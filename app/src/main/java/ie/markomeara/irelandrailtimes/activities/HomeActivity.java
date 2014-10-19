@@ -47,6 +47,7 @@ public class HomeActivity extends Activity {
         ArrayList favStationList = new ArrayList<String[]>();
         for(int i = 0; i < favStations.length; i++){
             favStationList.add(favStations[i]);
+            //Test
         }
 
         FavListAdapter adapter = new FavListAdapter(this, favStationList);
