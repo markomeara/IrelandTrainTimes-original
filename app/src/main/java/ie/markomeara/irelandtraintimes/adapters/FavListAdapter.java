@@ -1,4 +1,4 @@
-package ie.markomeara.irelandrailtimes.adapters;
+package ie.markomeara.irelandtraintimes.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,19 +9,24 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ie.markomeara.irelandrailtimes.R;
-import ie.markomeara.irelandrailtimes.Station;
+import ie.markomeara.irelandtraintimes.R;
 
 /**
- * Created by Mark on 05/10/2014.
+ * Created by Mark on 27/09/2014.
  */
-public class StationListAdapter extends ArrayAdapter<Station> {
+public class FavListAdapter extends ArrayAdapter<String[]> {
 
     private final Context context;
-    private final List<Station> stations;
+    private final List<String[]> stations;
 
-    public StationListAdapter(Context context, List<Station> items) {
+    public FavListAdapter(Context context, List<String[]> items) {
         super(context, R.layout.favlist_search, items);
+        this.context = context;
+        stations = items;
+    }
+
+    public FavListAdapter(Context context, int resource, List<String[]> items) {
+        super(context, resource, items);
         this.context = context;
         stations = items;
     }
@@ -32,20 +37,13 @@ public class StationListAdapter extends ArrayAdapter<Station> {
 
         View rowView = inflater.inflate(R.layout.favlist_search, parent, false);
 
-        if(stations.get(position).isFavourite()){
-            rowView.setBackgroundResource(R.drawable.favsearchitem_bg);
-            // TODO distance
-        }
-
         TextView stationName = (TextView) rowView.findViewById(R.id.favStationName);
         TextView distance = (TextView) rowView.findViewById(R.id.distance);
 
         // TODO Array bounds / null checking
-    //    String[] station = stations.get(position);
+        String[] station = stations.get(position);
         stationName.setText(station[0]);
         distance.setText(station[1]);
         return rowView;
     }
-
-
 }

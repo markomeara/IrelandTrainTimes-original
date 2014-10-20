@@ -1,4 +1,4 @@
-package ie.markomeara.irelandrailtimes.activities;
+package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,12 +10,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ie.markomeara.irelandrailtimes.R;
-import ie.markomeara.irelandrailtimes.adapters.FavListAdapter;
-import ie.markomeara.irelandrailtimes.utils.StationUtils;
+import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.adapters.FavListAdapter;
+import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.utils.StationUtils;
 
 
 public class HomeActivity extends Activity {
@@ -28,32 +31,32 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        List<Station> stns = null;
+        StationsDataSource sds = new StationsDataSource(this);
+        try {
+            sds.open();
+            stns = sds.getAllStations();
+            sds.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if(stns == null){
+            Station station = new Station(123, "Portmarnock", "Porto", 1.23, 3.21, "pnock");
+            stns.add(station);
+        }
+
         favList = (ListView) findViewById(R.id.favlist);
-        favStations = new String[][]{
-                {"Portmarnock", "1km"},
-                {"Malahide", "2km"},
-                {"Dublin Pearse", "8km"},
-                {"Dublin Connolly", "6km"},
-                {"Tara Street", "7km"},
-                {"Grand Canal Dock", "10km"},
-                {"Donabate", ""},
-                {"Rush & Lusk", ""},
-                {"Skerries", ""},
-                {"Gormanstown", ""},
-                {"Laytown", ""},
-                {"Drogheda", ""},
-                {"Dundalk", ""}
-            };
+
         ArrayList favStationList = new ArrayList<String[]>();
-        for(int i = 0; i < favStations.length; i++){
-            favStationList.add(favStations[i]);
+       // favList.setAdapter();
+        for(int i = 0; i < stns.size(); i++){
+            favStationList.add(new String[]{stns.get(i).getName(), stns.get(i).getAlias()});
             //Test
         }
 
         FavListAdapter adapter = new FavListAdapter(this, favStationList);
         favList.setAdapter(adapter);
-
-        StationUtils.getAllStations();
 
         favList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
@@ -67,11 +70,7 @@ public class HomeActivity extends Activity {
 
             }
         });
- //       populateFavList();
-    }
-
-    private void populateFavList(){
-       // favList.setAdapter();
+        //       populateFavList();
     }
 
     @Override

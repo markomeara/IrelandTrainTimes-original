@@ -1,4 +1,4 @@
-package ie.markomeara.irelandrailtimes;
+package ie.markomeara.irelandtraintimes;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

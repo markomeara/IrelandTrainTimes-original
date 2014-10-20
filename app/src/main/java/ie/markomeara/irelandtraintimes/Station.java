@@ -1,4 +1,4 @@
-package ie.markomeara.irelandrailtimes;
+package ie.markomeara.irelandtraintimes;
 
 import java.util.Comparator;
 
@@ -7,22 +7,26 @@ import java.util.Comparator;
  */
 public class Station implements Comparator{
 
+    private int id;
     private String name;
     private String alias;
     private double latitude;
     private double longitude;
     private String code;
-    private int id;
     private boolean favourite;
 
-    public Station(String name, String alias, double latitude, double longitude, String code, int id) {
+    public Station(int id, String name, String alias, double latitude, double longitude, String code) {
+        this(id, name, alias, latitude, longitude, code, false);
+    }
+
+    public Station(int id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
+        this.id = id;
         this.name = name;
         this.alias = alias;
         this.latitude = latitude;
         this.longitude = longitude;
         this.code = code;
-        this.id = id;
-        this.favourite = false;
+        this.favourite = fav;
     }
 
     public int compare(Object o1, Object o2){
