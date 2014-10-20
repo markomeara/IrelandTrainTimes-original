@@ -53,13 +53,12 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
 
             // Using 100 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
             if(stations.getLength() > 100) {
-                for (int i = 0; i < stations.getLength(); i++) {
+                StationsDataSource sds = new StationsDataSource(currentContext);
+                try{
+                    sds.open();
+                    sds.clearAllStations();
+                    for (int i = 0; i < stations.getLength(); i++) {
 
-                    StationsDataSource sds = new StationsDataSource(currentContext);
-                    try {
-
-                        sds.open();
-                        sds.clearAllStations();
                         if (stations.item(i).getNodeType() == Node.ELEMENT_NODE) {
                             Element stationElem = (Element) stations.item(i);
 
@@ -74,10 +73,10 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
                             sds.createStation(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
 
                         }
-                        sds.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
                     }
+                }
+                catch(SQLException ex){
+                    ex.printStackTrace();
                 }
             }
         } catch (MalformedURLException ex) {
@@ -95,10 +94,7 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
 
     @Override
     protected void onPostExecute(ArrayList<Station> stations) {
-
-
-        System.out.println("FETCHED");
-        Log.e("tag",stations.get(10).getName());
+        Log.i("Network Task", "Stations have been updated");
     }
 
 }

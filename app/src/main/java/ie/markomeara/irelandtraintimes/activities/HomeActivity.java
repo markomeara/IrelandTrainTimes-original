@@ -31,6 +31,10 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // Updating stations from API
+        StationUtils.getAllStations(this);
+
+
         List<Station> stns = null;
         StationsDataSource sds = new StationsDataSource(this);
         try {
