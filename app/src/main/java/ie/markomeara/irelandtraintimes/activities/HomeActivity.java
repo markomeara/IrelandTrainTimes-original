@@ -18,6 +18,7 @@ import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.adapters.FavListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.utils.PropertiesUtils;
 import ie.markomeara.irelandtraintimes.utils.StationUtils;
 
 
@@ -74,7 +75,7 @@ public class HomeActivity extends Activity {
 
             }
         });
-        //       populateFavList();
+
     }
 
     @Override
