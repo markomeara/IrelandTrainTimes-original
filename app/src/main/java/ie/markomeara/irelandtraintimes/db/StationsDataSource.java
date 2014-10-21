@@ -74,7 +74,9 @@ public class StationsDataSource {
     }
 
     public List<Station> getAllStations(){
-        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, null);
+
+        // Ordering by name
+        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_NAME);
         List<Station> stns = new ArrayList<Station>();
 
         while(cursor.moveToNext()){
