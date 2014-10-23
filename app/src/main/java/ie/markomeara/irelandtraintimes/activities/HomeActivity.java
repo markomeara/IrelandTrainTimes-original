@@ -18,8 +18,9 @@ import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.adapters.FavListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
-import ie.markomeara.irelandtraintimes.utils.PropertiesUtils;
+import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 import ie.markomeara.irelandtraintimes.utils.StationUtils;
+import twitter4j.Twitter;
 
 
 public class HomeActivity extends Activity {
@@ -32,6 +33,7 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        new TwitterTask(this).execute();
         // Updating stations from API
         StationUtils.getAllStations(this);
 

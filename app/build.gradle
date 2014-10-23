@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 19
     buildToolsVersion "20.0.0"
-
     defaultConfig {
-        applicationId "ie.markomeara.irelandrailtimes"
+        applicationId 'ie.markomeara.irelandtraintimes'
         minSdkVersion 15
         targetSdkVersion 19
         versionCode 1
@@ -13,13 +12,16 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile files('libs/twitter4j-core-4.0.2.jar')
+    compile files('libs/jsoup-1.8.1.jar')
+    compile files('libs/twitter4j-core-4.0.2-customised.jar')
 }
