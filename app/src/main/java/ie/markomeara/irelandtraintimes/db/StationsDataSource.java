@@ -39,6 +39,7 @@ public class StationsDataSource {
         return createStation(id, name, alias, latitude, longitude, code, false);
     }
 
+    // TODO Have method that takes list of stations
     public Station createStation(int id, String name, String alias, double latitude, double longitude, String code, boolean fav){
         ContentValues values = new ContentValues();
         values.put(DBManager.COLUMN_ID, id);

@@ -13,8 +13,10 @@ public class DBManager extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "irelandtraintimes.db";
 
     public static final String TABLE_STATIONS = "stations";
+    public static final String TABLE_TWEETS = "tweets";
 
     public static final String COLUMN_ID = "_id";
+
     public static final String COLUMN_STN_NAME = "name";
     public static final String COLUMN_STN_ALIAS = "alias";
     public static final String COLUMN_STN_LAT = "latitude";
@@ -22,9 +24,13 @@ public class DBManager extends SQLiteOpenHelper {
     public static final String COLUMN_STN_CODE = "code";
     public static final String COLUMN_STN_FAV = "favourite";
 
+    public static final String COLUMN_TWEET_TEXT = "text";
+    public static final String COLUMN_TWEET_CREATE_DATE = "createdate";
+    public static final String COLUMN_TWEET_RT_COUNT = "retweetcount";
+
     private static final int DATABASE_VERSION = 1;
 
-    private static final String DATABASE_CREATE = "create table "
+    private static final String TABLE_STATIONS_CREATE = "create table "
             + TABLE_STATIONS + "(" + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_STN_NAME + " text not null, "
             + COLUMN_STN_ALIAS + " text, "
@@ -33,13 +39,20 @@ public class DBManager extends SQLiteOpenHelper {
             + COLUMN_STN_CODE + " text, "
             + COLUMN_STN_FAV + " integer);";
 
+    private static final String TABLE_TWEETS_CREATE = "create table "
+            + TABLE_TWEETS + "(" + COLUMN_ID + " integer primary key autoincrement, "
+            + COLUMN_TWEET_TEXT + " text not null, "
+            + COLUMN_TWEET_CREATE_DATE + " text not null, "
+            + COLUMN_TWEET_RT_COUNT + " integer);";
+
     public DBManager(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DATABASE_CREATE);
+        db.execSQL(TABLE_STATIONS_CREATE);
+        db.execSQL(TABLE_TWEETS_CREATE);
     }
 
     @Override
@@ -48,6 +61,7 @@ public class DBManager extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TWEETS);
         onCreate(db);
     }
 

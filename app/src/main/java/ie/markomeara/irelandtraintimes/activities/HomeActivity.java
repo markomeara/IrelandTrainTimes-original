@@ -18,6 +18,7 @@ import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.adapters.FavListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 import ie.markomeara.irelandtraintimes.utils.StationUtils;
 import twitter4j.Twitter;
@@ -34,9 +35,12 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         new TwitterTask(this).execute();
+
+        // TODO Resolve possible overlap between writing/clearing DB and also reading from it below?
+        // Do writes only take place when connection is closed??
+
         // Updating stations from API
         StationUtils.getAllStations(this);
-
 
         List<Station> stns = null;
         StationsDataSource sds = new StationsDataSource(this);
@@ -49,6 +53,7 @@ public class HomeActivity extends Activity {
         }
 
         if(stns == null){
+            stns = new ArrayList<Station>();
             Station station = new Station(123, "Portmarnock", "Porto", 1.23, 3.21, "pnock");
             stns.add(station);
         }
@@ -98,4 +103,6 @@ public class HomeActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    // TODO Think about lifecycle and how we refresh data when user goes back to home screen
 }

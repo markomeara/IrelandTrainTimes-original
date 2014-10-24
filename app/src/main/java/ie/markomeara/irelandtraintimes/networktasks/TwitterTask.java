@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ import java.util.Set;
 
 import javax.crypto.SecretKey;
 
+import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
+import ie.markomeara.irelandtraintimes.twitter.Tweet;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import twitter4j.Paging;
 import twitter4j.Query;
@@ -46,18 +49,6 @@ public class TwitterTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] params) {
 
-      //   try {
-
-           // Token accessToken = new Token(SecretKeys.SECRET_KEY);
-            //  Token requestToken = twitterService.getRequestToken();
-            // Token accessToken = twitterService.getAccessToken(requestToken, null);
-           // twitterService.signRequest(accessToken, req);
-            //Response res = req.send();
-           // Log.w("RES: ", res.getBody().toString());
-     //   }
-    //    catch(TwitterException ex){
-     //       ex.printStackTrace();
-      //  }
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setApplicationOnlyAuthEnabled(true);
@@ -68,10 +59,12 @@ public class TwitterTask extends AsyncTask {
 
         try {
 
+
             twitter.getOAuth2Token();
             List<twitter4j.Status> statuses;
 
-            // Get last 60 statuses from Irish Rail
+            // Get last 200 statuses from Irish Rail
+            // 200 is the count before all replies and retweets are removed
             Paging page = new Paging(1, 200);
 
             boolean includeReplies = false;
@@ -83,21 +76,23 @@ public class TwitterTask extends AsyncTask {
             Set<String> keys = limits.keySet();
             Iterator<String> iter = keys.iterator();
 
-            while(iter.hasNext()){
-                String key = iter.next();
-                Log.w(key, "" + limits.get(key).getLimit());
-            }
+            TweetsDataSource tds = new TweetsDataSource(currentContext);
+            try {
+                tds.open();
+                for(int i = 0; i < statuses.size(); i++) {
+                    tds.createTweet(statuses.get(i).getId(), statuses.get(i).getText(), statuses.get(i).getCreatedAt().toString(), statuses.get(i).getRetweetCount());
+                }
+                tds.close();
 
-            for(int i = 0; i < statuses.size(); i++){
-                if(!statuses.get(i).isRetweet() && !statuses.get(i).getText().startsWith("@")){
-                    Log.w("Tweet", statuses.get(i).getText() + " (" + statuses.get(i).getCreatedAt() + ")");
+                tds.open();
+                List<Tweet> ts = tds.getAllTweets();
+                for(int i = 0; i < ts.size(); i++){
+                   Log.w("TWEET FROM DB", ts.get(i).getText());
                 }
-                else{
-                    Log.w("RT", "Skipping: " + statuses.get(i).getText() + " (" + statuses.get(i).getCreatedAt() + ")");
-                }
+                tds.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            Log.w("Status count", "" + statuses.size());
-            Log.w("RT??: ", "" + statuses.get(0).isRetweet());
 
         } catch (TwitterException e) {
             e.printStackTrace();
