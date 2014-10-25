@@ -79,9 +79,7 @@ public class TwitterTask extends AsyncTask {
             TweetsDataSource tds = new TweetsDataSource(currentContext);
             try {
                 tds.open();
-                for(int i = 0; i < statuses.size(); i++) {
-                    tds.createTweet(statuses.get(i).getId(), statuses.get(i).getText(), statuses.get(i).getCreatedAt().toString(), statuses.get(i).getRetweetCount());
-                }
+                tds.createRelevantTweets(statuses);
                 tds.close();
 
                 tds.open();
