@@ -32,8 +32,8 @@ public class DBManager extends SQLiteOpenHelper {
 
     // TODO Make station name unique
     private static final String TABLE_STATIONS_CREATE = "create table "
-            + TABLE_STATIONS + "(" + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_STN_NAME + " text not null, "
+            + TABLE_STATIONS + "(" + COLUMN_ID + " integer primary key, "
+            + COLUMN_STN_NAME + " text unique not null, "
             + COLUMN_STN_ALIAS + " text, "
             + COLUMN_STN_LAT + " real, "
             + COLUMN_STN_LONG + " real, "
@@ -41,7 +41,7 @@ public class DBManager extends SQLiteOpenHelper {
             + COLUMN_STN_FAV + " integer);";
 
     private static final String TABLE_TWEETS_CREATE = "create table "
-            + TABLE_TWEETS + "(" + COLUMN_ID + " integer primary key autoincrement, "
+            + TABLE_TWEETS + "(" + COLUMN_ID + " integer primary key, "
             + COLUMN_TWEET_TEXT + " text not null, "
             + COLUMN_TWEET_CREATE_DATE + " text not null, "
             + COLUMN_TWEET_RT_COUNT + " integer);";

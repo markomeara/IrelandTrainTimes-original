@@ -43,7 +43,7 @@ public class StationsDataSource {
         return createStation(id, name, alias, latitude, longitude, code, false);
     }
 
-    public Station createStation(int id, String name, String alias, double latitude, double longitude, String code, boolean fav){
+    public Station createStation(int id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
         ContentValues values = new ContentValues();
         values.put(DBManager.COLUMN_ID, id);
         values.put(DBManager.COLUMN_STN_NAME, name);
@@ -57,8 +57,10 @@ public class StationsDataSource {
         Log.i("DB Access", "Station created with id " + id);
         Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + entryId, null, null, null, null);
 
-        cursor.moveToFirst();
-        Station newStation = cursorToStation(cursor);
+        Station newStation = null;
+        if(cursor.moveToFirst()){
+            newStation = cursorToStation(cursor);
+        }
         cursor.close();
         return newStation;
     }
@@ -83,7 +85,9 @@ public class StationsDataSource {
                 String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
 
                 Station createdStation = createStation(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
-                createdStationsList.add(createdStation);
+                if(createdStation != null) {
+                    createdStationsList.add(createdStation);
+                }
 
             }
 
