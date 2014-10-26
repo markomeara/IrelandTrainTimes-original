@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,7 +30,7 @@ import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 /**
  * Created by Mark on 30/09/2014.
  */
-public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<Station>> {
+public class RetrieveStationsTask extends AsyncTask<Object, Integer, List<Station>> {
 
     private final String allStationsAPI = "http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML";
     private Context currentContext;
@@ -39,9 +40,9 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
     }
 
     @Override
-    protected ArrayList<Station> doInBackground(Object[] params) {
+    protected List<Station> doInBackground(Object[] params) {
 
-        ArrayList stationsList = new ArrayList<Station>();
+        List stationsList = new ArrayList<Station>();
 
         try {
             URL url = new URL(allStationsAPI);
@@ -50,36 +51,21 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
             Document doc = db.parse(new InputSource(url.openStream()));
             doc.getDocumentElement().normalize();
 
-            NodeList stations = doc.getElementsByTagName("objStation");
+            NodeList stationsNodes = doc.getElementsByTagName("objStation");
 
-            // Using 100 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
-            if(stations.getLength() > 100) {
+            // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
+            if(stationsNodes.getLength() > 130) {
                 StationsDataSource sds = new StationsDataSource(currentContext);
                 try{
                     sds.open();
-                    sds.clearAllStations();
-                    for (int i = 0; i < stations.getLength(); i++) {
-
-                        if (stations.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                            Element stationElem = (Element) stations.item(i);
-
-                            // TODO A shitload of null checks
-                            int stationId = Integer.parseInt(stationElem.getElementsByTagName("StationId").item(0).getTextContent());
-                            String stationName = stationElem.getElementsByTagName("StationDesc").item(0).getTextContent();
-                            String stationAlias = stationElem.getElementsByTagName("StationAlias").item(0).getTextContent();
-                            double stationLat = Double.parseDouble(stationElem.getElementsByTagName("StationLatitude").item(0).getTextContent());
-                            double stationLong = Double.parseDouble(stationElem.getElementsByTagName("StationLongitude").item(0).getTextContent());
-                            String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
-
-                            sds.createStation(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
-
-                        }
-                    }
+                    stationsList = sds.createStationsFromNodes(stationsNodes);
+                    sds.close();
                 }
                 catch(SQLException ex){
                     ex.printStackTrace();
                 }
             }
+
         } catch (MalformedURLException ex) {
             Log.w("Error updating stations", ex);
         } catch (ParserConfigurationException ex) {
@@ -94,7 +80,7 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Station> stations) {
+    protected void onPostExecute(List<Station> stations) {
         Log.i("Network Task", "Stations have been updated");
         Toast toast = Toast.makeText(currentContext, "Stations updated", Toast.LENGTH_SHORT);
         toast.show();

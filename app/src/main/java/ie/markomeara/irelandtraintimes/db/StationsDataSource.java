@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +64,36 @@ public class StationsDataSource {
         return newStation;
     }
 
+    public List<Station> createStationsFromNodes(NodeList stationsNodes){
+
+        List<Station> createdStationsList = new ArrayList<Station>();
+        db.beginTransaction();
+        clearAllStations();
+
+        for (int i = 0; i < stationsNodes.getLength(); i++) {
+
+            if (stationsNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                Element stationElem = (Element) stationsNodes.item(i);
+
+                // TODO A shitload of null checks
+                int stationId = Integer.parseInt(stationElem.getElementsByTagName("StationId").item(0).getTextContent());
+                String stationName = stationElem.getElementsByTagName("StationDesc").item(0).getTextContent();
+                String stationAlias = stationElem.getElementsByTagName("StationAlias").item(0).getTextContent();
+                double stationLat = Double.parseDouble(stationElem.getElementsByTagName("StationLatitude").item(0).getTextContent());
+                double stationLong = Double.parseDouble(stationElem.getElementsByTagName("StationLongitude").item(0).getTextContent());
+                String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
+
+                Station createdStation = createStation(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
+                createdStationsList.add(createdStation);
+
+            }
+
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return createdStationsList;
+    }
+
     public Station updateFavourite(Station stn, boolean fav){
         ContentValues cv = new ContentValues();
         cv.put(DBManager.COLUMN_STN_FAV, false);
@@ -74,7 +108,7 @@ public class StationsDataSource {
         return updatedStation;
     }
 
-    public List<Station> getAllStations(){
+    public List<Station> retrieveAllStations(){
 
         // Ordering by name
         Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_NAME);
@@ -85,6 +119,14 @@ public class StationsDataSource {
         }
 
         return stns;
+    }
+
+    public Station retrieveStationById(long id){
+
+        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID +" = "+ id, null, null, null, null);
+        cursor.moveToFirst();
+        return cursorToStation(cursor);
+
     }
 
     public void clearAllStations(){
