@@ -1,5 +1,8 @@
 package ie.markomeara.irelandtraintimes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Comparator;
 
 /**
@@ -7,7 +10,7 @@ import java.util.Comparator;
  */
 public class Station implements Comparator{
 
-    private int id;
+    private long id;
     private String name;
     private String alias;
     private double latitude;
@@ -15,11 +18,11 @@ public class Station implements Comparator{
     private String code;
     private boolean favourite;
 
-    public Station(int id, String name, String alias, double latitude, double longitude, String code) {
+    public Station(long id, String name, String alias, double latitude, double longitude, String code) {
         this(id, name, alias, latitude, longitude, code, false);
     }
 
-    public Station(int id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
+    public Station(long id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
         this.id = id;
         this.name = name;
         this.alias = alias;
@@ -59,9 +62,10 @@ public class Station implements Comparator{
         return code;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     public boolean isFavourite() { return favourite; }
+
 }
