@@ -73,12 +73,11 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
     protected void onPostExecute(List<Train> trainsDue) {
 
         String trainsText = "";
-        for(int i = 0; i < trainsDue.size(); i++) {
-            Train train = trainsDue.get(i);
-            trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
-        }
-
-        if(!trainsText.isEmpty()){
+        if(trainsDue != null && trainsDue.size() > 0) {
+            for (int i = 0; i < trainsDue.size(); i++) {
+                Train train = trainsDue.get(i);
+                trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
+            }
             textView.setText(trainsText);
         }
         else{
