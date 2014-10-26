@@ -43,7 +43,6 @@ public class StationsDataSource {
         return createStation(id, name, alias, latitude, longitude, code, false);
     }
 
-    // TODO Have method that takes list of stations
     public Station createStation(int id, String name, String alias, double latitude, double longitude, String code, boolean fav){
         ContentValues values = new ContentValues();
         values.put(DBManager.COLUMN_ID, id);
@@ -134,13 +133,14 @@ public class StationsDataSource {
     }
 
     private Station cursorToStation(Cursor cursor){
-        int id = cursor.getInt(0);
-        String name = cursor.getString(1);
-        String alias = cursor.getString(2);
-        double latitude = cursor.getDouble(3);
-        double longitude = cursor.getDouble(4);
-        String code = cursor.getString(5);
-        boolean fav = (cursor.getInt(6) > 0);
+
+        int id = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_ID));
+        String name = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_NAME));
+        String alias = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_ALIAS));
+        double latitude = cursor.getDouble(cursor.getColumnIndex(DBManager.COLUMN_STN_LAT));
+        double longitude = cursor.getDouble(cursor.getColumnIndex(DBManager.COLUMN_STN_LONG));
+        String code = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_CODE));
+        boolean fav = (cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_STN_FAV)) > 0);
 
         Station stn = new Station(id, name, alias, latitude, longitude, code, fav);
 
