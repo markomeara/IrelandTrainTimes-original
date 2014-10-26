@@ -22,7 +22,7 @@ import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 import ie.markomeara.irelandtraintimes.utils.StationUtils;
 
 
-public class HomeActivity extends Activity {
+public class StationListActivity extends Activity {
 
     private ListView stationListView;
 
