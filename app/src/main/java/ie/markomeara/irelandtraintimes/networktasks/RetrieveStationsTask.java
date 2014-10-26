@@ -3,6 +3,7 @@ package ie.markomeara.irelandtraintimes.networktasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,13 +81,13 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
                 }
             }
         } catch (MalformedURLException ex) {
-            ex.printStackTrace();
+            Log.w("Error updating stations", ex);
         } catch (ParserConfigurationException ex) {
-            ex.printStackTrace();
+            Log.w("Error updating stations", ex);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.w("Error updating stations", ex);
         } catch (SAXException ex) {
-            ex.printStackTrace();
+            Log.w("Error updating stations", ex);
         }
 
         return stationsList;
@@ -95,6 +96,8 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, ArrayList<S
     @Override
     protected void onPostExecute(ArrayList<Station> stations) {
         Log.i("Network Task", "Stations have been updated");
+        Toast toast = Toast.makeText(currentContext, "Stations updated", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 }

@@ -10,18 +10,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.Station;
 
 /**
- * Created by Mark on 05/10/2014.
+ * Created by Mark on 27/09/2014.
  */
-public class StationListAdapter extends ArrayAdapter<Station> {
+public class StationListAdapter extends ArrayAdapter<String[]> {
 
     private final Context context;
-    private final List<Station> stations;
+    private final List<String[]> stations;
 
-    public StationListAdapter(Context context, List<Station> items) {
-        super(context, R.layout.favlist_search, items);
+    public StationListAdapter(Context context, List<String[]> items) {
+        super(context, R.layout.stationlist_search, items);
         this.context = context;
         stations = items;
     }
@@ -30,23 +29,18 @@ public class StationListAdapter extends ArrayAdapter<Station> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.favlist_search, parent, false);
+        View rowView = inflater.inflate(R.layout.stationlist_search, parent, false);
 
-        if(stations.get(position).isFavourite()){
-            rowView.setBackgroundResource(R.drawable.favsearchitem_bg);
-            // TODO distance
-        }
-
-        TextView stationName = (TextView) rowView.findViewById(R.id.favStationName);
+        TextView stationName = (TextView) rowView.findViewById(R.id.stationName);
         TextView distance = (TextView) rowView.findViewById(R.id.distance);
 
-        // TODO Array bounds / null checking
-       // String[] station = stations.get(position);
-
-        stationName.setText(stations.get(position).getName());
-       // distance.setText(station[1]);
+        if(stations.size() >= position) {
+            String[] station = stations.get(position);
+            stationName.setText(station[0]);
+            if (station.length > 0) {
+                distance.setText(station[1]);
+            }
+        }
         return rowView;
     }
-
-
 }

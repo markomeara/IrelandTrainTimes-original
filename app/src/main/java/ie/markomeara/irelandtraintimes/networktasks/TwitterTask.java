@@ -3,6 +3,8 @@ package ie.markomeara.irelandtraintimes.networktasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TableLayout;
+import android.widget.Toast;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -16,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,7 @@ import java.util.Set;
 
 import javax.crypto.SecretKey;
 
+import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.twitter.Tweet;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
@@ -38,7 +42,7 @@ import twitter4j.conf.ConfigurationBuilder;
 /**
  * Created by Mark on 21/10/2014.
  */
-public class TwitterTask extends AsyncTask {
+public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
     private Context currentContext;
 
@@ -47,7 +51,7 @@ public class TwitterTask extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
+    protected Void doInBackground(Void... params) {
 
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -130,4 +134,13 @@ public class TwitterTask extends AsyncTask {
 
         return null;
     }
+
+    @Override
+    protected void onPostExecute(Void param) {
+        Log.i("Network Task", "Tweets have been updated");
+        Toast t = Toast.makeText(currentContext, "Tweets updated", Toast.LENGTH_SHORT);
+        t.show();
+
+    }
+
 }

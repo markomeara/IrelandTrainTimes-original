@@ -16,18 +16,15 @@ import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.adapters.FavListAdapter;
+import ie.markomeara.irelandtraintimes.adapters.StationListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
-import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 import ie.markomeara.irelandtraintimes.utils.StationUtils;
-import twitter4j.Twitter;
 
 
 public class HomeActivity extends Activity {
 
-    ListView favList;
-    String[][] favStations;
+    private ListView stationListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,47 +39,8 @@ public class HomeActivity extends Activity {
         // Updating stations from API
         StationUtils.getAllStations(this);
 
-        List<Station> stns = null;
-        StationsDataSource sds = new StationsDataSource(this);
-        try {
-            sds.open();
-            stns = sds.getAllStations();
-            sds.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        if(stns == null){
-            stns = new ArrayList<Station>();
-            Station station = new Station(123, "Portmarnock", "Porto", 1.23, 3.21, "pnock");
-            stns.add(station);
-        }
-
-        favList = (ListView) findViewById(R.id.favlist);
-
-        ArrayList favStationList = new ArrayList<String[]>();
-       // favList.setAdapter();
-        for(int i = 0; i < stns.size(); i++){
-            favStationList.add(new String[]{stns.get(i).getName(), stns.get(i).getAlias()});
-            //Test
-        }
-
-        FavListAdapter adapter = new FavListAdapter(this, favStationList);
-        favList.setAdapter(adapter);
-
-        favList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id){
-
-                System.out.println("Clicked: " + position);
-                RelativeLayout clickedItemLayout = (RelativeLayout) clickedItem;
-                TextView stationNameView = (TextView) clickedItemLayout.getChildAt(0);
-                String stationName = stationNameView.getText().toString();
-                System.out.println(stationName);
-
-            }
-        });
-
+        // TODO Figure out when stations should be refreshed... not that often obviously
+        refreshStationListDisplay();
     }
 
     @Override
@@ -105,4 +63,49 @@ public class HomeActivity extends Activity {
     }
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen
+
+    private void refreshStationListDisplay(){
+
+        List<Station> stns = null;
+        StationsDataSource sds = new StationsDataSource(this);
+        // Retrieving stations from DB
+        try {
+            sds.open();
+            stns = sds.getAllStations();
+            sds.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if(stns == null){
+            stns = new ArrayList<Station>();
+            Station station = new Station(123, "Portmarnock", "Porto", 1.23, 3.21, "pnock");
+            stns.add(station);
+        }
+
+        stationListView = (ListView) findViewById(R.id.stationlist);
+
+        ArrayList stationList = new ArrayList<String[]>();
+
+        for(int i = 0; i < stns.size(); i++){
+            stationList.add(new String[]{stns.get(i).getName(), stns.get(i).getAlias()});
+            //Test
+        }
+
+        StationListAdapter adapter = new StationListAdapter(this, stationList);
+        stationListView.setAdapter(adapter);
+
+        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id){
+
+                System.out.println("Clicked: " + position);
+                RelativeLayout clickedItemLayout = (RelativeLayout) clickedItem;
+                TextView stationNameView = (TextView) clickedItemLayout.getChildAt(0);
+                String stationName = stationNameView.getText().toString();
+                System.out.println(stationName);
+
+            }
+        });
+    }
 }

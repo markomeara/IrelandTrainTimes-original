@@ -3,6 +3,7 @@ package ie.markomeara.irelandtraintimes.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -83,7 +84,6 @@ public class TweetsDataSource {
     private boolean isRelevantStatus(Status status){
 
         boolean relevant = true;
-
         String statusText = status.getText();
 
         // If it mentions a user
@@ -112,6 +112,7 @@ public class TweetsDataSource {
         // TODO Check that tweet isn't there already
         db.insert(DBManager.TABLE_TWEETS, null, values);
         Log.i("DB Access", "Tweet created with id " + id);
+
         Cursor cursor = db.query(DBManager.TABLE_TWEETS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
 
         cursor.moveToFirst();
