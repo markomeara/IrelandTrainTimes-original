@@ -3,9 +3,7 @@ package ie.markomeara.irelandtraintimes.networktasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,7 +45,8 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
         List<Train> trains = null;
 
         if(stationParams.length >= 1){
-            String code = stationParams[0].getCode();
+            Station station = stationParams[0];
+            String code = station.getCode();
 
             try {
                 URL url = new URL("http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML?StationCode=" + code);
@@ -57,7 +56,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
                 doc.getDocumentElement().normalize();
 
                 NodeList trainsNodes = doc.getElementsByTagName("objStationData");
-                trains = createTrainsFromNodes(trainsNodes);
+                trains = createTrainsFromNodesExclStation(trainsNodes, station);
             }
             catch(MalformedURLException ex) { Log.w("Error getting trains at station", ex); }
             catch(ParserConfigurationException ex){ Log.w("Error getting trains at station", ex); }
@@ -87,7 +86,12 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
         }
     }
 
-    private List<Train> createTrainsFromNodes(NodeList trainsNodes) {
+    /**
+     * Create trains from nodes but ignore trains destined for the requested station
+     * @param trainsNodes
+     * @return
+     */
+    private List<Train> createTrainsFromNodesExclStation(NodeList trainsNodes, Station station) {
 
         List<Train> trains = new ArrayList<Train>();
 
@@ -99,23 +103,24 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
                 // TODO A load of null checks
                 // TODO Use constants for element names
-                String code = trainElem.getElementsByTagName("Traincode").item(0).getTextContent();
-                String origin = trainElem.getElementsByTagName("Origin").item(0).getTextContent();
                 String dest = trainElem.getElementsByTagName("Destination").item(0).getTextContent();
-                String latestInfo = trainElem.getElementsByTagName("Lastlocation").item(0).getTextContent();
-                String direction = trainElem.getElementsByTagName("Direction").item(0).getTextContent();
-                String trainType = trainElem.getElementsByTagName("Traintype").item(0).getTextContent();
-                int dueIn = Integer.parseInt(trainElem.getElementsByTagName("Duein").item(0).getTextContent());
-                int late = Integer.parseInt(trainElem.getElementsByTagName("Late").item(0).getTextContent());
+                if(!dest.equals(station.getName())) {
+                    String code = trainElem.getElementsByTagName("Traincode").item(0).getTextContent();
+                    String origin = trainElem.getElementsByTagName("Origin").item(0).getTextContent();
+                    String latestInfo = trainElem.getElementsByTagName("Lastlocation").item(0).getTextContent();
+                    String direction = trainElem.getElementsByTagName("Direction").item(0).getTextContent();
+                    String trainType = trainElem.getElementsByTagName("Traintype").item(0).getTextContent();
+                    int dueIn = Integer.parseInt(trainElem.getElementsByTagName("Duein").item(0).getTextContent());
+                    int late = Integer.parseInt(trainElem.getElementsByTagName("Late").item(0).getTextContent());
 
-                // Just using phone time instead of API update time to avoid parsing and comparison problems etc
-                Date updateTime = new Date();
+                    // Just using phone time instead of API update time to avoid parsing and comparison problems etc
+                    Date updateTime = new Date();
 
-                Train createdTrain = new Train(code, origin, dest, latestInfo, direction, trainType, dueIn, late, updateTime);
+                    Train createdTrain = new Train(code, origin, dest, latestInfo, direction, trainType, dueIn, late, updateTime);
 
-                // TODO Exclude trains that terminate at the station displayed
-                trains.add(createdTrain);
-
+                    // TODO Exclude trains that terminate at the station displayed
+                    trains.add(createdTrain);
+                }
             }
         }
 
