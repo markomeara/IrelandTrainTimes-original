@@ -17,6 +17,12 @@
         android:hint="Enter station name"
         android:inputType="text" />
 
+    <TextView
+        android:id="@+id/loadingStationsTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loadingStations" />
+
     <ListView
         android:id="@+id/stationlist"
         android:layout_width="fill_parent"

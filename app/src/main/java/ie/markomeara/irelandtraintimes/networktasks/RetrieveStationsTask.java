@@ -1,5 +1,6 @@
 package ie.markomeara.irelandtraintimes.networktasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,25 +23,22 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.activities.StationListActivity;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 
 
 /**
  * Created by Mark on 30/09/2014.
  */
-public class RetrieveStationsTask extends AsyncTask<Object, Integer, List<Station>> {
+public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
     private final String allStationsAPI = "http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML";
-    private Context currentContext;
+    private StationListActivity callingActivity;
 
-    public RetrieveStationsTask(Context c){
-        this.currentContext = c;
-    }
+    public RetrieveStationsTask(StationListActivity activity){ this.callingActivity = activity; }
 
     @Override
-    protected List<Station> doInBackground(Object[] params) {
-
-        List stationsList = new ArrayList<Station>();
+    protected Boolean doInBackground(Boolean[] updateUIParam) {
 
         try {
             URL url = new URL(allStationsAPI);
@@ -53,10 +51,10 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, List<Statio
 
             // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
             if(stationsNodes.getLength() > 130) {
-                StationsDataSource sds = new StationsDataSource(currentContext);
+                StationsDataSource sds = new StationsDataSource(callingActivity);
                 try{
                     sds.open();
-                    stationsList = sds.createStationsFromNodes(stationsNodes);
+                    sds.createStationsFromNodes(stationsNodes);
                     sds.close();
                 }
                 catch(SQLException ex){
@@ -70,13 +68,22 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, List<Statio
         catch (IOException ex) { Log.w("Error updating stations", ex); }
         catch (SAXException ex) { Log.w("Error updating stations", ex); }
 
-        return stationsList;
+        boolean updateUI = false;
+        if(updateUIParam.length > 0){
+            updateUI = updateUIParam[0];
+        }
+
+        return updateUI;
     }
 
     @Override
-    protected void onPostExecute(List<Station> stations) {
+    protected void onPostExecute(Boolean updateUIImmediately) {
+        // If station list is being initialized for first time, then refresh UI immediately
+        if(updateUIImmediately){
+            callingActivity.refreshStationListDisplay();
+        }
         Log.i("Network Task", "Stations have been updated");
-        Toast toast = Toast.makeText(currentContext, "Stations updated", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(callingActivity, "Stations updated", Toast.LENGTH_SHORT);
         toast.show();
     }
 

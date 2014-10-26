@@ -2,44 +2,53 @@ package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.adapters.StationListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.networktasks.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
-import ie.markomeara.irelandtraintimes.utils.StationUtils;
 
 
 public class StationListActivity extends Activity {
 
     private ListView stationListView;
+    private TextView stationsLoadingTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_stationlist);
+
+        stationListView = (ListView) findViewById(R.id.stationlist);
+        stationsLoadingTV = (TextView) findViewById(R.id.loadingStationsTV);
 
         new TwitterTask(this).execute();
 
-        // Updating stations from API
-        StationUtils.getAllStations(this);
-
         // TODO Figure out when stations should be refreshed... not that often obviously
         refreshStationListDisplay();
+
+        // Updating stations from API
+
+        // If we are not showing any stations, tell this to Stations task
+        // so it knows to update view when it's finished
+        boolean initializingStationsList = (stationListView.getCount() == 0);
+        new RetrieveStationsTask(this).execute(initializingStationsList);
+        if(!initializingStationsList){
+            refreshStationListDisplay();
+        }
     }
 
     @Override
@@ -63,7 +72,7 @@ public class StationListActivity extends Activity {
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen
 
-    private void refreshStationListDisplay(){
+    public void refreshStationListDisplay(){
 
         List<Station> stationList = null;
         StationsDataSource sds = new StationsDataSource(this);
@@ -76,20 +85,21 @@ public class StationListActivity extends Activity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if(!stationList.isEmpty()) {
+            stationListView.setAdapter(new StationListAdapter(this, stationList));
+            stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        stationListView = (ListView) findViewById(R.id.stationlist);
-        stationListView.setAdapter(new StationListAdapter(this, stationList));
+                public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id) {
 
-        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    Station station = (Station) parent.getItemAtPosition(position);
+                    Intent i = new Intent(StationListActivity.this, StationNextTrainsActivity.class);
+                    i.putExtra("stationId", station.getId());
+                    startActivity(i);
 
-            public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id){
-
-                Station station = (Station) parent.getItemAtPosition(position);
-                Intent i = new Intent(StationListActivity.this, StationNextTrainsActivity.class);
-                i.putExtra("stationId", station.getId());
-                startActivity(i);
-
-            }
-        });
+                }
+            });
+            stationsLoadingTV.setVisibility(View.GONE);
+        }
     }
+
 }
