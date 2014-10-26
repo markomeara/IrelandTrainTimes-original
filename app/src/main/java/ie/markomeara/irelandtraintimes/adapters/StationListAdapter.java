@@ -10,19 +10,20 @@ import android.widget.TextView;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.Station;
 
 /**
  * Created by Mark on 27/09/2014.
  */
-public class StationListAdapter extends ArrayAdapter<String[]> {
+public class StationListAdapter extends ArrayAdapter<Station> {
 
     private final Context context;
-    private final List<String[]> stations;
+    private final List<Station> stations;
 
-    public StationListAdapter(Context context, List<String[]> items) {
-        super(context, R.layout.stationlist_search, items);
+    public StationListAdapter(Context context, List<Station> stations) {
+        super(context, R.layout.stationlist_search, stations);
         this.context = context;
-        stations = items;
+        this.stations = stations;
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
@@ -35,10 +36,10 @@ public class StationListAdapter extends ArrayAdapter<String[]> {
         TextView distance = (TextView) rowView.findViewById(R.id.distance);
 
         if(stations.size() >= position) {
-            String[] station = stations.get(position);
-            stationName.setText(station[0]);
-            if (station.length > 0) {
-                distance.setText(station[1]);
+            Station station = stations.get(position);
+            stationName.setText(station.getName());
+            if (stations.size() > 0) {
+                distance.setText(station.getAlias());
             }
         }
         return rowView;
