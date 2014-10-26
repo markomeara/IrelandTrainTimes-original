@@ -1,6 +1,7 @@
 package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -66,44 +68,29 @@ public class StationListActivity extends Activity {
 
     private void refreshStationListDisplay(){
 
-        List<Station> stns = null;
+        List<Station> stationList = null;
         StationsDataSource sds = new StationsDataSource(this);
+
         // Retrieving stations from DB
         try {
             sds.open();
-            stns = sds.getAllStations();
+            stationList = sds.retrieveAllStations();
             sds.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if(stns == null){
-            stns = new ArrayList<Station>();
-            Station station = new Station(123, "Portmarnock", "Porto", 1.23, 3.21, "pnock");
-            stns.add(station);
-        }
-
         stationListView = (ListView) findViewById(R.id.stationlist);
-
-        ArrayList stationList = new ArrayList<String[]>();
-
-        for(int i = 0; i < stns.size(); i++){
-            stationList.add(new String[]{stns.get(i).getName(), stns.get(i).getAlias()});
-            //Test
-        }
-
-        StationListAdapter adapter = new StationListAdapter(this, stationList);
-        stationListView.setAdapter(adapter);
+        stationListView.setAdapter(new StationListAdapter(this, stationList));
 
         stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id){
 
-                System.out.println("Clicked: " + position);
-                RelativeLayout clickedItemLayout = (RelativeLayout) clickedItem;
-                TextView stationNameView = (TextView) clickedItemLayout.getChildAt(0);
-                String stationName = stationNameView.getText().toString();
-                System.out.println(stationName);
+                Station station = (Station) parent.getItemAtPosition(position);
+                Intent i = new Intent(StationListActivity.this, StationNextTrainsActivity.class);
+                i.putExtra("stationId", station.getId());
+                startActivity(i);
 
             }
         });
