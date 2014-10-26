@@ -4,5 +4,6 @@
     <string name="app_name">Ireland Train Times</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_station_next_trains">StationNextTrainsActivity</string>
 
 </resources>
