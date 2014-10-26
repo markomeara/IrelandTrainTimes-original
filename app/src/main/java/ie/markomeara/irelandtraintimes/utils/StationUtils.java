@@ -11,7 +11,7 @@ public class StationUtils {
 
     public static void getAllStations(Context c) {
 
-        // TODO Caching
+        // TODO Remove this class... really not needed at all
         new RetrieveStationsTask(c).execute();
 
     }

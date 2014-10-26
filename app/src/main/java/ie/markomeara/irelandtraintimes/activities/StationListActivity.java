@@ -35,9 +35,6 @@ public class StationListActivity extends Activity {
 
         new TwitterTask(this).execute();
 
-        // TODO Resolve possible overlap between writing/clearing DB and also reading from it below?
-        // Do writes only take place when connection is closed??
-
         // Updating stations from API
         StationUtils.getAllStations(this);
 

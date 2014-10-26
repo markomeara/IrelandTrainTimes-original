@@ -34,6 +34,8 @@ public class TweetsDataSource {
 
     public void close() { dbManager.close(); }
 
+    // TODO Remove tweets more than 24 hours old
+
     public List<Tweet> createRelevantTweets(List<Status> statuses){
 
         List<Tweet> tweets = new ArrayList<Tweet>();

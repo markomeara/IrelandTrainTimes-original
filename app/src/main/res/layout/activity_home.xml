@@ -11,11 +11,11 @@
 
 
     <EditText
-        android:id="@+id/email_address"
+        android:id="@+id/stationSearchField"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Enter station name"
-        android:inputType="textEmailAddress" />
+        android:inputType="text" />
 
     <ListView
         android:id="@+id/stationlist"

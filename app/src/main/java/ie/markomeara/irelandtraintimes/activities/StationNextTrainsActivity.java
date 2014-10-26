@@ -2,17 +2,19 @@ package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.sql.SQLException;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
 
 public class StationNextTrainsActivity extends Activity {
 
@@ -23,8 +25,9 @@ public class StationNextTrainsActivity extends Activity {
 
         // TODO Handle if station is null
         Station station = getStationFromIntent();
-        Toast toast = Toast.makeText(this, station.getName(), Toast.LENGTH_LONG);
-        toast.show();
+        TextView trainsDueTV = (TextView) findViewById(R.id.trainsDue);
+
+        AsyncTask ntt = new NextTrainsTask(this, trainsDueTV).execute(station);
 
     }
 

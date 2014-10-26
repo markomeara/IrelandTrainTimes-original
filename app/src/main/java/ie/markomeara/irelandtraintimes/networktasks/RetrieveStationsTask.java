@@ -6,8 +6,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -65,16 +63,12 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, List<Statio
                     ex.printStackTrace();
                 }
             }
-
-        } catch (MalformedURLException ex) {
-            Log.w("Error updating stations", ex);
-        } catch (ParserConfigurationException ex) {
-            Log.w("Error updating stations", ex);
-        } catch (IOException ex) {
-            Log.w("Error updating stations", ex);
-        } catch (SAXException ex) {
-            Log.w("Error updating stations", ex);
         }
+
+        catch (MalformedURLException ex) { Log.w("Error updating stations", ex); }
+        catch (ParserConfigurationException ex) { Log.w("Error updating stations", ex); }
+        catch (IOException ex) { Log.w("Error updating stations", ex); }
+        catch (SAXException ex) { Log.w("Error updating stations", ex); }
 
         return stationsList;
     }
@@ -85,5 +79,7 @@ public class RetrieveStationsTask extends AsyncTask<Object, Integer, List<Statio
         Toast toast = Toast.makeText(currentContext, "Stations updated", Toast.LENGTH_SHORT);
         toast.show();
     }
+
+
 
 }

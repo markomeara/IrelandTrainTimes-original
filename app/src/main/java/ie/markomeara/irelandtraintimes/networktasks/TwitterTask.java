@@ -24,19 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.crypto.SecretKey;
-
-import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.twitter.Tweet;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import twitter4j.Paging;
-import twitter4j.Query;
 import twitter4j.RateLimitStatus;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.auth.OAuth2Token;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
