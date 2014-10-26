@@ -30,6 +30,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
 
+    // TODO Make station name unique
     private static final String TABLE_STATIONS_CREATE = "create table "
             + TABLE_STATIONS + "(" + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_STN_NAME + " text not null, "
