@@ -2,6 +2,7 @@ package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +14,11 @@ import java.sql.SQLException;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
 
-public class StationNextTrainsActivity extends Activity {
+public class StationNextTrainsActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,5 +79,10 @@ public class StationNextTrainsActivity extends Activity {
         }
 
         return retrievedStation;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        // TODO Implement
     }
 }

@@ -7,5 +7,6 @@
     <string name="title_activity_station_next_trains">StationNextTrainsActivity</string>
     <string name="loading">Loading train info...</string>
     <string name="loadingStations">Initializing stations...</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

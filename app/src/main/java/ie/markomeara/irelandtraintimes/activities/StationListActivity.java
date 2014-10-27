@@ -2,6 +2,7 @@ package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,13 +17,14 @@ import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment;
 import ie.markomeara.irelandtraintimes.adapters.StationListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 import ie.markomeara.irelandtraintimes.networktasks.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 
 
-public class StationListActivity extends Activity {
+public class StationListActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener {
 
     private ListView stationListView;
     private TextView stationsLoadingTV;
@@ -100,4 +102,8 @@ public class StationListActivity extends Activity {
         }
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        // TODO Implement
+    }
 }
