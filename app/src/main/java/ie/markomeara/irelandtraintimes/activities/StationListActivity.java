@@ -35,8 +35,6 @@ public class StationListActivity extends Activity {
         stationListView = (ListView) findViewById(R.id.stationlist);
         stationsLoadingTV = (TextView) findViewById(R.id.loadingStationsTV);
 
-        new TwitterTask(this).execute();
-
         // TODO Figure out when stations should be refreshed... not that often obviously
         refreshStationListDisplay();
 
@@ -46,9 +44,9 @@ public class StationListActivity extends Activity {
         // so it knows to update view when it's finished
         boolean initializingStationsList = (stationListView.getCount() == 0);
         new RetrieveStationsTask(this).execute(initializingStationsList);
-        if(!initializingStationsList){
-            refreshStationListDisplay();
-        }
+
+        // Update tweets
+        new TwitterTask(this).execute();
     }
 
     @Override
