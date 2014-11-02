@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
@@ -40,7 +41,6 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
         Log.w(TAG, "Clicked: " + station.getName());
         FragmentTransaction ft  = getFragmentManager().beginTransaction();
         ft.replace(R.id.mainfragment_placeholder, StationNextTrainsFragment.newInstance(station));
-        // TODO Put in transition
         ft.addToBackStack(TAG);
         ft.commit();
     }

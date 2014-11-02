@@ -68,8 +68,6 @@ public class StationListFragment extends Fragment {
         boolean initializingStationsList = (stationListView.getCount() == 0);
         new RetrieveStationsTask(this).execute(initializingStationsList);
 
-        // Update tweets
-    //    new TwitterTask(getActivity()).execute();
     }
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen

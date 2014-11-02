@@ -66,7 +66,6 @@ public class StationNextTrainsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        TextView trainsDueTV = (TextView) getView().findViewById(R.id.trainsDue);
         AsyncTask ntt = new NextTrainsTask(this).execute(displayedStation);
     }
 
