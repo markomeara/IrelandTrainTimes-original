@@ -26,6 +26,8 @@ import ie.markomeara.irelandtraintimes.db.StationsDataSource;
  */
 public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
+    private static final String TAG = RetrieveStationsTask.class.getSimpleName();
+
     private final String allStationsAPI = "http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML";
   //  private StationListActivity callingActivity;
     private StationListFragment stationListFragment;
@@ -63,10 +65,10 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
             }
         }
 
-        catch (MalformedURLException ex) { Log.w("Error updating stations", ex); }
-        catch (ParserConfigurationException ex) { Log.w("Error updating stations", ex); }
-        catch (IOException ex) { Log.w("Error updating stations", ex); }
-        catch (SAXException ex) { Log.w("Error updating stations", ex); }
+        catch (MalformedURLException ex) { Log.w(TAG, ex); }
+        catch (ParserConfigurationException ex) { Log.w(TAG, ex); }
+        catch (IOException ex) { Log.w(TAG, ex); }
+        catch (SAXException ex) { Log.w(TAG, ex); }
 
         boolean updateUI = false;
         if(updateUIParam.length > 0){
@@ -83,7 +85,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
             // callingActivity.refreshStationListDisplay();
             stationListFragment.refreshStationListDisplay();
         }
-        Log.i("Network Task", "Stations have been updated");
+        Log.i(TAG, "Stations have been updated");
         // TODO This returns null pointer exception if we've already changed activity
         // .... but how can this be if it was passed updateUIImmediately (as this should only be passed
         // when no stations are displayed?!?

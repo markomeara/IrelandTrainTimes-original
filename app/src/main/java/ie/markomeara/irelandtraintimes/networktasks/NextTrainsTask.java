@@ -32,6 +32,8 @@ import ie.markomeara.irelandtraintimes.activities.fragments.StationNextTrainsFra
  */
 public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
+    private static final String TAG = NextTrainsTask.class.getSimpleName();
+
     private StationNextTrainsFragment callingFragment;
 
     public NextTrainsTask(StationNextTrainsFragment fragment){
@@ -57,13 +59,13 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
                 NodeList trainsNodes = doc.getElementsByTagName("objStationData");
                 trains = createTrainsFromNodesExclStation(trainsNodes, station);
             }
-            catch(MalformedURLException ex) { Log.w("Error getting trains at station", ex); }
-            catch(ParserConfigurationException ex){ Log.w("Error getting trains at station", ex); }
-            catch(IOException ex){ Log.w("Error getting trains at station", ex); }
-            catch(SAXException ex){ Log.w("Error getting trains at station", ex); }
+            catch(MalformedURLException ex) { Log.w(TAG, ex); }
+            catch(ParserConfigurationException ex){ Log.w(TAG, ex); }
+            catch(IOException ex){ Log.w(TAG, ex); }
+            catch(SAXException ex){ Log.w(TAG, ex); }
         }
         else{
-            Log.w("Error getting trains at station", "Parameters are not as expected");
+            Log.w(TAG, "Parameters are not as expected");
         }
         return trains;
     }

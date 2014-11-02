@@ -39,6 +39,8 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
+    private static final String TAG = TwitterTask.class.getSimpleName();
+
     private Context currentContext;
 
     public TwitterTask(Context c){
@@ -82,7 +84,7 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
                 tds.open();
                 List<Tweet> ts = tds.getAllTweets();
                 for(int i = 0; i < ts.size(); i++){
-                   Log.w("TWEET FROM DB", ts.get(i).getText());
+                   Log.w(TAG, "Tweet from DB: " + ts.get(i).getText());
                 }
                 tds.close();
             } catch (SQLException e) {
@@ -115,7 +117,7 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
                 String s = doc.toString();
                 System.out.println(s);
 
-          //      Log.w("NULL", "----null----");
+          //      Log.w(TAG, "----null----");
 
             }
         }
@@ -130,7 +132,7 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void param) {
-        Log.i("Network Task", "Tweets have been updated");
+        Log.i(TAG, "Tweets have been updated");
         Toast t = Toast.makeText(currentContext, "Tweets updated", Toast.LENGTH_SHORT);
         t.show();
 

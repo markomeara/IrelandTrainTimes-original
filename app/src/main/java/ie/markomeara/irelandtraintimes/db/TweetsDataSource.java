@@ -19,6 +19,8 @@ import twitter4j.Status;
  */
 public class TweetsDataSource {
 
+    private static final String TAG = TweetsDataSource.class.getSimpleName();
+
     private SQLiteDatabase db;
     private DBManager dbManager;
     private String[] allColumns = { DBManager.COLUMN_ID, DBManager.COLUMN_TWEET_TEXT,
@@ -54,7 +56,7 @@ public class TweetsDataSource {
             }
         }
 
-        Log.d("createTweets", "Returning created tweets");
+        Log.d(TAG, "Returning created tweets");
         return tweets;
     }
 
@@ -113,7 +115,7 @@ public class TweetsDataSource {
 
         // TODO Check that tweet isn't there already
         db.insert(DBManager.TABLE_TWEETS, null, values);
-        Log.i("DB Access", "Tweet created with id " + id);
+        Log.i(TAG, "Tweet created with id " + id);
 
         Cursor cursor = db.query(DBManager.TABLE_TWEETS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
 
@@ -134,7 +136,7 @@ public class TweetsDataSource {
 
         Tweet tweet = new Tweet(id, text, createdAt, rtCount);
 
-        Log.i("DB Access", "Returning tweet with id " + id);
+        Log.i(TAG, "Returning tweet with id " + id);
         return tweet;
     }
 

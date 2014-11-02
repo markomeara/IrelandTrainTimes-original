@@ -24,7 +24,7 @@ import ie.markomeara.irelandtraintimes.networktasks.RetrieveStationsTask;
  */
 public class StationListFragment extends Fragment {
 
-    // TODO Fix this up
+    private static final String TAG = StationListFragment.class.getSimpleName();
 
     private ListView stationListView;
     private TextView stationsLoadingTV;

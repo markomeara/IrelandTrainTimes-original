@@ -10,6 +10,8 @@ import java.util.Comparator;
  */
 public class Station implements Comparator{
 
+    private static final String TAG = Station.class.getSimpleName();
+
     private long id;
     private String name;
     private String alias;

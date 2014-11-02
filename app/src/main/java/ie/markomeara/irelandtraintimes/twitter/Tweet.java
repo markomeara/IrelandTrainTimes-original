@@ -7,6 +7,8 @@ import java.util.Date;
  */
 public class Tweet {
 
+    private static final String TAG = Tweet.class.getSimpleName();
+
     private int id;
     private String text;
     private String createdAt;

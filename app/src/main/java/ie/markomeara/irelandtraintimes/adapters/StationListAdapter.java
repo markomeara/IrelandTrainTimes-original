@@ -17,6 +17,8 @@ import ie.markomeara.irelandtraintimes.Station;
  */
 public class StationListAdapter extends ArrayAdapter<Station> {
 
+    private static final String TAG = StationListAdapter.class.getSimpleName();
+
     private final Context context;
     private final List<Station> stations;
 

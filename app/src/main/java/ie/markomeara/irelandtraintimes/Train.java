@@ -7,6 +7,8 @@ import java.util.Date;
  */
 public class Train {
 
+    private static final String TAG = Train.class.getSimpleName();
+
     private String trainCode;
     private String origin;
     private String destination;

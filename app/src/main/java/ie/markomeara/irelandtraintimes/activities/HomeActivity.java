@@ -18,7 +18,6 @@ import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragmen
 public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener,
         StationListFragment.OnStationSelectedListener {
 
-    // TODO Get the TAG like below for all classes
     private static final String TAG = HomeActivity.class.getSimpleName();
 
     @Override
@@ -41,6 +40,7 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
         Log.w(TAG, "Clicked: " + station.getName());
         FragmentTransaction ft  = getFragmentManager().beginTransaction();
         ft.replace(R.id.mainfragment_placeholder, StationNextTrainsFragment.newInstance(station));
+        // TODO Put in transition
         ft.addToBackStack(TAG);
         ft.commit();
     }

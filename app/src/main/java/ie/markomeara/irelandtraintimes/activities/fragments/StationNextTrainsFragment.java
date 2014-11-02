@@ -23,7 +23,7 @@ import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
  */
 public class StationNextTrainsFragment extends Fragment {
 
-    // TODO Fix this up
+    private static final String TAG = StationNextTrainsFragment.class.getSimpleName();
 
     private static final String STATION_PARAM = "stationId";
 
@@ -49,7 +49,7 @@ public class StationNextTrainsFragment extends Fragment {
                 sds.close();
             }
             catch(SQLException ex){
-                Log.e("Error retrieving station to display", "SQLException", ex);
+                Log.e(TAG, ex.toString());
             }
         }
     }

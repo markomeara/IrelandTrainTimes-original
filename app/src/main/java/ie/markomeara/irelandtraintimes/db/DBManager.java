@@ -10,6 +10,8 @@ import android.util.Log;
  */
 public class DBManager extends SQLiteOpenHelper {
 
+    private static final String TAG = DBManager.class.getSimpleName();
+
     private static final String DATABASE_NAME = "irelandtraintimes.db";
 
     public static final String TABLE_STATIONS = "stations";
@@ -58,7 +60,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(DBManager.class.getName(),
+        Log.w(TAG,
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATIONS);

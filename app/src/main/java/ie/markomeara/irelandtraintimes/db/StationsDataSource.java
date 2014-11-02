@@ -21,6 +21,8 @@ import ie.markomeara.irelandtraintimes.Station;
  */
 public class StationsDataSource {
 
+    private static final String TAG = StationsDataSource.class.getSimpleName();
+
     private SQLiteDatabase db;
     private DBManager dbManager;
     private String[] allColumns = { DBManager.COLUMN_ID, DBManager.COLUMN_STN_NAME,
@@ -54,7 +56,7 @@ public class StationsDataSource {
         values.put(DBManager.COLUMN_STN_FAV, fav);
 
         long entryId = db.insert(DBManager.TABLE_STATIONS, null, values);
-        Log.i("DB Access", "Station created with id " + id);
+        Log.i(TAG, "Station created with id " + id);
         Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + entryId, null, null, null, null);
 
         Station newStation = null;
@@ -148,7 +150,7 @@ public class StationsDataSource {
 
         Station stn = new Station(id, name, alias, latitude, longitude, code, fav);
 
-        Log.i("DB Access", "Returning station with id " + id);
+        Log.i(TAG, "Returning station with id " + id);
         return stn;
     }
 }
