@@ -5,11 +5,17 @@
     android:background="@color/twitterblue"
     tools:context="ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment">
 
+    <!--TextSwitcher android:id="@+id/tweet_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"/-->
+
     <TextView
         android:id="@+id/tweetdisplayedTV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Placeholder tweet text"
+        android:text="@string/no_tweets"
         android:gravity="center"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
