@@ -8,10 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
+import ie.markomeara.irelandtraintimes.twitter.Tweet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +38,10 @@ public class TwitterUpdateFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private List<Tweet> tweets;
+    private TextView tweetTextView;
+    private int currentTweet = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -78,14 +90,58 @@ public class TwitterUpdateFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        tweetTextView = (TextView)  getView().findViewById(R.id.tweetdisplayedTV);
+
         new TwitterTask(getActivity()).execute();
 
-        TextView tweetTextView = (TextView)  getView().findViewById(R.id.tweetdisplayedTV);
+        TweetsDataSource tds = new TweetsDataSource(getActivity());
+        try {
+            tds.open();
+            tweets = tds.getAllTweets();
+            tds.close();
+
+            if(!tweets.isEmpty()) {
+                tweetTextView.setText(tweets.get(0).getText());
+            }
+        }
+        catch(SQLException ex){
+            Log.e(TAG, ex.toString());
+        }
+
+        Timer timer = new Timer("tweet_switcher");
+
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    public void run() {
+                        getActivity().runOnUiThread( new Runnable(){
+
+                            @Override
+                            public void run() {
+                                if(currentTweet < (tweets.size() - 1)){
+                                    currentTweet++;
+                                }
+                                else if(!tweets.isEmpty()){
+                                    currentTweet = 0;
+                                }
+                                else{
+                                    currentTweet = -1;
+                                }
+
+                                if(currentTweet >= 0) {
+                                    tweetTextView.setText(tweets.get(currentTweet).getText());
+                                }
+                            }
+                        });
+                        //switch your text using either runOnUiThread() or sending alarm and receiving it in your gui thread
+                    }
+                }, 5000, 5000);
+
+
         // Placeholder text to show persistence of change between activity changes
-        Log.w(TAG, "Creating fragment");
-        String exisingtext = tweetTextView.getText().toString();
-        Log.w(TAG, "Existing text: " + exisingtext);
-        tweetTextView.setText("(23 mins)  Remember: no trains btwn Pearse and Dun Laoghaire today Sat 25th & tmrw Sun 26th Oct for line works.  Full info: http://t.co/sQBN9GrD3r");
+ //       Log.w(TAG, "Creating fragment");
+ //       String exisingtext = tweetTextView.getText().toString();
+ //       Log.w(TAG, "Existing text: " + exisingtext);
+ //       tweetTextView.setText("(23 mins)  Remember: no trains btwn Pearse and Dun Laoghaire today Sat 25th & tmrw Sun 26th Oct for line works.  Full info: http://t.co/sQBN9GrD3r");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
