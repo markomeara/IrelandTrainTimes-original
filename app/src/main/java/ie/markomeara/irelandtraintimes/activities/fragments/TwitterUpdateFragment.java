@@ -41,6 +41,7 @@ public class TwitterUpdateFragment extends Fragment {
 
     private List<Tweet> tweets;
     private TextView tweetTextView;
+    Timer tweetSwitchTimer;
     private int currentTweet = 0;
 
     // TODO: Rename and change types of parameters
@@ -95,53 +96,17 @@ public class TwitterUpdateFragment extends Fragment {
         new TwitterTask(getActivity()).execute();
 
         TweetsDataSource tds = new TweetsDataSource(getActivity());
-        try {
-            tds.open();
-            tweets = tds.getAllTweets();
-            tds.close();
 
-            if(!tweets.isEmpty()) {
-                tweetTextView.setText(tweets.get(0).getText());
-            }
-        }
-        catch(SQLException ex){
-            Log.e(TAG, ex.toString());
+        tds.open();
+        tweets = tds.getAllTweets();
+        tds.close();
+
+        if(!tweets.isEmpty()) {
+            tweetTextView.setText(tweets.get(0).getText());
         }
 
-        Timer timer = new Timer("tweet_switcher");
+        scheduleTweetSwitching();
 
-        timer.scheduleAtFixedRate(
-                new TimerTask() {
-                    public void run() {
-                        getActivity().runOnUiThread( new Runnable(){
-
-                            @Override
-                            public void run() {
-                                if(currentTweet < (tweets.size() - 1)){
-                                    currentTweet++;
-                                }
-                                else if(!tweets.isEmpty()){
-                                    currentTweet = 0;
-                                }
-                                else{
-                                    currentTweet = -1;
-                                }
-
-                                if(currentTweet >= 0) {
-                                    tweetTextView.setText(tweets.get(currentTweet).getText());
-                                }
-                            }
-                        });
-                        //switch your text using either runOnUiThread() or sending alarm and receiving it in your gui thread
-                    }
-                }, 5000, 5000);
-
-
-        // Placeholder text to show persistence of change between activity changes
- //       Log.w(TAG, "Creating fragment");
- //       String exisingtext = tweetTextView.getText().toString();
- //       Log.w(TAG, "Existing text: " + exisingtext);
- //       tweetTextView.setText("(23 mins)  Remember: no trains btwn Pearse and Dun Laoghaire today Sat 25th & tmrw Sun 26th Oct for line works.  Full info: http://t.co/sQBN9GrD3r");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -168,6 +133,12 @@ public class TwitterUpdateFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        tweetSwitchTimer.cancel();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -183,4 +154,41 @@ public class TwitterUpdateFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    private void scheduleTweetSwitching(){
+        tweetSwitchTimer = new Timer("tweet_switcher");
+        tweetSwitchTimer.scheduleAtFixedRate(
+                new TimerTask() {
+                    public void run() {
+                        getActivity().runOnUiThread( new Runnable(){
+
+                            @Override
+                            public void run() {
+                                if(currentTweet < (tweets.size() - 1)){
+                                    currentTweet++;
+                                }
+                                else{
+                                    // Refresh tweets when we're about to go back to start
+                                    refreshTweetList();
+                                    currentTweet = 0;
+                                }
+
+                                if(!tweets.isEmpty()) {
+                                    tweetTextView.setText(tweets.get(currentTweet).getText());
+                                }
+                                else{
+                                    tweetTextView.setText(getString(R.string.no_tweets));
+                                }
+                            }
+                        });
+                        //switch your text using either runOnUiThread() or sending alarm and receiving it in your gui thread
+                    }
+                }, 5000, 5000);
+    }
+
+    private void refreshTweetList(){
+        TweetsDataSource tds = new TweetsDataSource(getActivity());
+        tds.open();
+        tweets = tds.getAllTweets();
+        tds.close();
+    }
 }

@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.SQLException;
 import android.util.Log;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ie.markomeara.irelandtraintimes.twitter.Tweet;
 import twitter4j.Status;
@@ -26,11 +28,13 @@ public class TweetsDataSource {
     private String[] allColumns = { DBManager.COLUMN_ID, DBManager.COLUMN_TWEET_TEXT,
             DBManager.COLUMN_TWEET_CREATE_DATE, DBManager.COLUMN_TWEET_RT_COUNT};
 
+    private long oneDay = TimeUnit.DAYS.toMillis(1);
+
     public TweetsDataSource(Context context){
         dbManager = new DBManager(context);
     }
 
-    public void open() throws SQLException {
+    public void open() {
         db = dbManager.getWritableDatabase();
     }
 
@@ -42,19 +46,29 @@ public class TweetsDataSource {
 
         List<Tweet> tweets = new ArrayList<Tweet>();
 
+        Date tweetCutoffTime = new Date();
+        tweetCutoffTime.setTime(tweetCutoffTime.getTime() - oneDay);
+
+
         for(int i = 0; i < statuses.size(); i++){
 
             Status status = statuses.get(i);
-            if(isRelevantStatus(status)) {
+            Date createdDate = status.getCreatedAt();
+
+            if(isRelevantStatus(status) && createdDate.after(tweetCutoffTime)) {
                 long id = status.getId();
                 String text = status.getText();
-                String createDate = status.getCreatedAt().toString();
+                Date createDate = status.getCreatedAt();
                 int rtCount = status.getRetweetCount();
 
                 Tweet createdTweet = insertTweet(id, text, createDate, rtCount);
-                tweets.add(createdTweet);
+                if(createdTweet != null) {
+                    tweets.add(createdTweet);
+                }
             }
         }
+
+        purgeOldTweets(tweetCutoffTime);
 
         Log.d(TAG, "Returning created tweets");
         return tweets;
@@ -105,25 +119,28 @@ public class TweetsDataSource {
         return relevant;
     }
 
-    private Tweet insertTweet(long id, String text, String createDate, int rtCount){
+    private Tweet insertTweet(long id, String text, Date createDate, int rtCount){
 
+        Tweet newTweet = null;
         ContentValues values = new ContentValues();
         values.put(DBManager.COLUMN_ID, id);
         values.put(DBManager.COLUMN_TWEET_TEXT, text);
-        values.put(DBManager.COLUMN_TWEET_CREATE_DATE, createDate);
+        values.put(DBManager.COLUMN_TWEET_CREATE_DATE, createDate.getTime());
         values.put(DBManager.COLUMN_TWEET_RT_COUNT, rtCount);
 
-        // TODO Check that tweet isn't there already
-        db.insert(DBManager.TABLE_TWEETS, null, values);
-        Log.i(TAG, "Tweet created with id " + id);
+        try {
+            db.insertOrThrow(DBManager.TABLE_TWEETS, null, values);
+            Log.i(TAG, "Tweet created with id " + id);
 
-        Cursor cursor = db.query(DBManager.TABLE_TWEETS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
+            Cursor cursor = db.query(DBManager.TABLE_TWEETS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
 
-        cursor.moveToFirst();
-        Tweet newTweet = null;
-        if(!cursor.isAfterLast()) {
-            newTweet = cursorToTweet(cursor);
-            cursor.close();
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                newTweet = cursorToTweet(cursor);
+                cursor.close();
+            }
+        } catch(SQLiteConstraintException ex){
+            Log.i(TAG, ex.getMessage(), ex);
         }
         return newTweet;
     }
@@ -131,13 +148,18 @@ public class TweetsDataSource {
     private Tweet cursorToTweet(Cursor cursor){
         int id = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_ID));
         String text = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_TWEET_TEXT));
-        String createdAt = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_TWEET_CREATE_DATE));
+        long createdAt = cursor.getLong(cursor.getColumnIndex(DBManager.COLUMN_TWEET_CREATE_DATE));
         int rtCount = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_TWEET_RT_COUNT));
 
-        Tweet tweet = new Tweet(id, text, createdAt, rtCount);
+        Date createdAtDate = new Date(createdAt);
+        Tweet tweet = new Tweet(id, text, createdAtDate, rtCount);
 
         Log.i(TAG, "Returning tweet with id " + id);
         return tweet;
+    }
+
+    private void purgeOldTweets(Date cutoffTime){
+        db.delete(DBManager.TABLE_TWEETS, DBManager.COLUMN_TWEET_CREATE_DATE + "<" + cutoffTime.getTime(), null);
     }
 
 }

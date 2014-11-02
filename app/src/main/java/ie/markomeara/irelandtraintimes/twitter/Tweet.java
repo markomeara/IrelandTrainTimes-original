@@ -11,10 +11,10 @@ public class Tweet {
 
     private int id;
     private String text;
-    private String createdAt;
+    private Date createdAt;
     private int retweetCount;
 
-    public Tweet(int id, String text, String createdAt, int retweetCount){
+    public Tweet(int id, String text, Date createdAt, int retweetCount){
         this.id = id;
         this.text = text;
         this.createdAt = createdAt;
@@ -29,7 +29,7 @@ public class Tweet {
         return text;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 

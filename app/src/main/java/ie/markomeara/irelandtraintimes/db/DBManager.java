@@ -45,7 +45,7 @@ public class DBManager extends SQLiteOpenHelper {
     private static final String TABLE_TWEETS_CREATE = "create table "
             + TABLE_TWEETS + "(" + COLUMN_ID + " integer primary key, "
             + COLUMN_TWEET_TEXT + " text not null, "
-            + COLUMN_TWEET_CREATE_DATE + " text not null, "
+            + COLUMN_TWEET_CREATE_DATE + " integer not null, "
             + COLUMN_TWEET_RT_COUNT + " integer);";
 
     public DBManager(Context context){
