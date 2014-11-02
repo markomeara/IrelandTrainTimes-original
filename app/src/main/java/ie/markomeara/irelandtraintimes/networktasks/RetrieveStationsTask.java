@@ -19,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
 
 
 /**
@@ -52,15 +53,20 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
             // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
             if(stationsNodes.getLength() > 130) {
-//                StationsDataSource sds = new StationsDataSource(callingActivity);
                   StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
                 try{
-                    sds.open();
-                    sds.createStationsFromNodes(stationsNodes);
-                    sds.close();
-                }
-                catch(SQLException ex){
-                    ex.printStackTrace();
+                    if(sds != null) {
+                        sds.open();
+                        sds.createStationsFromNodes(stationsNodes);
+                        sds.close();
+                    }
+                } catch (SQLException ex) {
+                    Log.e(TAG, ex.toString(), ex);
+                } catch(DBNotAvailableException ex){
+                    Log.e(TAG, ex.toString(), ex);
+                } catch(NullPointerException ex){
+                    // TODO Figure out why nullpointexception thrown here on screen rotate
+                    Log.e(TAG, ex.toString(), ex);
                 }
             }
         }

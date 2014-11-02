@@ -1,6 +1,7 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.app.Fragment;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.Train;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
 import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
 
 /**
@@ -47,9 +49,10 @@ public class StationNextTrainsFragment extends Fragment {
                 sds.open();
                 displayedStation = sds.retrieveStationById(stationId);
                 sds.close();
-            }
-            catch(SQLException ex){
-                Log.e(TAG, ex.toString());
+            } catch (SQLException ex) {
+                Log.e(TAG, ex.toString(), ex);
+            } catch(DBNotAvailableException ex){
+                Log.e(TAG, ex.toString(), ex);
             }
         }
     }
@@ -58,6 +61,7 @@ public class StationNextTrainsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_station_next_trains, container, false);
     }

@@ -76,23 +76,19 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
             Iterator<String> iter = keys.iterator();
 
             TweetsDataSource tds = new TweetsDataSource(currentContext);
-            try {
-                tds.open();
-                tds.createRelevantTweets(statuses);
-                tds.close();
 
-                tds.open();
-                List<Tweet> ts = tds.getAllTweets();
-                for(int i = 0; i < ts.size(); i++){
-                   Log.w(TAG, "Tweet from DB: " + ts.get(i).getText());
-                }
-                tds.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            tds.open();
+            tds.createRelevantTweets(statuses);
+            tds.close();
+
+            tds.open();
+            List<Tweet> ts = tds.getAllTweets();
+            for (int i = 0; i < ts.size(); i++) {
+                Log.w(TAG, "Tweet from DB: " + ts.get(i).getText());
             }
-
-        } catch (TwitterException e) {
-            e.printStackTrace();
+            tds.close();
+        }catch(TwitterException ex){
+            Log.w(TAG, ex);
         }
 
 
@@ -124,8 +120,6 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
         catch(IOException ex){
             ex.printStackTrace();
         }*/
-
-
 
         return null;
     }

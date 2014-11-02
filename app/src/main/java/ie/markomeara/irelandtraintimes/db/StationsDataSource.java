@@ -3,6 +3,7 @@ package ie.markomeara.irelandtraintimes.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
 
 /**
  * Created by Mark on 19/10/2014.
@@ -33,8 +35,13 @@ public class StationsDataSource {
         dbManager = new DBManager(context);
     }
 
-    public void open() throws SQLException {
-        db = dbManager.getWritableDatabase();
+    public void open() throws SQLException, DBNotAvailableException {
+        if(dbManager != null) {
+            db = dbManager.getWritableDatabase();
+        }
+        else{
+            throw new DBNotAvailableException("dbManager has not been initialised");
+        }
     }
 
     public void close() {
@@ -46,6 +53,9 @@ public class StationsDataSource {
     }
 
     public Station createStation(int id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
+
+        Station newStation = null;
+
         ContentValues values = new ContentValues();
         values.put(DBManager.COLUMN_ID, id);
         values.put(DBManager.COLUMN_STN_NAME, name);
@@ -55,15 +65,18 @@ public class StationsDataSource {
         values.put(DBManager.COLUMN_STN_CODE, code);
         values.put(DBManager.COLUMN_STN_FAV, fav);
 
-        long entryId = db.insert(DBManager.TABLE_STATIONS, null, values);
-        Log.i(TAG, "Station created with id " + id);
-        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + entryId, null, null, null, null);
+        try {
+            long entryId = db.insertOrThrow(DBManager.TABLE_STATIONS, null, values);
+            Log.i(TAG, "Station created with id " + id);
+            Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + entryId, null, null, null, null);
 
-        Station newStation = null;
-        if(cursor.moveToFirst()){
-            newStation = cursorToStation(cursor);
+            if (cursor.moveToFirst()) {
+                newStation = cursorToStation(cursor);
+            }
+            cursor.close();
+        } catch(SQLiteConstraintException ex){
+            Log.i(TAG, ex.getMessage(), ex);
         }
-        cursor.close();
         return newStation;
     }
 
@@ -90,9 +103,7 @@ public class StationsDataSource {
                 if(createdStation != null) {
                     createdStationsList.add(createdStation);
                 }
-
             }
-
         }
         db.setTransactionSuccessful();
         db.endTransaction();
