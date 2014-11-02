@@ -1,0 +1,10 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tweetdisplayedTV"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:text="(No recent transport updates found)"
+    android:gravity="center"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp"
+    android:textColor="@color/tweettext"/>
