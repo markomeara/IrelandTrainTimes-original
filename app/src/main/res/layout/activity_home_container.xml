@@ -1,0 +1,21 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/mainfragment_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/twitterupdatefragment"
+        />
+
+    <fragment android:name="ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment"
+        android:id="@+id/twitterupdatefragment"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

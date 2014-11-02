@@ -48,7 +48,6 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setApplicationOnlyAuthEnabled(true);
         cb.setOAuthConsumerKey(SecretKeys.API_KEY);
@@ -57,7 +56,6 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
         Twitter twitter = tf.getInstance();
 
         try {
-
 
             twitter.getOAuth2Token();
             List<twitter4j.Status> statuses;

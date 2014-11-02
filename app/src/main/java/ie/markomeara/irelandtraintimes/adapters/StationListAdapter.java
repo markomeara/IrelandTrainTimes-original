@@ -21,7 +21,7 @@ public class StationListAdapter extends ArrayAdapter<Station> {
     private final List<Station> stations;
 
     public StationListAdapter(Context context, List<Station> stations) {
-        super(context, R.layout.stationlist_search, stations);
+        super(context, R.layout.list_stations, stations);
         this.context = context;
         this.stations = stations;
     }
@@ -30,7 +30,7 @@ public class StationListAdapter extends ArrayAdapter<Station> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.stationlist_search, parent, false);
+        View rowView = inflater.inflate(R.layout.list_stations, parent, false);
 
         TextView stationName = (TextView) rowView.findViewById(R.id.stationName);
         TextView distance = (TextView) rowView.findViewById(R.id.distance);

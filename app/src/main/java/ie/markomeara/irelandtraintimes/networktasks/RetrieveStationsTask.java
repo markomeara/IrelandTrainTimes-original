@@ -1,10 +1,7 @@
 package ie.markomeara.irelandtraintimes.networktasks;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -15,17 +12,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.activities.StationListActivity;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
-import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 
 
@@ -35,12 +27,14 @@ import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
     private final String allStationsAPI = "http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML";
-    private StationListActivity callingActivity;
+  //  private StationListActivity callingActivity;
+    private StationListFragment stationListFragment;
     // private StationListFragment stationListFragment;
 
-    public RetrieveStationsTask(StationListActivity activity){ this.callingActivity = activity; }
+    // TODO Remove this activity based constructor
+  //  public RetrieveStationsTask(StationListActivity activity){ this.callingActivity = activity; }
 
-  //  public RetrieveStationsTask(StationListFragment fragment){ this.stationListFragment = fragment; }
+    public RetrieveStationsTask(StationListFragment fragment){ this.stationListFragment = fragment; }
 
     @Override
     protected Boolean doInBackground(Boolean[] updateUIParam) {
@@ -56,8 +50,8 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
             // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
             if(stationsNodes.getLength() > 130) {
-                StationsDataSource sds = new StationsDataSource(callingActivity);
-                // StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
+//                StationsDataSource sds = new StationsDataSource(callingActivity);
+                  StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
                 try{
                     sds.open();
                     sds.createStationsFromNodes(stationsNodes);
@@ -86,13 +80,16 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     protected void onPostExecute(Boolean updateUIImmediately) {
         // If station list is being initialized for first time, then refresh UI immediately
         if(updateUIImmediately){
-            callingActivity.refreshStationListDisplay();
-           // stationListFragment.refreshStationListDisplay();
+            // callingActivity.refreshStationListDisplay();
+            stationListFragment.refreshStationListDisplay();
         }
         Log.i("Network Task", "Stations have been updated");
-        // Toast toast = Toast.makeText(stationListFragment.getActivity(), "Stations updated", Toast.LENGTH_SHORT);
-        Toast toast = Toast.makeText(callingActivity, "Stations updated", Toast.LENGTH_SHORT);
-        toast.show();
+        // TODO This returns null pointer exception if we've already changed activity
+        // .... but how can this be if it was passed updateUIImmediately (as this should only be passed
+        // when no stations are displayed?!?
+ //       Toast toast = Toast.makeText(stationListFragment.getActivity(), "Stations updated", Toast.LENGTH_SHORT);
+        // Toast toast = Toast.makeText(callingActivity, "Stations updated", Toast.LENGTH_SHORT);
+  //      toast.show();
     }
 
 

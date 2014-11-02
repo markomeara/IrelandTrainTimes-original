@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +31,8 @@ public class TwitterUpdateFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private static final String TAG = TwitterUpdateFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
@@ -72,9 +76,15 @@ public class TwitterUpdateFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
+        new TwitterTask(getActivity()).execute();
+
         TextView tweetTextView = (TextView)  getView().findViewById(R.id.tweetdisplayedTV);
         // Placeholder text to show persistence of change between activity changes
-        tweetTextView.setText("(23 mins)  Remember: no trains btwn Pearse and Dun Laoghaire today Sat 25th &amp; tmrw Sun 26th Oct for line works.  Full info: http://t.co/sQBN9GrD3r");
+        Log.w(TAG, "Creating fragment");
+        String exisingtext = tweetTextView.getText().toString();
+        Log.w(TAG, "Existing text: " + exisingtext);
+        tweetTextView.setText("(23 mins)  Remember: no trains btwn Pearse and Dun Laoghaire today Sat 25th & tmrw Sun 26th Oct for line works.  Full info: http://t.co/sQBN9GrD3r");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

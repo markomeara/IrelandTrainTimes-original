@@ -25,18 +25,17 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.Train;
+import ie.markomeara.irelandtraintimes.activities.fragments.StationNextTrainsFragment;
 
 /**
  * Created by Mark on 26/10/2014.
  */
 public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
-    private Context currentContext;
-    private TextView textView;
+    private StationNextTrainsFragment callingFragment;
 
-    public NextTrainsTask(Context c, TextView textView){
-        this.currentContext = c;
-        this.textView = textView;
+    public NextTrainsTask(StationNextTrainsFragment fragment){
+        this.callingFragment = fragment;
     }
 
     @Override
@@ -71,18 +70,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
     @Override
     protected void onPostExecute(List<Train> trainsDue) {
-
-        String trainsText = "";
-        if(trainsDue != null && trainsDue.size() > 0) {
-            for (int i = 0; i < trainsDue.size(); i++) {
-                Train train = trainsDue.get(i);
-                trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
-            }
-            textView.setText(trainsText);
-        }
-        else{
-            textView.setText("No trains found");
-        }
+        callingFragment.displayTimes(trainsDue);
     }
 
     /**
