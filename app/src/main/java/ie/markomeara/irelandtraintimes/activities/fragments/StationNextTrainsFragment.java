@@ -73,20 +73,24 @@ public class StationNextTrainsFragment extends Fragment {
         AsyncTask ntt = new NextTrainsTask(this).execute(displayedStation);
     }
 
-
+    // Called by NextTrainsTask
     public void displayTimes(List<Train> trainsDue){
         String trainsText = "";
-        TextView trainsDueTV = (TextView) getView().findViewById(R.id.trainsDue);
 
-        if(trainsDue != null && trainsDue.size() > 0) {
-            for (int i = 0; i < trainsDue.size(); i++) {
-                Train train = trainsDue.get(i);
-                trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
+        View activityView = getView();
+        if(activityView != null) {
+
+            TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue);
+
+            if (trainsDue != null && trainsDue.size() > 0) {
+                for (int i = 0; i < trainsDue.size(); i++) {
+                    Train train = trainsDue.get(i);
+                    trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
+                }
+                trainsDueTV.setText(trainsText);
+            } else {
+                trainsDueTV.setText("No trains found");
             }
-            trainsDueTV.setText(trainsText);
-        }
-        else{
-            trainsDueTV.setText("No trains found");
         }
     }
 }

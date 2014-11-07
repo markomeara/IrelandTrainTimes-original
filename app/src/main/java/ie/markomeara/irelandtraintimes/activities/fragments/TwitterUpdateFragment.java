@@ -42,7 +42,7 @@ public class TwitterUpdateFragment extends Fragment {
     private List<Tweet> tweets;
     private TextView tweetTextView;
     Timer tweetSwitchTimer;
-    private int currentTweet = 0;
+    private int currentTweet;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -101,8 +101,9 @@ public class TwitterUpdateFragment extends Fragment {
         tweets = tds.getAllTweets();
         tds.close();
 
+        currentTweet = 0;
         if(!tweets.isEmpty()) {
-            tweetTextView.setText(tweets.get(0).getText());
+            tweetTextView.setText(tweets.get(currentTweet).getText());
         }
 
         scheduleTweetSwitching();
