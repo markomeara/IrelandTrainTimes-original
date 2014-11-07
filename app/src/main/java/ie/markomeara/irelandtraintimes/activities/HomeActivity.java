@@ -1,11 +1,11 @@
 package ie.markomeara.irelandtraintimes.activities;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.AnimationUtils;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
@@ -26,9 +26,12 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_container);
 
-        FragmentTransaction ft  = getFragmentManager().beginTransaction();
-        ft.add(R.id.mainfragment_placeholder, new StationListFragment());
-        ft.commit();
+        FragmentManager fragMgr = getFragmentManager();
+        if(fragMgr.findFragmentById(R.id.mainfragment_placeholder) == null) {
+            FragmentTransaction ft = fragMgr.beginTransaction();
+            ft.add(R.id.mainfragment_placeholder, new StationListFragment());
+            ft.commit();
+        }
     }
 
     @Override
