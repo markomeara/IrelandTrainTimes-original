@@ -69,6 +69,7 @@ public class StationNextTrainsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getActivity().getActionBar().setTitle(displayedStation.getName());
 
         AsyncTask ntt = new NextTrainsTask(this).execute(displayedStation);
     }

@@ -64,6 +64,8 @@ public class StationListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getActivity().getActionBar().setTitle(R.string.app_name);
+
         stationSearchField_ET = (EditText) getView().findViewById(R.id.stationSearchField);
         stationListView = (ListView) getView().findViewById(R.id.stationlist);
         stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
