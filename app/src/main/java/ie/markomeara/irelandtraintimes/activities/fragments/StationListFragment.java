@@ -108,17 +108,13 @@ public class StationListFragment extends Fragment {
             stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id) {
-                    Station selectedStation = (Station) parent.getItemAtPosition(position);
-                    goToNextTrainsFragment(selectedStation);
+                    Station selectedStation = (Station) parent.getAdapter().getItem(position);
+                    listener.onStationSelectedListener(selectedStation);
                 }
             });
 
             stationsLoadingTV.setVisibility(View.GONE);
         }
-    }
-
-    private void goToNextTrainsFragment(Station station){
-        listener.onStationSelectedListener(station);
     }
 
     private void monitorStationNameInput(){

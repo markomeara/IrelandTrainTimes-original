@@ -46,6 +46,8 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Filtera
             rowView = inflater.inflate(R.layout.list_stations, parent, false);
         }
 
+        // TODO Use ViewHolder
+
         TextView stationName = (TextView) rowView.findViewById(R.id.stationName);
         TextView distance = (TextView) rowView.findViewById(R.id.distance);
 
@@ -68,7 +70,12 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Filtera
 
     @Override
     public int getCount(){
-        return this.filteredStations.size();
+       return this.filteredStations.size();
+    }
+
+    @Override
+    public Station getItem(int position){
+        return filteredStations.get(position);
     }
 
     private class StationListFilter extends Filter {
