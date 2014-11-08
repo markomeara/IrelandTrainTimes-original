@@ -89,7 +89,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
         // If station list is being initialized for first time, then refresh UI immediately
         if(updateUIImmediately){
             // callingActivity.refreshStationListDisplay();
-            stationListFragment.refreshStationListDisplay();
+            stationListFragment.initStationListDisplay();
         }
         Log.i(TAG, "Stations have been updated");
         // TODO This returns null pointer exception if we've already changed activity

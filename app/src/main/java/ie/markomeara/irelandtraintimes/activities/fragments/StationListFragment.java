@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -29,8 +33,11 @@ public class StationListFragment extends Fragment {
 
     private static final String TAG = StationListFragment.class.getSimpleName();
 
+    private EditText stationSearchField_ET;
     private ListView stationListView;
     private TextView stationsLoadingTV;
+    private List<Station> stationList = null;
+    private StationListAdapter stationListAdapter;
 
     private OnStationSelectedListener listener;
 
@@ -57,12 +64,15 @@ public class StationListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
+        stationSearchField_ET = (EditText) getView().findViewById(R.id.stationSearchField);
         stationListView = (ListView) getView().findViewById(R.id.stationlist);
         stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
+        stationListAdapter = new StationListAdapter(getActivity(), stationList);
 
         // TODO Figure out when stations should be refreshed... not that often obviously
-        refreshStationListDisplay();
+        initStationListDisplay();
+
+        monitorStationNameInput();
 
         // Updating stations from API
 
@@ -74,10 +84,8 @@ public class StationListFragment extends Fragment {
     }
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen
+    public void initStationListDisplay(){
 
-    public void refreshStationListDisplay(){
-
-        List<Station> stationList = null;
         StationsDataSource sds = new StationsDataSource(getActivity());
 
         // Retrieving stations from DB
@@ -92,7 +100,8 @@ public class StationListFragment extends Fragment {
         }
         if(!stationList.isEmpty()) {
 
-            stationListView.setAdapter(new StationListAdapter(getActivity(), stationList));
+            stationListAdapter = new StationListAdapter(getActivity(), stationList);
+            stationListView.setAdapter(stationListAdapter);
 
             stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -108,6 +117,23 @@ public class StationListFragment extends Fragment {
 
     private void goToNextTrainsFragment(Station station){
         listener.onStationSelectedListener(station);
+    }
+
+    private void monitorStationNameInput(){
+
+        TextWatcher stationSearchFieldListener = new TextWatcher(){
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void afterTextChanged(Editable s) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s != null) {
+                    stationListAdapter.getFilter().filter(s.toString());
+                }
+            }};
+
+        stationSearchField_ET.addTextChangedListener(stationSearchFieldListener);
+        stationListView.setTextFilterEnabled(true);
     }
 
     public interface OnStationSelectedListener {
