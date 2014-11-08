@@ -89,7 +89,7 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Filtera
 
                 for (Station stn : allStations) {
                     if (stn.getName().toUpperCase().contains(filterTerm.toString().toUpperCase())
-                            || stn.getAlias().contains(filterTerm.toString().toUpperCase()))
+                            || stn.getAlias().toUpperCase().contains(filterTerm.toString().toUpperCase()))
                         reducedStations.add(stn);
                 }
                 // TODO Sort stations so that those that start with search term appear first
