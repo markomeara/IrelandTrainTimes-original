@@ -1,7 +1,6 @@
-package ie.markomeara.irelandtraintimes.adapters;
+package ie.markomeara.irelandtraintimes.ListHelpers.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

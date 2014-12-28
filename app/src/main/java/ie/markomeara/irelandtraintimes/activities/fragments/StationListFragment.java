@@ -2,7 +2,6 @@ package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,14 +13,13 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.adapters.StationListAdapter;
+import ie.markomeara.irelandtraintimes.ListHelpers.adapters.StationListAdapter;
 import ie.markomeara.irelandtraintimes.db.StationsDataSource;
 import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
 import ie.markomeara.irelandtraintimes.networktasks.RetrieveStationsTask;

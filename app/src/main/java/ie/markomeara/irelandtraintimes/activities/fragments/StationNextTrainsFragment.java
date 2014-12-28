@@ -1,5 +1,6 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.sql.SQLException;
@@ -26,10 +29,10 @@ import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
 public class StationNextTrainsFragment extends Fragment {
 
     private static final String TAG = StationNextTrainsFragment.class.getSimpleName();
-
     private static final String STATION_PARAM = "stationId";
-
     private Station displayedStation;
+    private Activity parentActivity;
+    private LayoutInflater layoutInflater;
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -63,33 +66,46 @@ public class StationNextTrainsFragment extends Fragment {
 
         super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_station_next_trains, container, false);
+        layoutInflater = inflater;
+        return layoutInflater.inflate(R.layout.fragment_station_next_trains, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().getActionBar().setTitle(displayedStation.getName());
+        parentActivity = getActivity();
+        parentActivity.getActionBar().setTitle(displayedStation.getName());
 
         AsyncTask ntt = new NextTrainsTask(this).execute(displayedStation);
     }
 
     // Called by NextTrainsTask
     public void displayTimes(List<Train> trainsDue){
-        String trainsText = "";
+ //       String trainsText = "";
 
         View activityView = getView();
         if(activityView != null) {
 
-            TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue);
-
             if (trainsDue != null && trainsDue.size() > 0) {
                 for (int i = 0; i < trainsDue.size(); i++) {
                     Train train = trainsDue.get(i);
-                    trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
+
+                    RelativeLayout trainDueRow_RL = (RelativeLayout) layoutInflater.inflate(R.layout.list_trains_relative, null);
+
+                    LinearLayout trainsDueList_LL = (LinearLayout) parentActivity.findViewById(R.id.trainsDueInfo_LL);
+                    TextView trainDest = (TextView) trainDueRow_RL.findViewById(R.id.trainsdue_dest_TV);
+                    TextView trainDueMins = (TextView) trainDueRow_RL.findViewById(R.id.trainsdue_mins_TV);
+
+                    trainDest.setText(train.getDestination());
+                    trainDueMins.setText(Integer.toString(train.getDueIn()));
+
+                    trainsDueList_LL.addView(trainDueRow_RL);
+
+//                    trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
                 }
-                trainsDueTV.setText(trainsText);
+//                trainsDueTV.setText(trainsText);
             } else {
+                TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue);
                 trainsDueTV.setText("No trains found");
             }
         }
