@@ -16,29 +16,27 @@ public class Train {
     private String direction;
     private String trainType;
     private int dueIn;
-    private int late;
+    private int delayMins;
     private Date updateTime;
 
+    private String status;
+
+    private String schArrival;
+    private String expArrival;
+
+    // These will be 00:00 if train terminates at this station
+    private String schDepart;
+    private String expDepart;
+
+    private String destArrivalTime;
+    private String originTime;
+    private String trainDate;
     // Other options from API include: origintime, destinationtime, exparrival, expdepart, scharrival,
     // schdepart, desttime
 
     // No need to save train to DB as it doesn't need to persist, since it will go out of date pretty quickly
 
     public Train(){ }
-
-    public Train(String code, String origin, String dest, String latestInfo, String direction,
-                 String trainType, int dueIn, int late, Date updateTime){
-
-        this.trainCode = code;
-        this.origin = origin;
-        this.destination = dest;
-        this.latestInfo = latestInfo;
-        this.direction = direction;
-        this.trainType = trainType;
-        this.dueIn = dueIn;
-        this.updateTime = updateTime;
-
-    }
 
     public String getTrainCode() {
         return trainCode;
@@ -104,12 +102,75 @@ public class Train {
         this.dueIn = dueIn;
     }
 
-    public int getLate() {
-        return late;
+    public int getDelayMins() {
+        return delayMins;
     }
 
-    public void setLate(int late) {
-        this.late = late;
+    public void setDelayMins(int delayMins) {
+        this.delayMins = delayMins;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSchArrival() {
+        return schArrival;
+    }
+
+    public void setSchArrival(String schArrival) {
+        this.schArrival = schArrival;
+    }
+
+    public String getExpArrival() {
+        return expArrival;
+    }
+
+    public void setExpArrival(String expArrival) {
+        this.expArrival = expArrival;
+    }
+
+    public String getSchDepart() {
+        return schDepart;
+    }
+
+    public void setSchDepart(String schDepart) {
+        this.schDepart = schDepart;
+    }
+
+    public String getExpDepart() {
+        return expDepart;
+    }
+
+    public void setExpDepart(String expDepart) {
+        this.expDepart = expDepart;
+    }
+
+    public String getDestArrivalTime() {
+        return destArrivalTime;
+    }
+
+    public void setDestArrivalTime(String destArrivalTime) {
+        this.destArrivalTime = destArrivalTime;
+    }
+
+    public String getOriginTime() {
+        return originTime;
+    }
+
+    public void setOriginTime(String originTime) {
+        this.originTime = originTime;
+    }
+
+    public String getTrainDate() {
+        return trainDate;
+    }
+
+    public void setTrainDate(String trainDate) {
+        this.trainDate = trainDate;
+    }
 }

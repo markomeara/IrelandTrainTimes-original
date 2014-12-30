@@ -21,10 +21,11 @@
         android:id="@+id/trainsDueInfo_LL">
 
         <TextView
-            android:id="@+id/trainsDue"
+            android:id="@+id/trainsDue_loading_TV"
             android:text="@string/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 

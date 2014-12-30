@@ -2,7 +2,6 @@ package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
@@ -33,6 +33,7 @@ public class StationNextTrainsFragment extends Fragment {
     private Station displayedStation;
     private Activity parentActivity;
     private LayoutInflater layoutInflater;
+    private View activityView;
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -81,33 +82,71 @@ public class StationNextTrainsFragment extends Fragment {
 
     // Called by NextTrainsTask
     public void displayTimes(List<Train> trainsDue){
- //       String trainsText = "";
 
+        // TODO Move setting activity view to oncreate/onresume
         View activityView = getView();
         if(activityView != null) {
 
-            if (trainsDue != null && trainsDue.size() > 0) {
+            if (trainsDue != null && !trainsDue.isEmpty()) {
+
+
                 for (int i = 0; i < trainsDue.size(); i++) {
                     Train train = trainsDue.get(i);
 
-                    RelativeLayout trainDueRow_RL = (RelativeLayout) layoutInflater.inflate(R.layout.list_trains_relative, null);
-
                     LinearLayout trainsDueList_LL = (LinearLayout) parentActivity.findViewById(R.id.trainsDueInfo_LL);
-                    TextView trainDest = (TextView) trainDueRow_RL.findViewById(R.id.trainsdue_dest_TV);
-                    TextView trainDueMins = (TextView) trainDueRow_RL.findViewById(R.id.trainsdue_mins_TV);
+                    RelativeLayout trainDueRow_RL = (RelativeLayout) layoutInflater.inflate(R.layout.list_trains_relative, trainsDueList_LL, false);
 
-                    trainDest.setText(train.getDestination());
-                    trainDueMins.setText(Integer.toString(train.getDueIn()));
 
+                    TextView trainDest_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_dest_TV);
+                    TextView trainDueMins_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_mins_TV);
+                    TextView trainDueTime_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_time_TV);
+                    TextView trainDelayMins_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_delay_TV);
+
+                    trainDest_TV.setText(train.getDestination());
+                    trainDueMins_TV.setText(Integer.toString(train.getDueIn()));
+                    trainDueTime_TV.setText(train.getExpDepart());
+
+                    int delayMins = train.getDelayMins();
+
+                    StringBuilder delayMinsDisplay = new StringBuilder();
+
+                    if(delayMins != 0){
+                        String sign = "";
+                        // Negative delay will already have a minus sign from API
+                        if(delayMins > 0){
+                            sign = "+";
+                        }
+                        delayMinsDisplay.append("(");
+                        delayMinsDisplay.append(sign);
+                        delayMinsDisplay.append(delayMins);
+                        delayMinsDisplay.append(")");
+                    }
+
+                    trainDelayMins_TV.setText(delayMinsDisplay.toString() + " mins");
                     trainsDueList_LL.addView(trainDueRow_RL);
 
-//                    trainsText += train.getDueIn() + " " + train.getDestination() + " (" + train.getDirection() + ")\n";
                 }
-//                trainsDueTV.setText(trainsText);
+                hideInfoMessage();
             } else {
-                TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue);
-                trainsDueTV.setText("No trains found");
+                showNoResultsMessage();
             }
         }
+    }
+
+    private void hideInfoMessage(){
+        // TODO Move setting activity view to oncreate/onresume
+        View activityView = getView();
+        if(activityView != null){
+            View loadingMsg = activityView.findViewById(R.id.trainsDue_loading_TV);
+            loadingMsg.setVisibility(View.GONE);
+        }
+    }
+
+    private void showNoResultsMessage(){
+        // TODO Move setting activity view to oncreate/onresume
+        View activityView = getView();
+        TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue_loading_TV);
+        trainsDueTV.setText("No trains found");
+        trainsDueTV.setVisibility(View.VISIBLE);
     }
 }

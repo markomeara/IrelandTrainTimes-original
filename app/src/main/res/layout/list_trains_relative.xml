@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/traindue_RL"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:paddingLeft="10dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:id="@+id/traindue_RL"
     android:background="@drawable/stationsearchitem_bg">
 
     <TextView
+        android:id="@+id/traindue_dest_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="Dublin Connolly"
-        android:id="@+id/trainsdue_dest_TV"
         />
 
     <TextView
+        android:id="@+id/traindue_mins_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="38 mins"
-        android:id="@+id/trainsdue_mins_TV"
-        android:layout_alignBottom="@+id/reminderButton"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp" />
 
     <TextView
+        android:id="@+id/traindue_time_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="22:14"
         android:layout_marginRight="10dp"
-        android:id="@+id/trainsdue_time_TV"
-        android:layout_toLeftOf="@+id/trainsdue_delay_TV"
+        android:layout_toLeftOf="@+id/traindue_delay_TV"
         android:layout_alignBottom="@+id/reminderButton"/>
 
     <TextView
+        android:id="@+id/traindue_delay_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="(+6)"
         android:layout_marginRight="20dp"
-        android:id="@+id/trainsdue_delay_TV"
         android:layout_toLeftOf="@+id/reminderButton"
         android:layout_alignBottom="@+id/reminderButton"
         />
@@ -50,9 +51,11 @@
         android:background="@color/twitterblue" />
 
     <ImageButton
+        android:id="@+id/reminderButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/reminderButton"
         android:background="@color/twitterblue"
-        android:layout_alignParentRight="true"/>
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

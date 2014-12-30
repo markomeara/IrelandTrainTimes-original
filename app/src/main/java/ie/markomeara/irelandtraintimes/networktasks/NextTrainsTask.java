@@ -1,9 +1,7 @@
 package ie.markomeara.irelandtraintimes.networktasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,7 +78,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
      * @param trainsNodes
      * @return
      */
-    private List<Train> createTrainsFromNodesExclStation(NodeList trainsNodes, Station station) {
+    private List<Train> createTrainsFromNodesExclStation(NodeList trainsNodes, Station selectedStation) {
 
         List<Train> trains = new ArrayList<Train>();
 
@@ -93,20 +91,10 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
                 // TODO A load of null checks
                 // TODO Use constants for element names
                 String dest = trainElem.getElementsByTagName("Destination").item(0).getTextContent();
-                if(!dest.equals(station.getName())) {
-                    String code = trainElem.getElementsByTagName("Traincode").item(0).getTextContent();
-                    String origin = trainElem.getElementsByTagName("Origin").item(0).getTextContent();
-                    String latestInfo = trainElem.getElementsByTagName("Lastlocation").item(0).getTextContent();
-                    String direction = trainElem.getElementsByTagName("Direction").item(0).getTextContent();
-                    String trainType = trainElem.getElementsByTagName("Traintype").item(0).getTextContent();
-                    int dueIn = Integer.parseInt(trainElem.getElementsByTagName("Duein").item(0).getTextContent());
-                    int late = Integer.parseInt(trainElem.getElementsByTagName("Late").item(0).getTextContent());
+                if(!dest.equals(selectedStation.getName())) {
 
-                    // Just using phone time instead of API update time to avoid parsing and comparison problems etc
-                    Date updateTime = new Date();
-
-                    Train createdTrain = new Train(code, origin, dest, latestInfo, direction, trainType, dueIn, late, updateTime);
-
+                    Train createdTrain = new Train();
+                    populateTrainFromXml(createdTrain, trainElem);
                     // TODO Exclude trains that terminate at the station displayed
                     trains.add(createdTrain);
                 }
@@ -116,5 +104,45 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
         return trains;
     }
 
+    private void populateTrainFromXml(Train train, Element trainElem){
+        String code = trainElem.getElementsByTagName("Traincode").item(0).getTextContent();
+        String destination = trainElem.getElementsByTagName("Destination").item(0).getTextContent();
+        String origin = trainElem.getElementsByTagName("Origin").item(0).getTextContent();
+        String latestInfo = trainElem.getElementsByTagName("Lastlocation").item(0).getTextContent();
+        String direction = trainElem.getElementsByTagName("Direction").item(0).getTextContent();
+        String trainType = trainElem.getElementsByTagName("Traintype").item(0).getTextContent();
+        int dueIn = Integer.parseInt(trainElem.getElementsByTagName("Duein").item(0).getTextContent());
+        int late = Integer.parseInt(trainElem.getElementsByTagName("Late").item(0).getTextContent());
+        String status = trainElem.getElementsByTagName("Status").item(0).getTextContent();
+        String expArrivalTime = trainElem.getElementsByTagName("Exparrival").item(0).getTextContent();
+        String expDepartTime = trainElem.getElementsByTagName("Expdepart").item(0).getTextContent();
+        String schArrivalTime = trainElem.getElementsByTagName("Scharrival").item(0).getTextContent();
+        String schDepartTime = trainElem.getElementsByTagName("Schdepart").item(0).getTextContent();
 
+        String destExpArrivalTime = trainElem.getElementsByTagName("Destinationtime").item(0).getTextContent();
+        String originTime = trainElem.getElementsByTagName("Origintime").item(0).getTextContent();
+        String trainDate = trainElem.getElementsByTagName("Traindate").item(0).getTextContent();
+
+        // Using phone time instead of API update time to avoid parsing and comparison problems etc
+        Date updateTime = new Date();
+
+        train.setTrainCode(code);
+        train.setDestination(destination);
+        train.setOrigin(origin);
+        train.setLatestInfo(latestInfo);
+        train.setDirection(direction);
+        train.setTrainType(trainType);
+        train.setDueIn(dueIn);
+        train.setDelayMins(late);
+        train.setStatus(status);
+        train.setExpArrival(expArrivalTime);
+        train.setExpDepart(expDepartTime);
+        train.setSchArrival(schArrivalTime);
+        train.setSchDepart(schDepartTime);
+        train.setDestArrivalTime(destExpArrivalTime);
+        train.setOriginTime(originTime);
+        train.setTrainDate(trainDate);
+        train.setUpdateTime(updateTime);
+
+    }
 }
