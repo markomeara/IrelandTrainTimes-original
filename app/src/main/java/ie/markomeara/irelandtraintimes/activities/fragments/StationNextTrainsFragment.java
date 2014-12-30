@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -89,13 +91,20 @@ public class StationNextTrainsFragment extends Fragment {
 
             if (trainsDue != null && !trainsDue.isEmpty()) {
 
+                // Sort trains by direction, then by due time
+                Collections.sort(trainsDue);
+                LinearLayout trainsDueList_LL = (LinearLayout) parentActivity.findViewById(R.id.trainsDueInfo_LL);
+                String directionBeingShown = "";
 
                 for (int i = 0; i < trainsDue.size(); i++) {
                     Train train = trainsDue.get(i);
 
-                    LinearLayout trainsDueList_LL = (LinearLayout) parentActivity.findViewById(R.id.trainsDueInfo_LL);
-                    RelativeLayout trainDueRow_RL = (RelativeLayout) layoutInflater.inflate(R.layout.list_trains_relative, trainsDueList_LL, false);
+                    if(!train.getDirection().equals(directionBeingShown)){
+                        appendDirectionHeading(trainsDueList_LL, train.getDirection());
+                        directionBeingShown = train.getDirection();
+                    }
 
+                    RelativeLayout trainDueRow_RL = (RelativeLayout) layoutInflater.inflate(R.layout.list_trains_relative, trainsDueList_LL, false);
 
                     TextView trainDest_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_dest_TV);
                     TextView trainDueMins_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_mins_TV);
@@ -103,7 +112,7 @@ public class StationNextTrainsFragment extends Fragment {
                     TextView trainDelayMins_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_delay_TV);
 
                     trainDest_TV.setText(train.getDestination());
-                    trainDueMins_TV.setText(Integer.toString(train.getDueIn()));
+                    trainDueMins_TV.setText(Integer.toString(train.getDueIn()) + " mins");
                     trainDueTime_TV.setText(train.getExpDepart());
 
                     int delayMins = train.getDelayMins();
@@ -122,7 +131,7 @@ public class StationNextTrainsFragment extends Fragment {
                         delayMinsDisplay.append(")");
                     }
 
-                    trainDelayMins_TV.setText(delayMinsDisplay.toString() + " mins");
+                    trainDelayMins_TV.setText(delayMinsDisplay.toString());
                     trainsDueList_LL.addView(trainDueRow_RL);
 
                 }
@@ -131,6 +140,13 @@ public class StationNextTrainsFragment extends Fragment {
                 showNoResultsMessage();
             }
         }
+    }
+
+    private void appendDirectionHeading(LinearLayout parentView, String direction){
+        LinearLayout heading_LL = (LinearLayout) layoutInflater.inflate(R.layout.direction_heading, parentView, false);
+        TextView direction_TV = (TextView) heading_LL.findViewById(R.id.directionHeading_TV);
+        direction_TV.setText(direction);
+        parentView.addView(heading_LL);
     }
 
     private void hideInfoMessage(){
