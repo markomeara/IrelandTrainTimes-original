@@ -9,15 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ie.markomeara.irelandtraintimes.ListHelpers.TrainListHeader;
+import ie.markomeara.irelandtraintimes.ListHelpers.adapters.TrainsDueListAdapter;
+import ie.markomeara.irelandtraintimes.ListHelpers.interfaces.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.Train;
@@ -93,48 +95,31 @@ public class StationNextTrainsFragment extends Fragment {
 
                 // Sort trains by direction, then by due time
                 Collections.sort(trainsDue);
-                LinearLayout trainsDueList_LL = (LinearLayout) parentActivity.findViewById(R.id.trainsDueInfo_LL);
-                String directionBeingShown = "";
+
+                // TrainListItems can be a train OR a direction heading
+                List<TrainListItem> trainListItems = new ArrayList<TrainListItem>();
+
+                String latestTrainDirectionHeading = "";
 
                 for (int i = 0; i < trainsDue.size(); i++) {
                     Train train = trainsDue.get(i);
 
-                    if(!train.getDirection().equals(directionBeingShown)){
-                        appendDirectionHeading(trainsDueList_LL, train.getDirection());
-                        directionBeingShown = train.getDirection();
+                    String nextTrainDirection = train.getDirection();
+                    if(!nextTrainDirection.equals(latestTrainDirectionHeading)){
+                        TrainListHeader directionHeader = new TrainListHeader(nextTrainDirection);
+                        trainListItems.add(directionHeader);
+                        latestTrainDirectionHeading = nextTrainDirection;
                     }
 
-                    RelativeLayout trainDueRow_RL = (RelativeLayout) layoutInflater.inflate(R.layout.list_trains_relative, trainsDueList_LL, false);
-
-                    TextView trainDest_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_dest_TV);
-                    TextView trainDueMins_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_mins_TV);
-                    TextView trainDueTime_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_time_TV);
-                    TextView trainDelayMins_TV = (TextView) trainDueRow_RL.findViewById(R.id.traindue_delay_TV);
-
-                    trainDest_TV.setText(train.getDestination());
-                    trainDueMins_TV.setText(Integer.toString(train.getDueIn()) + " mins");
-                    trainDueTime_TV.setText(train.getExpDepart());
-
-                    int delayMins = train.getDelayMins();
-
-                    StringBuilder delayMinsDisplay = new StringBuilder();
-
-                    if(delayMins != 0){
-                        String sign = "";
-                        // Negative delay will already have a minus sign from API
-                        if(delayMins > 0){
-                            sign = "+";
-                        }
-                        delayMinsDisplay.append("(");
-                        delayMinsDisplay.append(sign);
-                        delayMinsDisplay.append(delayMins);
-                        delayMinsDisplay.append(")");
-                    }
-
-                    trainDelayMins_TV.setText(delayMinsDisplay.toString());
-                    trainsDueList_LL.addView(trainDueRow_RL);
+                    trainListItems.add(trainsDue.get(i));
 
                 }
+
+                ListView trainsDueList = (ListView) activityView.findViewById(R.id.trainsDueAtStation_LV);
+                TrainsDueListAdapter trainsListAdapter = new TrainsDueListAdapter(getActivity(), trainListItems);
+
+                // Item click listener & reminder button click listener are set in adapter
+                trainsDueList.setAdapter(trainsListAdapter);
                 hideInfoMessage();
             } else {
                 showNoResultsMessage();

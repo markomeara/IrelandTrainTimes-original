@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/traindue_RL"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/stationsearchitem_bg">
+
+    <RelativeLayout
+        android:id="@+id/traindue_detailscontainer_RL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp"
+        android:layout_toLeftOf="@+id/reminderButton">
+
+        <TextView
+            android:id="@+id/traindue_dest_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="Dublin Connolly"
+            />
+
+        <TextView
+            android:id="@+id/traindue_mins_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="38 mins"
+            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@+id/traindue_delay_TV"/>
+
+        <TextView
+            android:id="@+id/traindue_time_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22:14"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/traindue_delay_TV"
+            android:layout_alignBottom="@+id/traindue_delay_TV"/>
+
+        <TextView
+            android:id="@+id/traindue_delay_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(+6)"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="5dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@+id/reminderButton"
+        android:layout_marginRight="10dp"
+        android:background="@color/irishrailgreen" />
+
+    <ImageButton
+        android:id="@+id/reminderButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/twitterblue"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

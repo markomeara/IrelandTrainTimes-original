@@ -2,10 +2,13 @@ package ie.markomeara.irelandtraintimes;
 
 import java.util.Date;
 
+import ie.markomeara.irelandtraintimes.ListHelpers.adapters.TrainsDueListAdapter;
+import ie.markomeara.irelandtraintimes.ListHelpers.interfaces.TrainListItem;
+
 /**
  * Created by Mark on 26/10/2014.
  */
-public class Train implements Comparable<Train> {
+public class Train implements Comparable<Train>, TrainListItem {
 
     private static final String TAG = Train.class.getSimpleName();
 
@@ -46,6 +49,10 @@ public class Train implements Comparable<Train> {
         else{
             return this.destination.compareTo(other.getDestination());
         }
+    }
+
+    public int getListViewType(){
+        return TrainsDueListAdapter.RowType.TRAIN.ordinal();
     }
 
     public String getTrainCode() {
