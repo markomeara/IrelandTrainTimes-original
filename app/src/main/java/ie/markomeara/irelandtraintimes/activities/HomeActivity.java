@@ -9,17 +9,23 @@ import android.util.Log;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.Train;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationNextTrainsFragment;
+import ie.markomeara.irelandtraintimes.activities.fragments.TrainDetailsFragment;
 import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment;
 
 /**
  * Created by Mark on 02/11/2014.
  */
 public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener,
-        StationListFragment.OnStationSelectedListener {
+        StationListFragment.OnStationSelectedListener, StationNextTrainsFragment.OnTrainSelectedListener {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+
+    // TODO Fragments should never communicate directly
+    // Change implementation so Activity handles comms and fragment changing
+    // See http://developer.android.com/training/basics/fragments/communicating.html
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +46,18 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
     }
 
     @Override
-    public void onStationSelectedListener(Station station) {
-        Log.w(TAG, "Clicked: " + station.getName());
+    public void onStationSelected(Station station) {
+        Log.i(TAG, "Clicked: " + station.getName());
         FragmentTransaction ft  = getFragmentManager().beginTransaction();
         ft.replace(R.id.mainfragment_placeholder, StationNextTrainsFragment.newInstance(station));
+        ft.addToBackStack(TAG);
+        ft.commit();
+    }
+
+    @Override
+    public void onTrainSelected(Train train){
+        FragmentTransaction ft  = getFragmentManager().beginTransaction();
+        ft.replace(R.id.mainfragment_placeholder, TrainDetailsFragment.newInstance(train));
         ft.addToBackStack(TAG);
         ft.commit();
     }

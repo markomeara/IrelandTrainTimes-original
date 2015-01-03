@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:background="#CC00CC00">
 
     <TextView
-        android:id="@+id/trainsDueListHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:text="Northbound"
-        android:gravity="center_horizontal"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:textStyle="bold"
-        android:background="@android:color/white" />
+        android:textColor="#FFFFFF"
+        android:text="TEST TEST TEST"/>
 
 </LinearLayout>

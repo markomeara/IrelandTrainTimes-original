@@ -94,10 +94,13 @@ public class StationsDataSource {
                 // TODO A shitload of null checks
                 int stationId = Integer.parseInt(stationElem.getElementsByTagName("StationId").item(0).getTextContent());
                 String stationName = stationElem.getElementsByTagName("StationDesc").item(0).getTextContent();
+                stationName = stationName.trim();
                 String stationAlias = stationElem.getElementsByTagName("StationAlias").item(0).getTextContent();
+                stationAlias = stationAlias.trim();
                 double stationLat = Double.parseDouble(stationElem.getElementsByTagName("StationLatitude").item(0).getTextContent());
                 double stationLong = Double.parseDouble(stationElem.getElementsByTagName("StationLongitude").item(0).getTextContent());
                 String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
+                stationCode = stationCode.trim();
 
                 Station createdStation = createStation(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
                 if(createdStation != null) {

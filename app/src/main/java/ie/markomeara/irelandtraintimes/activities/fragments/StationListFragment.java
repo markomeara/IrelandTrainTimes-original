@@ -107,7 +107,7 @@ public class StationListFragment extends Fragment {
 
                 public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id) {
                     Station selectedStation = (Station) parent.getAdapter().getItem(position);
-                    listener.onStationSelectedListener(selectedStation);
+                    listener.onStationSelected(selectedStation);
                 }
             });
 
@@ -133,7 +133,7 @@ public class StationListFragment extends Fragment {
     }
 
     public interface OnStationSelectedListener {
-        public void onStationSelectedListener(Station station);
+        public void onStationSelected(Station station);
     }
 
 }

@@ -36,8 +36,8 @@ public class StationNextTrainsFragment extends Fragment {
     private static final String STATION_PARAM = "stationId";
     private Station displayedStation;
     private Activity parentActivity;
+    private OnTrainSelectedListener onTrainSelectedListener;
     private LayoutInflater layoutInflater;
-    private View activityView;
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -82,6 +82,12 @@ public class StationNextTrainsFragment extends Fragment {
         parentActivity.getActionBar().setTitle(displayedStation.getName());
 
         AsyncTask ntt = new NextTrainsTask(this).execute(displayedStation);
+        if(parentActivity instanceof OnTrainSelectedListener){
+            onTrainSelectedListener = (OnTrainSelectedListener) parentActivity;
+        }
+        else{
+            Log.e(TAG, "Parent activity is not instance of OnTrainSelectedListener");
+        }
     }
 
     // Called by NextTrainsTask
@@ -117,6 +123,7 @@ public class StationNextTrainsFragment extends Fragment {
 
                 ListView trainsDueList = (ListView) activityView.findViewById(R.id.trainsDueAtStation_LV);
                 TrainsDueListAdapter trainsListAdapter = new TrainsDueListAdapter(getActivity(), trainListItems);
+                setOnClickListeners(trainsListAdapter);
 
                 // Item click listener & reminder button click listener are set in adapter
                 trainsDueList.setAdapter(trainsListAdapter);
@@ -125,13 +132,6 @@ public class StationNextTrainsFragment extends Fragment {
                 showNoResultsMessage();
             }
         }
-    }
-
-    private void appendDirectionHeading(LinearLayout parentView, String direction){
-        LinearLayout heading_LL = (LinearLayout) layoutInflater.inflate(R.layout.direction_heading, parentView, false);
-        TextView direction_TV = (TextView) heading_LL.findViewById(R.id.directionHeading_TV);
-        direction_TV.setText(direction);
-        parentView.addView(heading_LL);
     }
 
     private void hideInfoMessage(){
@@ -149,5 +149,24 @@ public class StationNextTrainsFragment extends Fragment {
         TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue_loading_TV);
         trainsDueTV.setText("No trains found");
         trainsDueTV.setVisibility(View.VISIBLE);
+    }
+
+    private void setOnClickListeners(TrainsDueListAdapter adapter){
+        adapter.setTrainDetailsOnClickListener(new TrainsDueListAdapter.OnClickListener() {
+            @Override
+            public void onClick(Train train) {
+                onTrainSelectedListener.onTrainSelected(train);
+            }
+        });
+        adapter.setReminderButtonOnClickListener(new TrainsDueListAdapter.OnClickListener(){
+            @Override
+            public void onClick(Train train) {
+                Log.e(TAG, "Reminder button: " + train.getDestination());
+            }
+        });
+    }
+
+    public interface OnTrainSelectedListener{
+        public void onTrainSelected(Train train);
     }
 }

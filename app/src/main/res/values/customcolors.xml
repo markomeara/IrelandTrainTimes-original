@@ -3,4 +3,7 @@
     <color name="twitterblue">#55ACEE</color>
     <color name="tweettext">#ffffff</color>
     <color name="irishrailgreen">#4c882f</color>
+    <color name="minordelay">#FFA500</color>
+    <color name="majordelay">#FF0000</color>
+    <color name="ontime">#00FF00</color>
 </resources>

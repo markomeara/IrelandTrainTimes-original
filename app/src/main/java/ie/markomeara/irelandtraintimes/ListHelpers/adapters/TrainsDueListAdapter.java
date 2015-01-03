@@ -1,5 +1,7 @@
 package ie.markomeara.irelandtraintimes.ListHelpers.adapters;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -25,21 +26,24 @@ public class TrainsDueListAdapter extends ArrayAdapter<TrainListItem> {
     private static final String TAG = TrainsDueListAdapter.class.getSimpleName();
 
     private LayoutInflater inflater;
+    private Activity callingActivity;
+
+    private OnClickListener trainDetailsOnClickListener;
+    private OnClickListener reminderButtonOnClickListener;
 
     public enum RowType {
         TRAIN, HEADER
     }
 
-
-    public TrainsDueListAdapter(Context context, List<TrainListItem> trains) {
-        super(context, 0, trains);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public TrainsDueListAdapter(Activity activity, List<TrainListItem> trains) {
+        super(activity, 0, trains);
+        this.callingActivity = activity;
+        inflater = (LayoutInflater) callingActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getViewTypeCount() {
         return RowType.values().length;
-
     }
 
     @Override
@@ -82,19 +86,23 @@ public class TrainsDueListAdapter extends ArrayAdapter<TrainListItem> {
         TextView trainDelayMins_TV = (TextView) trainDetailsView.findViewById(R.id.traindue_delay_TV);
         ImageButton reminderBtn = (ImageButton) trainDetailsView.findViewById(R.id.reminderButton);
 
-        detailsContainer.setOnClickListener(new ListView.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "Show details for: " + train.getDestination());
-            }
-        });
+        if(trainDetailsOnClickListener != null) {
+            detailsContainer.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    trainDetailsOnClickListener.onClick(train);
+                }
+            });
+        }
 
-        reminderBtn.setOnClickListener(new ListView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "Reminder button: " + train.getDestination());
-            }
-        });
+        if(reminderButtonOnClickListener != null){
+            reminderBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reminderButtonOnClickListener.onClick(train);
+                }
+            });
+        }
 
         trainDest_TV.setText(train.getDestination());
         trainDueMins_TV.setText(Integer.toString(train.getDueIn()) + " mins");
@@ -118,10 +126,34 @@ public class TrainsDueListAdapter extends ArrayAdapter<TrainListItem> {
 
         trainDelayMins_TV.setText(delayMinsDisplay.toString());
 
+        if(delayMins < 0){
+            int earlyColorId = getContext().getResources().getColor(R.color.irishrailgreen);
+            trainDueMins_TV.setTextColor(earlyColorId);
+            trainDelayMins_TV.setTextColor(earlyColorId);
+        }
+        else if(delayMins > 0 &&  delayMins < Train.MAJORDELAY_MINS){
+            int minorDelayColorId = getContext().getResources().getColor(R.color.minordelay);
+            trainDueMins_TV.setTextColor(minorDelayColorId);
+            trainDelayMins_TV.setTextColor(minorDelayColorId);
+        }
+        else if(delayMins >= Train.MAJORDELAY_MINS){
+            int majorDelayColorId = getContext().getResources().getColor(R.color.majordelay);
+            trainDueMins_TV.setTextColor(majorDelayColorId);
+            trainDelayMins_TV.setTextColor(majorDelayColorId);
+        }
+
         return trainDetailsView;
     }
 
-    private void reminderClicked(View v){
+    public void setTrainDetailsOnClickListener(OnClickListener onClickListener){
+        this.trainDetailsOnClickListener = onClickListener;
+    }
 
+    public void setReminderButtonOnClickListener(OnClickListener onClickListener){
+        this.reminderButtonOnClickListener = onClickListener;
+    }
+
+    public interface OnClickListener{
+        public void onClick(Train train);
     }
 }
