@@ -145,7 +145,7 @@ public class TweetsDataSource {
     }
 
     private Tweet cursorToTweet(Cursor cursor){
-        int id = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_ID));
+        long id = cursor.getLong(cursor.getColumnIndex(DBManager.COLUMN_ID));
         String text = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_TWEET_TEXT));
         long createdAt = cursor.getLong(cursor.getColumnIndex(DBManager.COLUMN_TWEET_CREATE_DATE));
         int rtCount = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_TWEET_RT_COUNT));
