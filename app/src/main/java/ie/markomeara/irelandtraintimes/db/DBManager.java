@@ -58,6 +58,8 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(TABLE_TWEETS_CREATE);
     }
 
+
+    // TODO Valid upgrade process to copy data over
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG,

@@ -28,6 +28,7 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
     private static final String TAG = TwitterTask.class.getSimpleName();
 
     private Context currentContext;
+    private static final long IRISH_RAIL_TWITTER_ID = 15115986;
 
     public TwitterTask(Context c){
         this.currentContext = c;
@@ -54,7 +55,7 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
             boolean includeReplies = false;
             boolean includeRTs = false;
-            statuses = twitter.getUserTimeline(15115986, page, includeReplies, includeRTs);
+            statuses = twitter.getUserTimeline(IRISH_RAIL_TWITTER_ID, page, includeReplies, includeRTs);
 
             Map<String, RateLimitStatus> limits = twitter.getRateLimitStatus();
 
@@ -67,12 +68,6 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
             tds.createRelevantTweets(statuses);
             tds.close();
 
-            tds.open();
-            List<Tweet> ts = tds.getAllTweets();
-            for (int i = 0; i < ts.size(); i++) {
-                Log.w(TAG, "Tweet from DB: " + ts.get(i).getText());
-            }
-            tds.close();
         }catch(TwitterException ex){
             Log.w(TAG, ex);
         }
