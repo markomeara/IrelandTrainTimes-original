@@ -1,5 +1,6 @@
 package ie.markomeara.irelandtraintimes.twitter;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -9,19 +10,20 @@ public class Tweet {
 
     private static final String TAG = Tweet.class.getSimpleName();
 
-    private int id;
+    // TODO Use something bigger than int for id, and in DB table too
+    private long id;
     private String text;
     private Date createdAt;
     private int retweetCount;
 
-    public Tweet(int id, String text, Date createdAt, int retweetCount){
+    public Tweet(long id, String text, Date createdAt, int retweetCount){
         this.id = id;
         this.text = text;
         this.createdAt = createdAt;
         this.retweetCount = retweetCount;
     }
 
-    public int getId(){
+    public long getId(){
         return id;
     }
 
