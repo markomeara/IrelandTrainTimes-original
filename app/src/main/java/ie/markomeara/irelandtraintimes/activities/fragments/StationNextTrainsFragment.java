@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +22,7 @@ import ie.markomeara.irelandtraintimes.ListHelpers.interfaces.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.Train;
-import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.storage.StationsDataSource;
 import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
 import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
 

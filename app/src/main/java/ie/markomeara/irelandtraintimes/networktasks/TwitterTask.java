@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
-import ie.markomeara.irelandtraintimes.twitter.Tweet;
+import ie.markomeara.irelandtraintimes.storage.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import twitter4j.Paging;
 import twitter4j.RateLimitStatus;

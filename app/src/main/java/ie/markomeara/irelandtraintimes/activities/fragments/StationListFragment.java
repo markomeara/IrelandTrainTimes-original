@@ -20,7 +20,7 @@ import java.util.List;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.Station;
 import ie.markomeara.irelandtraintimes.ListHelpers.adapters.StationListAdapter;
-import ie.markomeara.irelandtraintimes.db.StationsDataSource;
+import ie.markomeara.irelandtraintimes.storage.StationsDataSource;
 import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
 import ie.markomeara.irelandtraintimes.networktasks.RetrieveStationsTask;
 

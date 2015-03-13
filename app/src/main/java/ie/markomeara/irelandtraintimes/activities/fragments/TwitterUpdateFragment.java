@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.db.TweetsDataSource;
+import ie.markomeara.irelandtraintimes.storage.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.networktasks.TwitterTask;
 import ie.markomeara.irelandtraintimes.twitter.Tweet;
 
