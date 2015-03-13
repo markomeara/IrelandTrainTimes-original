@@ -98,8 +98,9 @@ public class TrainDetailsFragment extends Fragment {
 
     private void toggleReminder(){
         int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
-
         ReminderUtils.setReminder(mTrain, enteredReminderMins, getActivity().getPreferences(Context.MODE_PRIVATE));
+
+
     }
 
 
