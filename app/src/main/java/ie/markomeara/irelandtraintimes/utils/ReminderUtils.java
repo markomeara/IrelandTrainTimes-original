@@ -2,7 +2,7 @@ package ie.markomeara.irelandtraintimes.utils;
 
 import android.content.SharedPreferences;
 
-import ie.markomeara.irelandtraintimes.Train;
+import ie.markomeara.irelandtraintimes.trains.Train;
 
 /**
  * Created by Mark on 02/01/2015.

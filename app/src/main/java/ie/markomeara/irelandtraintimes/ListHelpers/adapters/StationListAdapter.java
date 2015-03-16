@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.trains.Station;
 
 /**
  * Created by Mark on 27/09/2014.

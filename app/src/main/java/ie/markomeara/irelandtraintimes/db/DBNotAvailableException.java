@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.exceptions;
+package ie.markomeara.irelandtraintimes.db;
 
 /**
  * Created by Mark on 02/11/2014.

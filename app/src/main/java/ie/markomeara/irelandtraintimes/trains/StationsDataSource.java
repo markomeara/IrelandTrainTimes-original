@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.storage;
+package ie.markomeara.irelandtraintimes.trains;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,8 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
+import ie.markomeara.irelandtraintimes.db.DBManager;
+import ie.markomeara.irelandtraintimes.db.DBNotAvailableException;
 
 /**
  * Created by Mark on 19/10/2014.

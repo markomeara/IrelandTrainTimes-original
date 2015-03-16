@@ -18,11 +18,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.Station;
+import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.ListHelpers.adapters.StationListAdapter;
-import ie.markomeara.irelandtraintimes.storage.StationsDataSource;
-import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
-import ie.markomeara.irelandtraintimes.networktasks.RetrieveStationsTask;
+import ie.markomeara.irelandtraintimes.trains.StationsDataSource;
+import ie.markomeara.irelandtraintimes.db.DBNotAvailableException;
+import ie.markomeara.irelandtraintimes.trains.RetrieveStationsTask;
 
 /**
  * Created by Mark on 27/10/2014.

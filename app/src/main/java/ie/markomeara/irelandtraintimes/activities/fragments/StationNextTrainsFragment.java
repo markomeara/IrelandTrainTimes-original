@@ -20,11 +20,11 @@ import ie.markomeara.irelandtraintimes.ListHelpers.TrainListHeader;
 import ie.markomeara.irelandtraintimes.ListHelpers.adapters.TrainsDueListAdapter;
 import ie.markomeara.irelandtraintimes.ListHelpers.interfaces.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.Train;
-import ie.markomeara.irelandtraintimes.storage.StationsDataSource;
-import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
-import ie.markomeara.irelandtraintimes.networktasks.NextTrainsTask;
+import ie.markomeara.irelandtraintimes.trains.Station;
+import ie.markomeara.irelandtraintimes.trains.Train;
+import ie.markomeara.irelandtraintimes.trains.StationsDataSource;
+import ie.markomeara.irelandtraintimes.db.DBNotAvailableException;
+import ie.markomeara.irelandtraintimes.trains.NextTrainsTask;
 
 /**
  * Created by Mark on 27/10/2014.

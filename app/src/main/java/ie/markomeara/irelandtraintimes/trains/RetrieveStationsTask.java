@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.networktasks;
+package ie.markomeara.irelandtraintimes.trains;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -18,8 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
-import ie.markomeara.irelandtraintimes.storage.StationsDataSource;
-import ie.markomeara.irelandtraintimes.exceptions.DBNotAvailableException;
+import ie.markomeara.irelandtraintimes.db.DBNotAvailableException;
 
 
 /**

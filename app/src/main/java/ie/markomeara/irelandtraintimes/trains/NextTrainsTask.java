@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.networktasks;
+package ie.markomeara.irelandtraintimes.trains;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -21,8 +21,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.Train;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationNextTrainsFragment;
 
 /**

@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.Station;
-import ie.markomeara.irelandtraintimes.Train;
+import ie.markomeara.irelandtraintimes.trains.Station;
+import ie.markomeara.irelandtraintimes.trains.Train;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.activities.fragments.TrainDetailsFragment;

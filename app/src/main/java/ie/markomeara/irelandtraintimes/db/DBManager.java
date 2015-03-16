@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.storage;
+package ie.markomeara.irelandtraintimes.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

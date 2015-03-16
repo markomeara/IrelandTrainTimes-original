@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.networktasks;
+package ie.markomeara.irelandtraintimes.twitter;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ie.markomeara.irelandtraintimes.storage.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import twitter4j.Paging;
 import twitter4j.RateLimitStatus;

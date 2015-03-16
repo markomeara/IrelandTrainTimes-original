@@ -1,9 +1,7 @@
 package ie.markomeara.irelandtraintimes.ListHelpers.adapters;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,7 @@ import java.util.List;
 import ie.markomeara.irelandtraintimes.ListHelpers.TrainListHeader;
 import ie.markomeara.irelandtraintimes.ListHelpers.interfaces.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.Train;
+import ie.markomeara.irelandtraintimes.trains.Train;
 
 /**
  * Created by Mark on 16/11/2014.

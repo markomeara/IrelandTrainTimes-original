@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes;
+package ie.markomeara.irelandtraintimes.trains;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes;
+package ie.markomeara.irelandtraintimes.trains;
 
 import java.util.Comparator;
 

@@ -8,6 +8,10 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <service
+            android:name="ie.markomeara.irelandtraintimes.services.ReminderService"
+            android:exported="false" />
+
         <activity android:name=".activities.HomeActivity"
             android:label="Ireland Train Times"
             android:windowSoftInputMode="adjustPan">

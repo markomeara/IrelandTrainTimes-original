@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.storage;
+package ie.markomeara.irelandtraintimes.twitter;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import ie.markomeara.irelandtraintimes.twitter.Tweet;
+import ie.markomeara.irelandtraintimes.db.DBManager;
 import twitter4j.Status;
 
 /**
