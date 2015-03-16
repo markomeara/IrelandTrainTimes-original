@@ -14,6 +14,7 @@ import android.widget.TextView;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.trains.Train;
 import ie.markomeara.irelandtraintimes.services.ReminderService;
+import ie.markomeara.irelandtraintimes.trains.TrainsAPI;
 import ie.markomeara.irelandtraintimes.utils.ReminderUtils;
 
 public class TrainDetailsFragment extends Fragment {
