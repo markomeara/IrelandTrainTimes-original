@@ -7,10 +7,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,69 +44,74 @@ public class StationsDataSource {
         dbManager.close();
     }
 
-    public Station createStation(int id, String name, String alias, double latitude, double longitude, String code){
-        return createStation(id, name, alias, latitude, longitude, code, false);
+    public boolean updateStoredStations(List<Station> stationList){
+
+        boolean overallSuccess = true;
+
+        for(Station station : stationList){
+
+            boolean stationSuccess = storeStation(station);
+            if(!stationSuccess){
+                overallSuccess = false;
+            }
+
+        }
+
+        return overallSuccess;
     }
 
-    public Station createStation(int id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
+    /**
+     * Stores station in SQLite DB
+     *
+     * @param stationToStore
+     * @return false if station isn't entered in DB. This can happen if station with same name already exists.
+     */
+    public boolean storeStation(Station stationToStore) {
 
-        Station newStation = null;
+        boolean success = false;
 
-        ContentValues values = new ContentValues();
-        values.put(DBManager.COLUMN_ID, id);
-        values.put(DBManager.COLUMN_STN_NAME, name);
-        values.put(DBManager.COLUMN_STN_ALIAS, alias);
-        values.put(DBManager.COLUMN_STN_LAT, latitude);
-        values.put(DBManager.COLUMN_STN_LONG, longitude);
-        values.put(DBManager.COLUMN_STN_CODE, code);
-        values.put(DBManager.COLUMN_STN_FAV, fav);
+        StringBuilder stationInsertQuery = new StringBuilder();
+        stationInsertQuery.append("INSERT OR REPLACE INTO ").append(DBManager.TABLE_STATIONS).append(" ");
+        stationInsertQuery.append("(");
+        stationInsertQuery.append(DBManager.COLUMN_ID).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_NAME).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_ALIAS).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_LAT).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_LONG).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_CODE).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_FAV);
+        stationInsertQuery.append(") ");
+        stationInsertQuery.append("VALUES ( ?, ?, ?, ?, ?, ?, (");
+        stationInsertQuery.append("SELECT ").append(DBManager.COLUMN_STN_FAV);
+        stationInsertQuery.append(" FROM ").append(DBManager.TABLE_STATIONS);
+        stationInsertQuery.append(" WHERE ").append(DBManager.COLUMN_ID).append(" = ?");
+        stationInsertQuery.append(")");
+        stationInsertQuery.append(")");
+
+        String[] queryArgs = new String[7];
+        queryArgs[0] = "" + stationToStore.getId();
+        queryArgs[1] = stationToStore.getName();
+        queryArgs[2] = stationToStore.getAlias();
+        queryArgs[3] = "" + stationToStore.getLatitude();
+        queryArgs[4] = "" + stationToStore.getLongitude();
+        queryArgs[5] = stationToStore.getCode();
+        queryArgs[6] = "" + stationToStore.getId();
 
         try {
-            long entryId = db.insertOrThrow(DBManager.TABLE_STATIONS, null, values);
-            Log.i(TAG, "Station created with id " + id);
-            Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + entryId, null, null, null, null);
+            db.rawQuery(stationInsertQuery.toString(), queryArgs);
+            Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stationToStore.getId(), null, null, null, null);
 
             if (cursor.moveToFirst()) {
-                newStation = cursorToStation(cursor);
+                Station updatedStation = cursorToStation(cursor);
+                if(updatedStation != null){
+                    success = true;
+                }
             }
             cursor.close();
         } catch(SQLiteConstraintException ex){
-            Log.i(TAG, ex.getMessage(), ex);
+            Log.e(TAG, ex.getMessage(), ex);
         }
-        return newStation;
-    }
-
-    public List<Station> createStationsFromNodes(NodeList stationsNodes){
-
-        List<Station> createdStationsList = new ArrayList<Station>();
-        db.beginTransaction();
-        clearAllStations();
-
-        for (int i = 0; i < stationsNodes.getLength(); i++) {
-
-            if (stationsNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                Element stationElem = (Element) stationsNodes.item(i);
-
-                // TODO A shitload of null checks
-                int stationId = Integer.parseInt(stationElem.getElementsByTagName("StationId").item(0).getTextContent());
-                String stationName = stationElem.getElementsByTagName("StationDesc").item(0).getTextContent();
-                stationName = stationName.trim();
-                String stationAlias = stationElem.getElementsByTagName("StationAlias").item(0).getTextContent();
-                stationAlias = stationAlias.trim();
-                double stationLat = Double.parseDouble(stationElem.getElementsByTagName("StationLatitude").item(0).getTextContent());
-                double stationLong = Double.parseDouble(stationElem.getElementsByTagName("StationLongitude").item(0).getTextContent());
-                String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
-                stationCode = stationCode.trim();
-
-                Station createdStation = createStation(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
-                if(createdStation != null) {
-                    createdStationsList.add(createdStation);
-                }
-            }
-        }
-        db.setTransactionSuccessful();
-        db.endTransaction();
-        return createdStationsList;
+        return success;
     }
 
     public Station updateFavourite(Station stn, boolean fav){
@@ -149,7 +150,10 @@ public class StationsDataSource {
     }
 
     public void clearAllStations(){
+        db.beginTransaction();
         db.delete(DBManager.TABLE_STATIONS, null, null);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     private Station cursorToStation(Cursor cursor){

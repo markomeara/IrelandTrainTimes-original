@@ -70,7 +70,7 @@ public class StationListFragment extends Fragment {
         stationListAdapter = new StationListAdapter(getActivity(), stationList);
 
         // TODO Figure out when stations should be refreshed... not that often obviously
-        initStationListDisplay();
+        refreshStationListDisplay();
 
         monitorStationNameInput();
 
@@ -84,7 +84,7 @@ public class StationListFragment extends Fragment {
     }
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen
-    public void initStationListDisplay(){
+    public void refreshStationListDisplay(){
 
         StationsDataSource sds = new StationsDataSource(getActivity());
 

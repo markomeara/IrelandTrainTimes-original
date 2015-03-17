@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,11 +24,11 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class TrainsAPI {
 
-    private static final String STATION_DATA_BY_CODE = "http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML?StationCode=%s";
-
+    private static final String STATION_DATA_BY_CODE_RAW_URL = "http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML?StationCode=%s";
+    public static final String ALL_STATIONS_RAW_URL = "http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML";
 
     public static URL stationDataByCodeURL(String stnCode) throws MalformedURLException {
-        return new URL(String.format(STATION_DATA_BY_CODE, stnCode));
+        return new URL(String.format(STATION_DATA_BY_CODE_RAW_URL, stnCode));
     }
 
     /**
@@ -46,6 +47,22 @@ public class TrainsAPI {
         return trains;
     }
 
+    public static List<Station> getAllStations() throws ParserConfigurationException, IOException, SAXException {
+
+        NodeList stationNodes = getAllStationNodes();
+        List<Station> allStations = createStationsFromNodes(stationNodes);
+        return allStations;
+    }
+
+    private static NodeList getAllStationNodes() throws ParserConfigurationException, IOException, SAXException {
+        URL url = new URL(TrainsAPI.ALL_STATIONS_RAW_URL);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(new InputSource(url.openStream()));
+        doc.getDocumentElement().normalize();
+        return doc.getElementsByTagName("objStation");
+    }
+
     private static NodeList getTrainNodesFromStationCode(String stnCode) throws ParserConfigurationException, IOException, SAXException {
         URL url = stationDataByCodeURL(stnCode);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -53,6 +70,35 @@ public class TrainsAPI {
         Document doc = db.parse(new InputSource(url.openStream()));
         doc.getDocumentElement().normalize();
         return doc.getElementsByTagName("objStationData");
+    }
+
+    private static List<Station> createStationsFromNodes(NodeList stationsNodes){
+
+        List<Station> createdStationsList = new LinkedList<Station>();
+
+        for (int i = 0; i < stationsNodes.getLength(); i++) {
+
+            if (stationsNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                Element stationElem = (Element) stationsNodes.item(i);
+
+                // TODO A shitload of null checks
+                int stationId = Integer.parseInt(stationElem.getElementsByTagName("StationId").item(0).getTextContent());
+                String stationName = stationElem.getElementsByTagName("StationDesc").item(0).getTextContent();
+                stationName = stationName.trim();
+                String stationAlias = stationElem.getElementsByTagName("StationAlias").item(0).getTextContent();
+                stationAlias = stationAlias.trim();
+                double stationLat = Double.parseDouble(stationElem.getElementsByTagName("StationLatitude").item(0).getTextContent());
+                double stationLong = Double.parseDouble(stationElem.getElementsByTagName("StationLongitude").item(0).getTextContent());
+                String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
+                stationCode = stationCode.trim();
+
+                Station createdStation = new Station(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
+
+                createdStationsList.add(createdStation);
+            }
+        }
+
+        return createdStationsList;
     }
 
 
