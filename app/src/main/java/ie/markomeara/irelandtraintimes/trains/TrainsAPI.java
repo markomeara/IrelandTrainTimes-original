@@ -31,8 +31,6 @@ public class TrainsAPI {
         return new URL(String.format(STATION_DATA_BY_CODE_RAW_URL, stnCode));
     }
 
-    // Test
-
     /**
      * Return all trains due to pass through selected station.
      * NOTE: This includes trains that terminate at selected station
@@ -54,6 +52,21 @@ public class TrainsAPI {
         NodeList stationNodes = getAllStationNodes();
         List<Station> allStations = createStationsFromNodes(stationNodes);
         return allStations;
+    }
+
+    public static Train getTrainAtStationCode(String trainCode, String stnCode) throws ParserConfigurationException, SAXException, IOException {
+        Train relevantTrain = null;
+
+        List<Train> allTrainsAtStation = getTrainsFromStationCode(stnCode);
+        for(Train train : allTrainsAtStation){
+            if(train.getTrainCode().equals(trainCode)){
+                relevantTrain = train;
+                break;
+            }
+        }
+
+        return relevantTrain;
+
     }
 
     private static NodeList getAllStationNodes() throws ParserConfigurationException, IOException, SAXException {

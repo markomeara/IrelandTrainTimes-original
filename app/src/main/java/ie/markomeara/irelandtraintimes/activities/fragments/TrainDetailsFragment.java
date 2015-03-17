@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
 import ie.markomeara.irelandtraintimes.services.ReminderService;
-import ie.markomeara.irelandtraintimes.trains.TrainsAPI;
-import ie.markomeara.irelandtraintimes.utils.ReminderUtils;
+import ie.markomeara.irelandtraintimes.utils.ReminderManager;
 
 public class TrainDetailsFragment extends Fragment {
 
@@ -24,6 +24,7 @@ public class TrainDetailsFragment extends Fragment {
 
     // TODO Be consistent of naming member vars throughout app... start with 'm' or not
     private Train mTrain;
+    private Station mStation;
 
     private TextView destination_TV;
     private TextView scheduled_TV;
@@ -34,11 +35,13 @@ public class TrainDetailsFragment extends Fragment {
     private TextView toggleReminder_BTN;
 
     public static String TRAIN_PARAM = "train";
+    public static String STATION_PARAM = "station";
 
-    public static TrainDetailsFragment newInstance(Train train) {
+    public static TrainDetailsFragment newInstance(Train train, Station stationBeingViewed) {
         TrainDetailsFragment fragment = new TrainDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(TRAIN_PARAM, train);
+        args.putParcelable(STATION_PARAM, stationBeingViewed);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,6 +54,7 @@ public class TrainDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mTrain = getArguments().getParcelable(TRAIN_PARAM);
+            mStation = getArguments().getParcelable(STATION_PARAM);
         }
 
         if(mTrain == null){
@@ -98,8 +102,9 @@ public class TrainDetailsFragment extends Fragment {
     }
 
     private void toggleReminder(){
+
         int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
-        ReminderUtils.setReminder(mTrain, enteredReminderMins, getActivity().getPreferences(Context.MODE_PRIVATE));
+        ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
 
         Intent reminderServiceIntent = new Intent(this.getActivity(), ReminderService.class);
         this.getActivity().startService(reminderServiceIntent);

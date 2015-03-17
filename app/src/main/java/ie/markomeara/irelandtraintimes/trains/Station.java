@@ -1,11 +1,14 @@
 package ie.markomeara.irelandtraintimes.trains;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Comparator;
 
 /**
  * Created by Mark on 04/10/2014.
  */
-public class Station implements Comparator{
+public class Station implements Comparator, Parcelable{
 
     private static final String TAG = Station.class.getSimpleName();
 
@@ -29,6 +32,16 @@ public class Station implements Comparator{
         this.longitude = longitude;
         this.code = code;
         this.favourite = fav;
+    }
+
+    public Station(Parcel in){
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.alias = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.code = in.readString();
+        this.favourite = in.readByte() != 0;
     }
 
     public int compare(Object o1, Object o2){
@@ -67,4 +80,19 @@ public class Station implements Comparator{
 
     public boolean isFavourite() { return favourite; }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(alias);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeString(code);
+        dest.writeByte((byte) (favourite ? 1 : 0));
+    }
 }

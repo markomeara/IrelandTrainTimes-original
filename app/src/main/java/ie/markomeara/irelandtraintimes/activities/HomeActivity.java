@@ -55,9 +55,9 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
     }
 
     @Override
-    public void onTrainSelected(Train train){
+    public void onTrainSelected(Train train, Station station){
         FragmentTransaction ft  = getFragmentManager().beginTransaction();
-        ft.replace(R.id.mainfragment_placeholder, TrainDetailsFragment.newInstance(train));
+        ft.replace(R.id.mainfragment_placeholder, TrainDetailsFragment.newInstance(train, station));
         ft.addToBackStack(TAG);
         ft.commit();
     }

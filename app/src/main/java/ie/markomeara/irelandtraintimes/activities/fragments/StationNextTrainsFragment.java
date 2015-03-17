@@ -154,7 +154,7 @@ public class StationNextTrainsFragment extends Fragment {
         adapter.setTrainDetailsOnClickListener(new TrainsDueListAdapter.OnClickListener() {
             @Override
             public void onClick(Train train) {
-                onTrainSelectedListener.onTrainSelected(train);
+                onTrainSelectedListener.onTrainSelected(train, displayedStation);
             }
         });
         adapter.setReminderButtonOnClickListener(new TrainsDueListAdapter.OnClickListener(){
@@ -166,6 +166,6 @@ public class StationNextTrainsFragment extends Fragment {
     }
 
     public interface OnTrainSelectedListener{
-        public void onTrainSelected(Train train);
+        public void onTrainSelected(Train train, Station station);
     }
 }
