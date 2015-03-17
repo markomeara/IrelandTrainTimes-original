@@ -31,8 +31,6 @@ public class TrainsAPI {
         return new URL(String.format(STATION_DATA_BY_CODE_RAW_URL, stnCode));
     }
 
-    // Test 2
-
     /**
      * Return all trains due to pass through selected station.
      * NOTE: This includes trains that terminate at selected station
