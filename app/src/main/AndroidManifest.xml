@@ -9,8 +9,10 @@
         android:theme="@style/AppTheme" >
 
         <service
-            android:name="ie.markomeara.irelandtraintimes.services.ReminderService"
+            android:name="ie.markomeara.irelandtraintimes.reminder.ReminderService"
             android:exported="false" />
+
+        <receiver android:name="ie.markomeara.irelandtraintimes.reminder.ReminderReceiver"></receiver>
 
         <activity android:name=".activities.HomeActivity"
             android:label="Ireland Train Times"

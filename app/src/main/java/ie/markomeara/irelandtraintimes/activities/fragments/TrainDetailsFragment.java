@@ -1,7 +1,5 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -14,8 +12,7 @@ import android.widget.TextView;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
-import ie.markomeara.irelandtraintimes.services.ReminderService;
-import ie.markomeara.irelandtraintimes.utils.ReminderManager;
+import ie.markomeara.irelandtraintimes.reminder.ReminderManager;
 
 public class TrainDetailsFragment extends Fragment {
 
@@ -105,9 +102,6 @@ public class TrainDetailsFragment extends Fragment {
 
         int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
         ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
-
-        Intent reminderServiceIntent = new Intent(this.getActivity(), ReminderService.class);
-        this.getActivity().startService(reminderServiceIntent);
 
     }
 
