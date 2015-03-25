@@ -68,7 +68,16 @@ public class StationsDataSource {
      */
     public boolean storeStation(Station stationToStore) {
 
-        boolean success = false;
+        /*
+         *
+         * Stores station but keeps its 'fav' boolean field if the station is already in the DB.
+         * Still overwrites other station fields as the values may have changed (e.g. new station name)
+         *
+         * Example query:
+         *
+         * INSERT OR REPLACE INTO stations (_id,name,alias,latitude,longitude,code,favourite)
+         * VALUES (228,'Belfast Central','',54.6123,-5.91744,'BFSTC', (SELECT favourite FROM stations where _id = 228));
+         */
 
         StringBuilder stationInsertQuery = new StringBuilder();
         stationInsertQuery.append("INSERT OR REPLACE INTO ").append(DBManager.TABLE_STATIONS).append(" ");
@@ -81,30 +90,32 @@ public class StationsDataSource {
         stationInsertQuery.append(DBManager.COLUMN_STN_CODE).append(",");
         stationInsertQuery.append(DBManager.COLUMN_STN_FAV);
         stationInsertQuery.append(") ");
-        stationInsertQuery.append("VALUES ( ?, ?, ?, ?, ?, ?, (");
-        stationInsertQuery.append("SELECT ").append(DBManager.COLUMN_STN_FAV);
-        stationInsertQuery.append(" FROM ").append(DBManager.TABLE_STATIONS);
-        stationInsertQuery.append(" WHERE ").append(DBManager.COLUMN_ID).append(" = ?");
-        stationInsertQuery.append(")");
-        stationInsertQuery.append(")");
+        stationInsertQuery.append("VALUES (");
+        stationInsertQuery.append(stationToStore.getId()).append(",");
+        stationInsertQuery.append("'").append(stationToStore.getName()).append("',");
+        stationInsertQuery.append("'").append(stationToStore.getAlias()).append("',");
+        stationInsertQuery.append(stationToStore.getLatitude()).append(",");
+        stationInsertQuery.append(stationToStore.getLongitude()).append(",");
+        stationInsertQuery.append("'").append(stationToStore.getCode()).append("',");
 
-        String[] queryArgs = new String[7];
-        queryArgs[0] = "" + stationToStore.getId();
-        queryArgs[1] = stationToStore.getName();
-        queryArgs[2] = stationToStore.getAlias();
-        queryArgs[3] = "" + stationToStore.getLatitude();
-        queryArgs[4] = "" + stationToStore.getLongitude();
-        queryArgs[5] = stationToStore.getCode();
-        queryArgs[6] = "" + stationToStore.getId();
+        stationInsertQuery.append("( SELECT ").append(DBManager.COLUMN_STN_FAV);
+        stationInsertQuery.append(" FROM ").append(DBManager.TABLE_STATIONS);
+        stationInsertQuery.append(" WHERE ").append(DBManager.COLUMN_ID).append(" = " + stationToStore.getId());
+        stationInsertQuery.append(")").append(")");
+
+        boolean success = false;
 
         try {
-            db.rawQuery(stationInsertQuery.toString(), queryArgs);
+            db.execSQL(stationInsertQuery.toString());
             Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stationToStore.getId(), null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 Station updatedStation = cursorToStation(cursor);
                 if(updatedStation != null){
                     success = true;
+                }
+                else{
+                    Log.e(TAG, "Error inserting station (id: " + stationToStore.getId() + ") into DB");
                 }
             }
             cursor.close();
