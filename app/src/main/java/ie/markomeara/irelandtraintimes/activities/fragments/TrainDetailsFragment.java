@@ -1,6 +1,5 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.trains.Station;
@@ -37,8 +41,10 @@ public class TrainDetailsFragment extends Fragment {
     private TextView latest_TV;
     private TextView service_TV;
     private TextView reminderMins_ET;
+    private TextView trackingActive_TV;
     private Button setReminder_Btn;
     private Button deleteReminder_Btn;
+    private LinearLayout trackingDetails_LL;
 
     public static String TRAIN_PARAM = "train";
     public static String STATION_PARAM = "station";
@@ -87,15 +93,17 @@ public class TrainDetailsFragment extends Fragment {
         dueIn_TV = (TextView) getView().findViewById(R.id.trainDetails_dueIn_TV);
         latest_TV = (TextView) getView().findViewById(R.id.trainDetails_latest_TV);
         service_TV = (TextView) getView().findViewById(R.id.trainDetails_service_TV);
+        trackingActive_TV = (TextView) getView().findViewById(R.id.trainDetails_trackingActive_TV);
         reminderMins_ET = (EditText) getView().findViewById(R.id.trainDetails_remindermins_ET);
         setReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_reminder_BTN);
+        deleteReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_deletereminder_BTN);
+        trackingDetails_LL = (LinearLayout) getView().findViewById(R.id.trackingDetails_RL);
         setReminder_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setReminder();
             }
         });
-        deleteReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_deletereminder_BTN);
         deleteReminder_Btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -125,14 +133,15 @@ public class TrainDetailsFragment extends Fragment {
 
         ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
 
+        updateTrackingUpdateTime();
         setReminder_Btn.setVisibility(View.GONE);
-        deleteReminder_Btn.setVisibility(View.VISIBLE);
+        trackingDetails_LL.setVisibility(View.VISIBLE);
 
     }
 
     private void deleteReminder(){
         ReminderManager.clearReminder(getActivity());
-        deleteReminder_Btn.setVisibility(View.GONE);
+        trackingDetails_LL.setVisibility(View.GONE);
         setReminder_Btn.setVisibility(View.VISIBLE);
     }
 
@@ -142,8 +151,18 @@ public class TrainDetailsFragment extends Fragment {
             // Get extra data included in the Intent
             mTrain = intent.getParcelableExtra("trainDetails");
             displayTrainDetails();
+            updateTrackingUpdateTime();
 
         }
     };
+
+    private void updateTrackingUpdateTime(){
+        // Getting time to tell user when details were last updated
+        Calendar c = Calendar.getInstance();
+        Date currTime = c.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String currTimeDisp = dateFormat.format(currTime);
+        trackingActive_TV.setText("Tracking Active. Details last updated at " + currTimeDisp);
+    }
 
 }
