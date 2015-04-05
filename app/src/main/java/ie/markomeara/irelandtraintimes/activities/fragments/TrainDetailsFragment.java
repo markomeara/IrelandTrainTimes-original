@@ -33,6 +33,7 @@ public class TrainDetailsFragment extends Fragment {
     private TextView destination_TV;
     private TextView scheduled_TV;
     private TextView estimated_TV;
+    private TextView dueIn_TV;
     private TextView latest_TV;
     private TextView service_TV;
     private TextView reminderMins_ET;
@@ -83,6 +84,7 @@ public class TrainDetailsFragment extends Fragment {
         destination_TV = (TextView) getView().findViewById(R.id.trainDetails_dest_TV);
         scheduled_TV = (TextView) getView().findViewById(R.id.trainDetails_scheduled_TV);
         estimated_TV = (TextView) getView().findViewById(R.id.trainDetails_estimated_TV);
+        dueIn_TV = (TextView) getView().findViewById(R.id.trainDetails_dueIn_TV);
         latest_TV = (TextView) getView().findViewById(R.id.trainDetails_latest_TV);
         service_TV = (TextView) getView().findViewById(R.id.trainDetails_service_TV);
         reminderMins_ET = (EditText) getView().findViewById(R.id.trainDetails_remindermins_ET);
@@ -109,6 +111,7 @@ public class TrainDetailsFragment extends Fragment {
         destination_TV.setText(mTrain.getDestination());
         scheduled_TV.setText(mTrain.getSchDepart());
         estimated_TV.setText(mTrain.getExpDepart());
+        dueIn_TV.setText(Integer.toString(mTrain.getDueIn()));
         latest_TV.setText(mTrain.getLatestInfo());
         service_TV.setText(mTrain.getTrainType());
     }
@@ -116,10 +119,11 @@ public class TrainDetailsFragment extends Fragment {
     private void setReminder(){
 
         int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
-        ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(trackingUpdateReceiver,
                 new IntentFilter("train-update-broadcast"));
+
+        ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
 
         setReminder_Btn.setVisibility(View.GONE);
         deleteReminder_Btn.setVisibility(View.VISIBLE);
@@ -128,6 +132,8 @@ public class TrainDetailsFragment extends Fragment {
 
     private void deleteReminder(){
         ReminderManager.clearReminder(getActivity());
+        deleteReminder_Btn.setVisibility(View.GONE);
+        setReminder_Btn.setVisibility(View.VISIBLE);
     }
 
     private BroadcastReceiver trackingUpdateReceiver = new BroadcastReceiver() {
@@ -135,9 +141,7 @@ public class TrainDetailsFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             mTrain = intent.getParcelableExtra("trainDetails");
-            scheduled_TV.setText(mTrain.getSchDepart());
-            estimated_TV.setText(mTrain.getExpDepart());
-            latest_TV.setText(mTrain.getLatestInfo());
+            displayTrainDetails();
 
         }
     };

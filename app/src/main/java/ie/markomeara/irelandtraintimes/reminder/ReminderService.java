@@ -38,13 +38,13 @@ public class ReminderService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Log.e(TAG, "ReminderService is running");
+        Log.i(TAG, "ReminderService is running");
 
         train = intent.getParcelableExtra("train");
         station = intent.getParcelableExtra("station");
         reminderMins = intent.getIntExtra("reminderMins", 0);
 
-        Log.e(TAG, station.getName() + " -- " + train.getTrainCode() + " -- " + reminderMins);
+        Log.i(TAG, station.getName() + " -- " + train.getTrainCode() + " -- " + reminderMins);
 
         try {
             Train latestTrainInfo = TrainsAPI.getTrainAtStationCode(train.getTrainCode(), station.getCode());
@@ -53,7 +53,7 @@ public class ReminderService extends IntentService {
                 trainHasGone();
             }
             else{
-                Log.e(TAG, "DUE: " + latestTrainInfo.getDueIn());
+                Log.d(TAG, "DUE: " + latestTrainInfo.getDueIn());
 
                 notifyUIWithReminderDetails(latestTrainInfo);
 
@@ -73,12 +73,12 @@ public class ReminderService extends IntentService {
     }
 
     private void trainHasGone(){
-        Log.e(TAG, "Train has gone");
+        Log.i(TAG, "Train has gone");
         ReminderManager.clearReminder(this);
     }
 
     private void notifyUIWithReminderDetails(Train trainInfo){
-        Log.e(TAG, "Notifying UI with reminder details");
+        Log.d(TAG, "Notifying UI with reminder details");
         Intent broadcastIntent = new Intent("train-update-broadcast");
         broadcastIntent.putExtra("trainDetails", trainInfo);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
@@ -87,19 +87,19 @@ public class ReminderService extends IntentService {
 
     private void showTrainAlert(){
 
-        Log.e(TAG, "Train is due!!");
+        Log.i(TAG, "Train is due!!");
         ReminderManager.setAlertShown();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e(TAG, "onBind");
+        Log.d(TAG, "onBind");
         return reminderServiceBinder;
     }
 
     public class ReminderServiceBinder extends Binder {
         public ReminderService getService(){
-            Log.e(TAG, "getService");
+            Log.d(TAG, "getService");
             return ReminderService.this;
         }
     }

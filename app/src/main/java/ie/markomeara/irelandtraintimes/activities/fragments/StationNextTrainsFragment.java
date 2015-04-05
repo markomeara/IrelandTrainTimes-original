@@ -160,7 +160,7 @@ public class StationNextTrainsFragment extends Fragment {
         adapter.setReminderButtonOnClickListener(new TrainsDueListAdapter.OnClickListener(){
             @Override
             public void onClick(Train train) {
-                Log.e(TAG, "Reminder button: " + train.getDestination());
+                Log.e(TAG, "IMPLEMENT: Reminder button: " + train.getDestination());
             }
         });
     }

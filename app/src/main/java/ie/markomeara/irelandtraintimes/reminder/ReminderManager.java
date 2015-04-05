@@ -34,6 +34,7 @@ public class ReminderManager {
 
     public static void setReminder(Train train, Station station, int mins, Context ctx){
 
+        Log.d(TAG, "setReminder");
         trainBeingTracked = train;
         stationBeingTracked = station;
         reminderMins = mins;
@@ -44,11 +45,7 @@ public class ReminderManager {
         alarm.putExtra("station", stationBeingTracked);
         alarm.putExtra("reminderMins", reminderMins);
 
-        Log.e(TAG, "Attempting to run polling");
-
-        // TODO Check if service/alarm is already running. If so, cancel alarm and start new one
-
-        pendingIntent = PendingIntent.getBroadcast(ctx, 0, alarm, 0);
+        pendingIntent = PendingIntent.getBroadcast(ctx, 0, alarm, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
                 REMINDER_POLL_INTERVAL, pendingIntent);
@@ -57,6 +54,7 @@ public class ReminderManager {
 
     public static void clearReminder(Context ctx){
 
+        Log.d(TAG, "clearReminder");
         // Stop reminder polling
         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
