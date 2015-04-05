@@ -1,12 +1,18 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,9 +36,8 @@ public class TrainDetailsFragment extends Fragment {
     private TextView latest_TV;
     private TextView service_TV;
     private TextView reminderMins_ET;
-    private TextView toggleReminder_BTN;
-
-    private DisplayReminderTrackingListener displayReminderTrackingListener;
+    private Button setReminder_Btn;
+    private Button deleteReminder_Btn;
 
     public static String TRAIN_PARAM = "train";
     public static String STATION_PARAM = "station";
@@ -68,20 +73,12 @@ public class TrainDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // TODO Rename fragment to not use 'overlay' if it's no longer an overlay
-        return inflater.inflate(R.layout.reminderoverlay, container, false);
+        return inflater.inflate(R.layout.fragment_train_details, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Activity parentActivity = getActivity();
-        if(parentActivity instanceof DisplayReminderTrackingListener){
-            displayReminderTrackingListener = (DisplayReminderTrackingListener) parentActivity;
-        }
-        else{
-            Log.e(TAG, "Parent activity is not instance of OnTrainSelectedListener");
-        }
 
         destination_TV = (TextView) getView().findViewById(R.id.trainDetails_dest_TV);
         scheduled_TV = (TextView) getView().findViewById(R.id.trainDetails_scheduled_TV);
@@ -89,11 +86,18 @@ public class TrainDetailsFragment extends Fragment {
         latest_TV = (TextView) getView().findViewById(R.id.trainDetails_latest_TV);
         service_TV = (TextView) getView().findViewById(R.id.trainDetails_service_TV);
         reminderMins_ET = (EditText) getView().findViewById(R.id.trainDetails_remindermins_ET);
-        toggleReminder_BTN = (TextView) getView().findViewById(R.id.trainDetails_reminder_BTN);
-        toggleReminder_BTN.setOnClickListener(new View.OnClickListener() {
+        setReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_reminder_BTN);
+        setReminder_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setReminder();
+            }
+        });
+        deleteReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_deletereminder_BTN);
+        deleteReminder_Btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                deleteReminder();
             }
         });
 
@@ -113,15 +117,29 @@ public class TrainDetailsFragment extends Fragment {
 
         int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
         ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
-        displayReminderTrackingListener.displayReminderTracking();
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(trackingUpdateReceiver,
+                new IntentFilter("train-update-broadcast"));
+
+        setReminder_Btn.setVisibility(View.GONE);
+        deleteReminder_Btn.setVisibility(View.VISIBLE);
 
     }
 
-    // TODO - Refactor - do we really need to have an interface for this?
-    // And if so, is this the most appropriate place to define it?
-    public interface DisplayReminderTrackingListener {
-        public void displayReminderTracking();
+    private void deleteReminder(){
+        ReminderManager.clearReminder(getActivity());
     }
 
+    private BroadcastReceiver trackingUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            mTrain = intent.getParcelableExtra("trainDetails");
+            scheduled_TV.setText(mTrain.getSchDepart());
+            estimated_TV.setText(mTrain.getExpDepart());
+            latest_TV.setText(mTrain.getLatestInfo());
+
+        }
+    };
 
 }

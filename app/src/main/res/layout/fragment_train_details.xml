@@ -160,11 +160,22 @@
     </RelativeLayout>
 
     <Button
+        android:id="@+id/trainDetails_deletereminder_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="#FF0000"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"
+        android:text="Delete Reminder"/>
+
+    <Button
         android:id="@+id/trainDetails_reminder_BTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="#FFFFFF"
+        android:visibility="visible"
         android:text="Set Reminder"/>
 
 </LinearLayout>
