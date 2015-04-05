@@ -95,4 +95,14 @@ public class Station implements Comparator, Parcelable{
         dest.writeString(code);
         dest.writeByte((byte) (favourite ? 1 : 0));
     }
+
+    public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+        public Station createFromParcel(Parcel source) {
+            return new Station(source);
+        }
+
+        public Station[] newArray(int size) {
+            return new Station[size];
+        }
+    };
 }

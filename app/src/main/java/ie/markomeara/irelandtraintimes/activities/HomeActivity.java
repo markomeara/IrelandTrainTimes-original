@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.activities.fragments.ReminderDetailsFragment;
 import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
@@ -19,7 +20,8 @@ import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragmen
  * Created by Mark on 02/11/2014.
  */
 public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener,
-        StationListFragment.OnStationSelectedListener, StationNextTrainsFragment.OnTrainSelectedListener {
+        StationListFragment.OnStationSelectedListener, StationNextTrainsFragment.OnTrainSelectedListener,
+        TrainDetailsFragment.DisplayReminderTrackingListener {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
@@ -58,6 +60,15 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
     public void onTrainSelected(Train train, Station station){
         FragmentTransaction ft  = getFragmentManager().beginTransaction();
         ft.replace(R.id.mainfragment_placeholder, TrainDetailsFragment.newInstance(train, station));
+        ft.addToBackStack(TAG);
+        ft.commit();
+    }
+
+    @Override
+    public void displayReminderTracking(){
+        FragmentTransaction ft  = getFragmentManager().beginTransaction();
+        ft.replace(R.id.mainfragment_placeholder, new ReminderDetailsFragment());
+        // TODO Do we always want to enable 'back'?
         ft.addToBackStack(TAG);
         ft.commit();
     }

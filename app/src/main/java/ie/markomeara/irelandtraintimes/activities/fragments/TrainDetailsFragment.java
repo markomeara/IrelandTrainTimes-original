@@ -1,5 +1,6 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -31,8 +32,13 @@ public class TrainDetailsFragment extends Fragment {
     private TextView reminderMins_ET;
     private TextView toggleReminder_BTN;
 
+    private DisplayReminderTrackingListener displayReminderTrackingListener;
+
     public static String TRAIN_PARAM = "train";
     public static String STATION_PARAM = "station";
+
+    public TrainDetailsFragment() {
+    }
 
     public static TrainDetailsFragment newInstance(Train train, Station stationBeingViewed) {
         TrainDetailsFragment fragment = new TrainDetailsFragment();
@@ -41,9 +47,6 @@ public class TrainDetailsFragment extends Fragment {
         args.putParcelable(STATION_PARAM, stationBeingViewed);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public TrainDetailsFragment() {
     }
 
     @Override
@@ -72,6 +75,14 @@ public class TrainDetailsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Activity parentActivity = getActivity();
+        if(parentActivity instanceof DisplayReminderTrackingListener){
+            displayReminderTrackingListener = (DisplayReminderTrackingListener) parentActivity;
+        }
+        else{
+            Log.e(TAG, "Parent activity is not instance of OnTrainSelectedListener");
+        }
+
         destination_TV = (TextView) getView().findViewById(R.id.trainDetails_dest_TV);
         scheduled_TV = (TextView) getView().findViewById(R.id.trainDetails_scheduled_TV);
         estimated_TV = (TextView) getView().findViewById(R.id.trainDetails_estimated_TV);
@@ -82,7 +93,7 @@ public class TrainDetailsFragment extends Fragment {
         toggleReminder_BTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleReminder();
+                setReminder();
             }
         });
 
@@ -98,11 +109,18 @@ public class TrainDetailsFragment extends Fragment {
         service_TV.setText(mTrain.getTrainType());
     }
 
-    private void toggleReminder(){
+    private void setReminder(){
 
         int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
         ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
+        displayReminderTrackingListener.displayReminderTracking();
 
+    }
+
+    // TODO - Refactor - do we really need to have an interface for this?
+    // And if so, is this the most appropriate place to define it?
+    public interface DisplayReminderTrackingListener {
+        public void displayReminderTracking();
     }
 
 

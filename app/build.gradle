@@ -24,4 +24,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/jsoup-1.8.1.jar')
     compile files('libs/twitter4j-core-4.0.2-customised.jar')
+    compile 'com.android.support:support-v4:21.0.0'
 }
