@@ -31,6 +31,7 @@ public class ReminderManager {
 
     private static boolean alertShown = false;
 
+    public static final String BROADCAST_NAME = "train-update-broadcast";
 
     public static void setReminder(Train train, Station station, int mins, Context ctx){
 
@@ -58,6 +59,9 @@ public class ReminderManager {
         // Stop reminder polling
         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+        trainBeingTracked = null;
+        stationBeingTracked = null;
+        reminderMins = -1;
 
     }
 

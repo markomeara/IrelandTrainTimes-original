@@ -216,7 +216,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="#FFFFFF"
-            android:text="TRACKING ACTIVE PLACEHOLDER" />
+            android:text="" />
 
 
     </LinearLayout>

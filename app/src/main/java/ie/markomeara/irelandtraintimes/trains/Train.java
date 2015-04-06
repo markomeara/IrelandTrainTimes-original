@@ -114,6 +114,17 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         }
     }
 
+    public boolean equals(Object obj){
+        boolean result = false;
+        if(obj instanceof Train){
+            Train otherTrain = (Train) obj;
+            if(otherTrain.getTrainCode().equals(this.getTrainCode())){
+                result = true;
+            }
+        }
+        return result;
+    }
+
     public int getListViewType(){
         return TrainsDueListAdapter.RowType.TRAIN.ordinal();
     }

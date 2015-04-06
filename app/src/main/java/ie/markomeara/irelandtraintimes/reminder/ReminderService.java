@@ -79,7 +79,7 @@ public class ReminderService extends IntentService {
 
     private void notifyUIWithReminderDetails(Train trainInfo){
         Log.d(TAG, "Notifying UI with reminder details");
-        Intent broadcastIntent = new Intent("train-update-broadcast");
+        Intent broadcastIntent = new Intent(ReminderManager.BROADCAST_NAME);
         broadcastIntent.putExtra("trainDetails", trainInfo);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
 

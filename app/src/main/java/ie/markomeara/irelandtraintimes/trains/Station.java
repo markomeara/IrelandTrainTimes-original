@@ -96,6 +96,19 @@ public class Station implements Comparator, Parcelable{
         dest.writeByte((byte) (favourite ? 1 : 0));
     }
 
+    @Override
+    public boolean equals(Object obj){
+        boolean result = false;
+        if(obj instanceof Station){
+            Station otherStation = (Station) obj;
+            if(otherStation.getId() == this.getId()){
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
         public Station createFromParcel(Parcel source) {
             return new Station(source);

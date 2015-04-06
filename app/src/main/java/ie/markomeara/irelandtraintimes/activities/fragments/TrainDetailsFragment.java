@@ -49,6 +49,9 @@ public class TrainDetailsFragment extends Fragment {
     public static String TRAIN_PARAM = "train";
     public static String STATION_PARAM = "station";
 
+    private static final String TRACKING_ACTIVE_MSG = "Tracking Active. Details last updated at %s. This screen" +
+            " will refresh automatically with your train details.";
+
     public TrainDetailsFragment() {
     }
 
@@ -79,7 +82,6 @@ public class TrainDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        // TODO Rename fragment to not use 'overlay' if it's no longer an overlay
         return inflater.inflate(R.layout.fragment_train_details, container, false);
     }
 
@@ -112,6 +114,9 @@ public class TrainDetailsFragment extends Fragment {
         });
 
         displayTrainDetails();
+        if(trainIsBeingTracked()){
+            automaticallyRefreshTrainDetails();
+        }
 
     }
 
@@ -124,23 +129,37 @@ public class TrainDetailsFragment extends Fragment {
         service_TV.setText(mTrain.getTrainType());
     }
 
-    private void setReminder(){
+    private boolean trainIsBeingTracked(){
+        boolean result = false;
 
-        int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
+        Train trainBeingTracked = ReminderManager.getTrainBeingTracked();
+        if(trainBeingTracked != null){
+            if(trainBeingTracked.equals(mTrain)){
+                result = true;
+            }
+        }
+        return result;
+    }
 
+    private void automaticallyRefreshTrainDetails(){
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(trackingUpdateReceiver,
-                new IntentFilter("train-update-broadcast"));
-
-        ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
-
+                new IntentFilter(ReminderManager.BROADCAST_NAME));
         updateTrackingUpdateTime();
         setReminder_Btn.setVisibility(View.GONE);
         trackingDetails_LL.setVisibility(View.VISIBLE);
+    }
+
+    private void setReminder(){
+
+        automaticallyRefreshTrainDetails();
+        int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
+        ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
 
     }
 
     private void deleteReminder(){
         ReminderManager.clearReminder(getActivity());
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(trackingUpdateReceiver);
         trackingDetails_LL.setVisibility(View.GONE);
         setReminder_Btn.setVisibility(View.VISIBLE);
     }
@@ -162,7 +181,9 @@ public class TrainDetailsFragment extends Fragment {
         Date currTime = c.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         String currTimeDisp = dateFormat.format(currTime);
-        trackingActive_TV.setText("Tracking Active. Details last updated at " + currTimeDisp);
+
+        String formattedTrackingMsg = String.format(TRACKING_ACTIVE_MSG, currTimeDisp);
+        trackingActive_TV.setText(formattedTrackingMsg);
     }
 
 }
