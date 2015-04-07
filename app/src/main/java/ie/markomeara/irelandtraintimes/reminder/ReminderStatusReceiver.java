@@ -56,8 +56,6 @@ public class ReminderStatusReceiver extends BroadcastReceiver {
                 .setContentTitle(strtitle)
                         // Set Text
                 .setContentText(trainDetails.getLatestInfo())
-                        // Add an Action Button below Notification
-                .addAction(R.drawable.ic_launcher, "Action Button", pIntent)
                         // Set PendingIntent into Notification
                 .setContentIntent(pIntent)
                         // Dismiss Notification
