@@ -11,9 +11,9 @@ import ie.markomeara.irelandtraintimes.trains.Train;
 /**
  * Created by mark on 21/03/15.
  */
-public class ReminderReceiver extends BroadcastReceiver{
+public class ReminderStartReceiver extends BroadcastReceiver{
 
-    private static final String TAG = ReminderReceiver.class.getSimpleName();
+    private static final String TAG = ReminderStartReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {

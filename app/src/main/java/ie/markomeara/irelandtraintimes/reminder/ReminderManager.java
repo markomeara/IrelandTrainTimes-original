@@ -41,7 +41,7 @@ public class ReminderManager {
         reminderMins = mins;
         alertShown = false;
 
-        Intent alarm = new Intent(ctx, ReminderReceiver.class);
+        Intent alarm = new Intent(ctx, ReminderStartReceiver.class);
         alarm.putExtra("train", trainBeingTracked);
         alarm.putExtra("station", stationBeingTracked);
         alarm.putExtra("reminderMins", reminderMins);

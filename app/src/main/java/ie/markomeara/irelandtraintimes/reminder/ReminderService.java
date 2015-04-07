@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
-
 import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
 import ie.markomeara.irelandtraintimes.trains.TrainsAPI;

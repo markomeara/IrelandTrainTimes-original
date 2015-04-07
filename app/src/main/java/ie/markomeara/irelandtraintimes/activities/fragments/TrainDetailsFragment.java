@@ -1,8 +1,6 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.reminder.ReminderStatusReceiver;
 import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
 import ie.markomeara.irelandtraintimes.reminder.ReminderManager;
@@ -48,6 +47,8 @@ public class TrainDetailsFragment extends Fragment {
 
     public static String TRAIN_PARAM = "train";
     public static String STATION_PARAM = "station";
+
+    private BroadcastReceiver trackingUpdateReceiver = new ReminderStatusReceiver(this);
 
     private static final String TRACKING_ACTIVE_MSG = "Tracking Active. Details last updated at %s. This screen" +
             " will refresh automatically with your train details.";
@@ -164,17 +165,6 @@ public class TrainDetailsFragment extends Fragment {
         setReminder_Btn.setVisibility(View.VISIBLE);
     }
 
-    private BroadcastReceiver trackingUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            mTrain = intent.getParcelableExtra("trainDetails");
-            displayTrainDetails();
-            updateTrackingUpdateTime();
-
-        }
-    };
-
     private void updateTrackingUpdateTime(){
         // Getting time to tell user when details were last updated
         Calendar c = Calendar.getInstance();
@@ -184,6 +174,13 @@ public class TrainDetailsFragment extends Fragment {
 
         String formattedTrackingMsg = String.format(TRACKING_ACTIVE_MSG, currTimeDisp);
         trackingActive_TV.setText(formattedTrackingMsg);
+    }
+
+    // Called from broadcaster when an update has been received for the train being tracked
+    public void newTrainDetailsReceived(Train trainDetails){
+        this.mTrain = trainDetails;
+        displayTrainDetails();
+        updateTrackingUpdateTime();
     }
 
 }
