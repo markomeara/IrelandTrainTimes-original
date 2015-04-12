@@ -179,7 +179,7 @@ public class StationsDataSource {
 
         Station stn = new Station(id, name, alias, latitude, longitude, code, fav);
 
-        Log.i(TAG, "Returning station with id " + id);
+        Log.d(TAG, "Returning station with id " + id);
         return stn;
     }
 }

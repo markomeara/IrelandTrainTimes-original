@@ -153,7 +153,7 @@ public class TweetsDataSource {
         Date createdAtDate = new Date(createdAt);
         Tweet tweet = new Tweet(id, text, createdAtDate, rtCount);
 
-        Log.i(TAG, "Returning tweet with id " + id);
+        Log.d(TAG, "Returning tweet with id " + id);
         return tweet;
     }
 
