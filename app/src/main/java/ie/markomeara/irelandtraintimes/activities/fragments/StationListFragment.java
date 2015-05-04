@@ -3,26 +3,28 @@ package ie.markomeara.irelandtraintimes.activities.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import ie.markomeara.irelandtraintimes.ListHelpers.adapters.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.trains.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.trains.Station;
-import ie.markomeara.irelandtraintimes.ListHelpers.adapters.StationListAdapter;
 import ie.markomeara.irelandtraintimes.trains.StationsDataSource;
 import ie.markomeara.irelandtraintimes.db.DBNotAvailableException;
-import ie.markomeara.irelandtraintimes.trains.RetrieveStationsTask;
 
 /**
  * Created by Mark on 27/10/2014.
@@ -32,12 +34,11 @@ public class StationListFragment extends Fragment {
     private static final String TAG = StationListFragment.class.getSimpleName();
 
     private EditText stationSearchField_ET;
-    private ListView stationListView;
+    private RecyclerView mStationRecyclerView;
+    private List<Station> mAllStations;
+    private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
     private TextView stationsLoadingTV;
-    private List<Station> stationList = null;
-    private StationListAdapter stationListAdapter;
-
-    private OnStationSelectedListener listener;
+    private OnStationClickedListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +52,7 @@ public class StationListFragment extends Fragment {
         super.onAttach(activity);
 
         try {
-            listener = (OnStationSelectedListener) activity;
+            listener = (OnStationClickedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnStationSelectedListener");
@@ -62,57 +63,50 @@ public class StationListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        loadStoredStationData();
+
         getActivity().getActionBar().setTitle(R.string.app_name);
-
         stationSearchField_ET = (EditText) getView().findViewById(R.id.stationSearchField);
-        stationListView = (ListView) getView().findViewById(R.id.stationlist);
+        mStationRecyclerView = (RecyclerView) getView().findViewById(R.id.stationlistRV);
         stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
-        stationListAdapter = new StationListAdapter(getActivity(), stationList);
 
-        // TODO Figure out when stations should be refreshed... not that often obviously
-        refreshStationListDisplay();
+        mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, listener);
+        mStationRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mStationRecyclerView.setAdapter(mStationRecyclerViewAdapter);
 
+        boolean immediateDisplayRefresh = false;
+        if(mAllStations.isEmpty()){
+            // If no stations are being displayed to user then update the display
+            // as soon as API returns with latest list of stations
+            immediateDisplayRefresh = true;
+        }
+        else{
+            // Don't show 'Initializing stations' text if stations are being shown
+            stationsLoadingTV.setVisibility(View.GONE);
+        }
+        updateStoredStationsFromAPI(immediateDisplayRefresh);
         monitorStationNameInput();
+    }
 
-        // Updating stations from API
-
-        // If we are not showing any stations, tell this to Stations task
-        // so it knows to update view when it's finished
-        boolean initializingStationsList = (stationListView.getCount() == 0);
-        new RetrieveStationsTask(this).execute(initializingStationsList);
-
+    public void updateStoredStationsFromAPI(boolean updateUIWhenComplete){
+        // TODO Network connection check
+        new RetrieveStationsTask(this).execute(updateUIWhenComplete);
     }
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen
     public void refreshStationListDisplay(){
 
-        StationsDataSource sds = new StationsDataSource(getActivity());
-
-        // Retrieving stations from DB
-        try {
-            sds.open();
-            stationList = sds.retrieveAllStations();
-            sds.close();
-        } catch (SQLException ex) {
-            Log.e(TAG, ex.toString(), ex);
-        } catch(DBNotAvailableException ex){
-            Log.e(TAG, ex.toString(), ex);
+        loadStoredStationData();
+        if(!mAllStations.isEmpty()) {
+            mStationRecyclerViewAdapter.updateDataSet(mAllStations);
         }
-        if(!stationList.isEmpty()) {
-
-            stationListAdapter = new StationListAdapter(getActivity(), stationList);
-            stationListView.setAdapter(stationListAdapter);
-
-            stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                public void onItemClick(AdapterView<?> parent, View clickedItem, int position, long id) {
-                    Station selectedStation = (Station) parent.getAdapter().getItem(position);
-                    listener.onStationSelected(selectedStation);
-                }
-            });
-
-            stationsLoadingTV.setVisibility(View.GONE);
+        else{
+            Toast toastMsg = new Toast(getActivity());
+            toastMsg.setText("No stations could be retrieved from Irish Rail website.");
+            toastMsg.setDuration(Toast.LENGTH_LONG);
+            toastMsg.show();
         }
+        stationsLoadingTV.setVisibility(View.GONE);
     }
 
     private void monitorStationNameInput(){
@@ -124,16 +118,31 @@ public class StationListFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s != null) {
-                    stationListAdapter.getFilter().filter(s.toString());
+                    mStationRecyclerViewAdapter.filter(s.toString());
                 }
             }};
 
         stationSearchField_ET.addTextChangedListener(stationSearchFieldListener);
-        stationListView.setTextFilterEnabled(true);
     }
 
-    public interface OnStationSelectedListener {
-        public void onStationSelected(Station station);
+    public interface OnStationClickedListener {
+        void onStationSelected(Station station);
     }
 
+    private void loadStoredStationData(){
+        // TODO Populate station data
+        mAllStations = new ArrayList<Station>();
+        StationsDataSource sds = new StationsDataSource(getActivity());
+        try {
+            sds.open();
+            mAllStations = sds.retrieveAllStations();
+            sds.close();
+        }
+        catch(SQLException ex){
+            Log.e(TAG, ex.getMessage());
+        }
+        catch(DBNotAvailableException ex){
+            Log.e(TAG, ex.getMessage());
+        }
+    }
 }

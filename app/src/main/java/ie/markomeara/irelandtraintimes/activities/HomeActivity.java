@@ -19,7 +19,7 @@ import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragmen
  * Created by Mark on 02/11/2014.
  */
 public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener,
-        StationListFragment.OnStationSelectedListener, StationNextTrainsFragment.OnTrainSelectedListener{
+        StationListFragment.OnStationClickedListener, StationNextTrainsFragment.OnTrainSelectedListener{
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 

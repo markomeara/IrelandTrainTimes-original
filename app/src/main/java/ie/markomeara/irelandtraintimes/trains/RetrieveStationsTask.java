@@ -64,7 +64,6 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
         catch (IOException ex) { Log.w(TAG, ex); }
         catch (SAXException ex) { Log.w(TAG, ex); }
 
-
         return updateUI;
     }
 
