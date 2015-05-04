@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.activities.HomeActivity;
+import ie.markomeara.irelandtraintimes.activities.BaseActivity;
 import ie.markomeara.irelandtraintimes.activities.fragments.TrainDetailsFragment;
 import ie.markomeara.irelandtraintimes.trains.Train;
 
@@ -37,7 +37,7 @@ public class ReminderStatusReceiver extends BroadcastReceiver {
         String strtitle = "Train departing in "  + trainDetails.getDueIn() + " mins";
         // Open NotificationView Class on Notification Click
   //  Intent intent = new Intent(context, NotificationView.class);
-        Intent intent = new Intent(context, HomeActivity.class);
+        Intent intent = new Intent(context, BaseActivity.class);
         // Send data to NotificationView Class
      intent.putExtra("title", strtitle);
      intent.putExtra("text", trainDetails.getLatestInfo());

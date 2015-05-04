@@ -17,3 +17,4 @@
 #}
 
 -ignorewarnings
+-include ../proguard-com.twitter.sdk.android.twitter.txt

@@ -37,8 +37,8 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setApplicationOnlyAuthEnabled(true);
-        cb.setOAuthConsumerKey(SecretKeys.API_KEY);
-        cb.setOAuthConsumerSecret(SecretKeys.SECRET_KEY);
+        cb.setOAuthConsumerKey(SecretKeys.TWITTER4J_API_KEY);
+        cb.setOAuthConsumerSecret(SecretKeys.TWITTER4J_SECRET_KEY);
         TwitterFactory tf = new TwitterFactory(cb.build());
         Twitter twitter = tf.getInstance();
 

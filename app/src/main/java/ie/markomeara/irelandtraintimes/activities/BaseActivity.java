@@ -3,15 +3,18 @@ package ie.markomeara.irelandtraintimes.activities;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
@@ -20,15 +23,19 @@ import ie.markomeara.irelandtraintimes.activities.fragments.StationNextTrainsFra
 import ie.markomeara.irelandtraintimes.activities.fragments.TrainDetailsFragment;
 import ie.markomeara.irelandtraintimes.activities.fragments.TwitterUpdateFragment;
 import ie.markomeara.irelandtraintimes.location.LocationUtils;
+import ie.markomeara.irelandtraintimes.utils.SecretKeys;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Mark on 02/11/2014.
  */
-public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFragmentInteractionListener,
+public class BaseActivity extends Activity implements TwitterUpdateFragment.TweetFragmentListener,
         StationListFragment.OnStationClickedListener, StationNextTrainsFragment.OnTrainSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = HomeActivity.class.getSimpleName();
+    // TODO Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+
+    private static final String TAG = BaseActivity.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -39,6 +46,10 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(SecretKeys.FABRIC_TWITTER_KEY,
+                SecretKeys.FABRIC_TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig), new Crashlytics());
         setContentView(R.layout.activity_home_container);
         buildGoogleApiClient();
 
@@ -57,8 +68,9 @@ public class HomeActivity extends Activity implements TwitterUpdateFragment.OnFr
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.e(TAG, "Need to implement onFragmentInteraction");
+    public void onTweetFragmentClicked() {
+        Intent intent = new Intent(this, TwitterActivity.class);
+        startActivity(intent);
     }
 
     @Override

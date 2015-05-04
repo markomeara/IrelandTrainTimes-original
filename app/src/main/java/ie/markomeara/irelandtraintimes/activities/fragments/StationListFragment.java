@@ -77,6 +77,7 @@ public class StationListFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        // TODO Should some of this be in onStart??
         mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, listener);
         mStationRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mStationRecyclerView.setAdapter(mStationRecyclerViewAdapter);

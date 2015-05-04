@@ -1,7 +1,6 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ public class TwitterUpdateFragment extends Fragment {
     Timer tweetSwitchTimer;
     private int currentTweet;
 
-    private OnFragmentInteractionListener mListener;
+    private TweetFragmentListener mListener;
 
     public TwitterUpdateFragment() {
         // Required empty public constructor
@@ -65,20 +64,22 @@ public class TwitterUpdateFragment extends Fragment {
 
         scheduleTweetSwitching();
 
-    }
+        // OnClick
+        tweetTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onTweetFragmentClicked();
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+            }
+        });
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (TweetFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -97,9 +98,9 @@ public class TwitterUpdateFragment extends Fragment {
         tweetSwitchTimer.cancel();
     }
 
-    public interface OnFragmentInteractionListener {
+    public interface TweetFragmentListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onTweetFragmentClicked();
     }
 
     private void scheduleTweetSwitching(){
@@ -139,4 +140,5 @@ public class TwitterUpdateFragment extends Fragment {
         tweets = tds.getAllTweets();
         tds.close();
     }
+
 }
