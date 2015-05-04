@@ -62,14 +62,21 @@ public class StationListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        loadStoredStationData();
-
         getActivity().getActionBar().setTitle(R.string.app_name);
         stationSearchField_ET = (EditText) getView().findViewById(R.id.stationSearchField);
         mStationRecyclerView = (RecyclerView) getView().findViewById(R.id.stationlistRV);
         stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        loadStoredStationData();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
         mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, listener);
         mStationRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mStationRecyclerView.setAdapter(mStationRecyclerViewAdapter);

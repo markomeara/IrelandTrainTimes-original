@@ -25,4 +25,5 @@ dependencies {
     compile files('libs/twitter4j-core-4.0.2-customised.jar')
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'com.google.android.gms:play-services:7.3.0'
 }

@@ -1,6 +1,9 @@
 package ie.markomeara.irelandtraintimes.ListHelpers.adapters;
 
+import android.location.Location;
+import android.location.LocationListener;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +15,13 @@ import java.util.List;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.activities.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.trains.Station;
+import ie.markomeara.irelandtraintimes.location.LocationUtils;
 
 /**
  * Created by markomeara on 03/05/2015.
  */
-public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecyclerViewAdapter.ViewHolder> {
+public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecyclerViewAdapter.ViewHolder>
+        implements LocationUtils.LocationListener {
 
     private static final String TAG = StationRecyclerViewAdapter.class.getSimpleName();
     public List<Station> mAllStations;
@@ -41,16 +46,31 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.setStnName(mVisibleStations.get(position).getName());
-        // TODO Pass actual calculated distance in here - not the alias
-        holder.setStnDistance(mVisibleStations.get(position).getAlias());
+        final Station currentStation = mVisibleStations.get(position);
+        double stationLatitude = currentStation.getLatitude();
+        double stationLongitude = currentStation.getLongitude();
+        int distanceBetweenStnAndLocation = LocationUtils.distFromCurrentLocation(stationLatitude, stationLongitude);
+
+        if(distanceBetweenStnAndLocation == LocationUtils.LOCATION_UNKNOWN){
+            // Will refresh list items when we have a location to display
+            LocationUtils.notifyWhenLocationUpdated(this);
+        }
+        else {
+            holder.setStnDistance(Integer.toString(distanceBetweenStnAndLocation) + "km");
+        }
+
+        if(!currentStation.getAlias().isEmpty()){
+            holder.setStationDisplayName(currentStation.getAlias());
+        }
+        else{
+            holder.setStationDisplayName(currentStation.getName());
+        }
 
         holder.getView().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Station clickedStation = mVisibleStations.get(position);
-                        mItemClickListener.onStationSelected(clickedStation);
+                        mItemClickListener.onStationSelected(currentStation);
                     }
                 }
         );
@@ -93,6 +113,13 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
         }
     }
 
+    @Override
+    public void locationUpdated() {
+        Log.e(TAG, "Location update notification received");
+        notifyDataSetChanged();
+        LocationUtils.removeNotificationListener(this);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final View stnItem;
@@ -106,7 +133,7 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
             return stnItem;
         }
 
-        public void setStnName(String name){
+        public void setStationDisplayName(String name){
             TextView stnName = (TextView) stnItem.findViewById(R.id.stationName);
             stnName.setText(name);
         }
