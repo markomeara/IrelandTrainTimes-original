@@ -5,13 +5,13 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +33,6 @@ public class StationListFragment extends Fragment {
 
     private static final String TAG = StationListFragment.class.getSimpleName();
 
-    private EditText stationSearchField_ET;
     private RecyclerView mStationRecyclerView;
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
@@ -43,12 +42,15 @@ public class StationListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView called");
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_stationlist, container, false);
     }
 
     @Override
     public void onAttach(Activity activity){
+        Log.d(TAG, "onAttach called");
         super.onAttach(activity);
 
         try {
@@ -61,21 +63,23 @@ public class StationListFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
         getActivity().getActionBar().setTitle(R.string.app_name);
-        stationSearchField_ET = (EditText) getView().findViewById(R.id.stationSearchField);
         mStationRecyclerView = (RecyclerView) getView().findViewById(R.id.stationlistRV);
         stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
+        Log.d(TAG, "onStart called");
         super.onStart();
         loadStoredStationData();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
+        Log.d(TAG, "onResume called");
         super.onResume();
         // TODO Should some of this be in onStart??
         mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, listener);
@@ -93,7 +97,32 @@ public class StationListFragment extends Fragment {
             stationsLoadingTV.setVisibility(View.GONE);
         }
         updateStoredStationsFromAPI(immediateDisplayRefresh);
-        monitorStationNameInput();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "onCreateOptionsMenu");
+        inflater.inflate(R.menu.base_activity_actions, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint(getActivity().getString(R.string.action_search_stations));
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "onQueryTextSubmit: " + query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(TAG, "onQueryTextChange: " + newText);
+                mStationRecyclerViewAdapter.filter(newText);
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public void updateStoredStationsFromAPI(boolean updateUIWhenComplete){
@@ -115,22 +144,6 @@ public class StationListFragment extends Fragment {
             toastMsg.show();
         }
         stationsLoadingTV.setVisibility(View.GONE);
-    }
-
-    private void monitorStationNameInput(){
-
-        TextWatcher stationSearchFieldListener = new TextWatcher(){
-
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void afterTextChanged(Editable s) { }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s != null) {
-                    mStationRecyclerViewAdapter.filter(s.toString());
-                }
-            }};
-
-        stationSearchField_ET.addTextChangedListener(stationSearchFieldListener);
     }
 
     public interface OnStationClickedListener {

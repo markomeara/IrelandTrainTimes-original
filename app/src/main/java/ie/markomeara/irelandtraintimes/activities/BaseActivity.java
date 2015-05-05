@@ -36,7 +36,6 @@ public class BaseActivity extends Activity implements TwitterUpdateFragment.Twee
     // TODO Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
     private static final String TAG = BaseActivity.class.getSimpleName();
-
     private GoogleApiClient mGoogleApiClient;
 
     // TODO Fragments should never communicate directly
@@ -45,6 +44,7 @@ public class BaseActivity extends Activity implements TwitterUpdateFragment.Twee
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(SecretKeys.FABRIC_TWITTER_KEY,
@@ -63,6 +63,7 @@ public class BaseActivity extends Activity implements TwitterUpdateFragment.Twee
 
     @Override
     protected void onStart(){
+        Log.d(TAG, "onStart called");
         super.onStart();
         mGoogleApiClient.connect();
     }

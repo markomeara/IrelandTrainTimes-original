@@ -13,14 +13,6 @@
    android:layout_above="@id/twitterupdatefragment"
    tools:context=".Home">
 
-   <EditText
-       android:id="@+id/stationSearchField"
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:hint="Enter station name"
-       android:inputType="text"
-       />
-
    <TextView
        android:id="@+id/loadingStationsTV"
        android:layout_width="wrap_content"
