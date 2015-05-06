@@ -1,8 +1,10 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -65,7 +67,14 @@ public class StationListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
-        getActivity().getActionBar().setTitle(R.string.app_name);
+        AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
+        ActionBar actionBar = parentActivity.getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.app_name);
+        }
+        else{
+            Log.e(TAG, "Action bar is null");
+        }
         mStationRecyclerView = (RecyclerView) getView().findViewById(R.id.stationlistRV);
         stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
     }

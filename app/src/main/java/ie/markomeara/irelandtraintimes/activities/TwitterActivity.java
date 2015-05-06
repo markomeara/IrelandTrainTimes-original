@@ -1,7 +1,7 @@
 package ie.markomeara.irelandtraintimes.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
@@ -12,7 +12,7 @@ import ie.markomeara.irelandtraintimes.R;
 /**
  * Created by markomeara on 04/05/2015.
  */
-public class TwitterActivity extends Activity {
+public class TwitterActivity extends AppCompatActivity {
 
     ListView twitter_LV;
 

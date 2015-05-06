@@ -1,11 +1,11 @@
 package ie.markomeara.irelandtraintimes.activities;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -29,7 +29,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by Mark on 02/11/2014.
  */
-public class BaseActivity extends Activity implements TwitterUpdateFragment.TweetFragmentListener,
+public class BaseActivity extends AppCompatActivity implements TwitterUpdateFragment.TweetFragmentListener,
         StationListFragment.OnStationClickedListener, StationNextTrainsFragment.OnTrainSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -53,7 +53,7 @@ public class BaseActivity extends Activity implements TwitterUpdateFragment.Twee
         setContentView(R.layout.activity_home_container);
         buildGoogleApiClient();
 
-        FragmentManager fragMgr = getFragmentManager();
+        FragmentManager fragMgr = getSupportFragmentManager();
         if(fragMgr.findFragmentById(R.id.mainfragment_placeholder) == null) {
             FragmentTransaction ft = fragMgr.beginTransaction();
             ft.add(R.id.mainfragment_placeholder, new StationListFragment());
@@ -77,7 +77,7 @@ public class BaseActivity extends Activity implements TwitterUpdateFragment.Twee
     @Override
     public void onStationSelected(Station station) {
         Log.i(TAG, "Clicked: " + station.getName());
-        FragmentTransaction ft  = getFragmentManager().beginTransaction();
+        FragmentTransaction ft  = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainfragment_placeholder, StationNextTrainsFragment.newInstance(station));
         ft.addToBackStack(TAG);
         ft.commit();
@@ -85,7 +85,7 @@ public class BaseActivity extends Activity implements TwitterUpdateFragment.Twee
 
     @Override
     public void onTrainSelected(Train train, Station station){
-        FragmentTransaction ft  = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainfragment_placeholder, TrainDetailsFragment.newInstance(train, station));
         ft.addToBackStack(TAG);
         ft.commit();

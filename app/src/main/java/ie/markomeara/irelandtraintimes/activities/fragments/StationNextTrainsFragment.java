@@ -1,9 +1,10 @@
 package ie.markomeara.irelandtraintimes.activities.fragments;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ public class StationNextTrainsFragment extends Fragment {
     private static final String TAG = StationNextTrainsFragment.class.getSimpleName();
     private static final String STATION_PARAM = "stationId";
     private Station displayedStation;
-    private Activity parentActivity;
+    private AppCompatActivity parentActivity;
     private OnTrainSelectedListener onTrainSelectedListener;
     private LayoutInflater layoutInflater;
 
@@ -77,8 +78,14 @@ public class StationNextTrainsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        parentActivity = getActivity();
-        parentActivity.getActionBar().setTitle(displayedStation.getName());
+        parentActivity = (AppCompatActivity) getActivity();
+        ActionBar actionBar = parentActivity.getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(displayedStation.getName());
+        }
+        else{
+            Log.e(TAG, "Action bar is null");
+        }
 
         AsyncTask ntt = new NextTrainsTask(this).execute(displayedStation);
         if(parentActivity instanceof OnTrainSelectedListener){
