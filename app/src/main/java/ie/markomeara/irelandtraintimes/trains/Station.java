@@ -15,19 +15,21 @@ public class Station implements Comparator, Parcelable{
     private long id;
     private String name;
     private String alias;
+    private String displayName;
     private double latitude;
     private double longitude;
     private String code;
     private boolean favourite;
 
-    public Station(long id, String name, String alias, double latitude, double longitude, String code) {
-        this(id, name, alias, latitude, longitude, code, false);
+    public Station(long id, String name, String alias, String displayName, double latitude, double longitude, String code) {
+        this(id, name, alias, displayName, latitude, longitude, code, false);
     }
 
-    public Station(long id, String name, String alias, double latitude, double longitude, String code, boolean fav) {
+    public Station(long id, String name, String alias, String displayName, double latitude, double longitude, String code, boolean fav) {
         this.id = id;
         this.name = name;
         this.alias = alias;
+        this.displayName = displayName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.code = code;
@@ -38,6 +40,7 @@ public class Station implements Comparator, Parcelable{
         this.id = in.readLong();
         this.name = in.readString();
         this.alias = in.readString();
+        this.displayName = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.code = in.readString();
@@ -61,6 +64,8 @@ public class Station implements Comparator, Parcelable{
     public String getAlias() {
         return alias;
     }
+
+    public String getDisplayName() { return displayName; }
 
     public double getLatitude() {
         return latitude;
@@ -90,6 +95,7 @@ public class Station implements Comparator, Parcelable{
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(alias);
+        dest.writeString(displayName);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(code);

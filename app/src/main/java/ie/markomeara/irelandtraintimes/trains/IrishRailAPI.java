@@ -22,7 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * Created by mark on 16/03/15.
  */
-public class TrainsAPI {
+public class IrishRailAPI {
 
     private static final String STATION_DATA_BY_CODE_RAW_URL = "http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML?StationCode=%s";
     public static final String ALL_STATIONS_RAW_URL = "http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML";
@@ -70,7 +70,7 @@ public class TrainsAPI {
     }
 
     private static NodeList getAllStationNodes() throws ParserConfigurationException, IOException, SAXException {
-        URL url = new URL(TrainsAPI.ALL_STATIONS_RAW_URL);
+        URL url = new URL(IrishRailAPI.ALL_STATIONS_RAW_URL);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(new InputSource(url.openStream()));
@@ -102,12 +102,13 @@ public class TrainsAPI {
                 stationName = stationName.trim();
                 String stationAlias = stationElem.getElementsByTagName("StationAlias").item(0).getTextContent();
                 stationAlias = stationAlias.trim();
+                String displayName = !stationAlias.isEmpty() ? stationAlias : stationName;
                 double stationLat = Double.parseDouble(stationElem.getElementsByTagName("StationLatitude").item(0).getTextContent());
                 double stationLong = Double.parseDouble(stationElem.getElementsByTagName("StationLongitude").item(0).getTextContent());
                 String stationCode = stationElem.getElementsByTagName("StationCode").item(0).getTextContent();
                 stationCode = stationCode.trim();
 
-                Station createdStation = new Station(stationId, stationName, stationAlias, stationLat, stationLong, stationCode);
+                Station createdStation = new Station(stationId, stationName, stationAlias, displayName, stationLat, stationLong, stationCode);
 
                 createdStationsList.add(createdStation);
             }
@@ -180,7 +181,7 @@ public class TrainsAPI {
                 // TODO A load of null checks
                 // TODO Use constants for element names
 
-                Train createdTrain = TrainsAPI.createTrainFromXml(trainElem);
+                Train createdTrain = IrishRailAPI.createTrainFromXml(trainElem);
                 trains.add(createdTrain);
 
             }

@@ -24,7 +24,7 @@ public class StationsDataSource {
     private SQLiteDatabase db;
     private DBManager dbManager;
     private String[] allColumns = { DBManager.COLUMN_ID, DBManager.COLUMN_STN_NAME,
-            DBManager.COLUMN_STN_ALIAS , DBManager.COLUMN_STN_LAT, DBManager.COLUMN_STN_LONG,
+            DBManager.COLUMN_STN_ALIAS, DBManager.COLUMN_STN_DISPLAY_NAME, DBManager.COLUMN_STN_LAT, DBManager.COLUMN_STN_LONG,
             DBManager.COLUMN_STN_CODE, DBManager.COLUMN_STN_FAV};
 
     public StationsDataSource(Context context){
@@ -85,6 +85,7 @@ public class StationsDataSource {
         stationInsertQuery.append(DBManager.COLUMN_ID).append(",");
         stationInsertQuery.append(DBManager.COLUMN_STN_NAME).append(",");
         stationInsertQuery.append(DBManager.COLUMN_STN_ALIAS).append(",");
+        stationInsertQuery.append(DBManager.COLUMN_STN_DISPLAY_NAME).append(",");
         stationInsertQuery.append(DBManager.COLUMN_STN_LAT).append(",");
         stationInsertQuery.append(DBManager.COLUMN_STN_LONG).append(",");
         stationInsertQuery.append(DBManager.COLUMN_STN_CODE).append(",");
@@ -94,6 +95,7 @@ public class StationsDataSource {
         stationInsertQuery.append(stationToStore.getId()).append(",");
         stationInsertQuery.append("'").append(stationToStore.getName()).append("',");
         stationInsertQuery.append("'").append(stationToStore.getAlias()).append("',");
+        stationInsertQuery.append("'").append(stationToStore.getDisplayName()).append("',");
         stationInsertQuery.append(stationToStore.getLatitude()).append(",");
         stationInsertQuery.append(stationToStore.getLongitude()).append(",");
         stationInsertQuery.append("'").append(stationToStore.getCode()).append("',");
@@ -141,8 +143,8 @@ public class StationsDataSource {
 
     public List<Station> retrieveAllStations(){
 
-        // Ordering by name
-        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_NAME);
+        // Order by display name
+        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_DISPLAY_NAME);
         List<Station> stns = new ArrayList<Station>();
 
         while(cursor.moveToNext()){
@@ -172,12 +174,13 @@ public class StationsDataSource {
         int id = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_ID));
         String name = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_NAME));
         String alias = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_ALIAS));
+        String displayName = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_DISPLAY_NAME));
         double latitude = cursor.getDouble(cursor.getColumnIndex(DBManager.COLUMN_STN_LAT));
         double longitude = cursor.getDouble(cursor.getColumnIndex(DBManager.COLUMN_STN_LONG));
         String code = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_CODE));
         boolean fav = (cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_STN_FAV)) > 0);
 
-        Station stn = new Station(id, name, alias, latitude, longitude, code, fav);
+        Station stn = new Station(id, name, alias, displayName, latitude, longitude, code, fav);
 
         Log.d(TAG, "Returning station with id " + id);
         return stn;

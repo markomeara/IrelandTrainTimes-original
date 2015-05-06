@@ -14,7 +14,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import ie.markomeara.irelandtraintimes.trains.Station;
 import ie.markomeara.irelandtraintimes.trains.Train;
-import ie.markomeara.irelandtraintimes.trains.TrainsAPI;
+import ie.markomeara.irelandtraintimes.trains.IrishRailAPI;
 
 /**
  * Created by mark on 16/03/15.
@@ -46,7 +46,7 @@ public class ReminderService extends IntentService {
         Log.i(TAG, station.getName() + " -- " + train.getTrainCode() + " -- " + reminderMins);
 
         try {
-            Train latestTrainInfo = TrainsAPI.getTrainAtStationCode(train.getTrainCode(), station.getCode());
+            Train latestTrainInfo = IrishRailAPI.getTrainAtStationCode(train.getTrainCode(), station.getCode());
 
             if(latestTrainInfo == null){
                 trainHasGone();

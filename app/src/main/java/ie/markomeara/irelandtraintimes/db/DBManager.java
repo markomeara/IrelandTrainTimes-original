@@ -21,6 +21,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     public static final String COLUMN_STN_NAME = "name";
     public static final String COLUMN_STN_ALIAS = "alias";
+    public static final String COLUMN_STN_DISPLAY_NAME = "displayname";
     public static final String COLUMN_STN_LAT = "latitude";
     public static final String COLUMN_STN_LONG = "longitude";
     public static final String COLUMN_STN_CODE = "code";
@@ -36,6 +37,7 @@ public class DBManager extends SQLiteOpenHelper {
             + TABLE_STATIONS + "(" + COLUMN_ID + " integer primary key, "
             + COLUMN_STN_NAME + " text unique not null, "
             + COLUMN_STN_ALIAS + " text, "
+            + COLUMN_STN_DISPLAY_NAME + " text unique not null, "
             + COLUMN_STN_LAT + " real, "
             + COLUMN_STN_LONG + " real, "
             + COLUMN_STN_CODE + " text, "
