@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -59,6 +60,10 @@ public class BaseActivity extends AppCompatActivity implements TwitterUpdateFrag
             ft.add(R.id.mainfragment_placeholder, new StationListFragment());
             ft.commit();
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
     }
 
     @Override
