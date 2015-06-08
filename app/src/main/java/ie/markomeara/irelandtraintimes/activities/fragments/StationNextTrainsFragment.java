@@ -82,6 +82,11 @@ public class StationNextTrainsFragment extends Fragment {
         ActionBar actionBar = parentActivity.getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(displayedStation.getName());
+
+            // TODO Add 'ontouch' background change to the back button in action bar
+            // it's there by default in lollipop
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
         }
         else{
             Log.e(TAG, "Action bar is null");

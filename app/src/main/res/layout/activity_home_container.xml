@@ -29,7 +29,7 @@
                 android:layout_height="fill_parent"
                 android:layout_width="match_parent"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/ToolbarTheme"
+                android:theme="@style/ToolbarTheme"
                 android:title="mytitle"/>
 
         </android.support.design.widget.AppBarLayout>

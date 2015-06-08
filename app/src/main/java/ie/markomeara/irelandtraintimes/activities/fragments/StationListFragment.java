@@ -71,6 +71,7 @@ public class StationListFragment extends Fragment {
         ActionBar actionBar = parentActivity.getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.app_name);
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
         else{
             Log.e(TAG, "Action bar is null");
