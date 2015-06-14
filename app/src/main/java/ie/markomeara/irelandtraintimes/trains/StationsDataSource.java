@@ -28,20 +28,8 @@ public class StationsDataSource {
             DBManager.COLUMN_STN_CODE, DBManager.COLUMN_STN_FAV};
 
     public StationsDataSource(Context context){
-        dbManager = new DBManager(context);
-    }
-
-    public void open() throws SQLException, DBNotAvailableException {
-        if(dbManager != null) {
-            db = dbManager.getWritableDatabase();
-        }
-        else{
-            throw new DBNotAvailableException("dbManager has not been initialised");
-        }
-    }
-
-    public void close() {
-        dbManager.close();
+        dbManager = DBManager.getDBManager(context);
+        db = dbManager.getWritableDatabase();
     }
 
     public boolean updateStoredStations(List<Station> stationList){

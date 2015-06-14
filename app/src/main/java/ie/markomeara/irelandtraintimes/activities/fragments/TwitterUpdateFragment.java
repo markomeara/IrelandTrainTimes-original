@@ -52,10 +52,7 @@ public class TwitterUpdateFragment extends Fragment {
         new TwitterTask(getActivity()).execute();
 
         TweetsDataSource tds = new TweetsDataSource(getActivity());
-
-        tds.open();
         tweets = tds.getAllTweets();
-        tds.close();
 
         currentTweet = 0;
         if(!tweets.isEmpty()) {
@@ -136,9 +133,7 @@ public class TwitterUpdateFragment extends Fragment {
 
     private void refreshTweetList(){
         TweetsDataSource tds = new TweetsDataSource(getActivity());
-        tds.open();
         tweets = tds.getAllTweets();
-        tds.close();
     }
 
 }

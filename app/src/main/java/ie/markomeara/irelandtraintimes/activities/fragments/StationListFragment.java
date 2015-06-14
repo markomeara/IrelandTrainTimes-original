@@ -164,16 +164,6 @@ public class StationListFragment extends Fragment {
         // TODO Populate station data
         mAllStations = new ArrayList<Station>();
         StationsDataSource sds = new StationsDataSource(getActivity());
-        try {
-            sds.open();
-            mAllStations = sds.retrieveAllStations();
-            sds.close();
-        }
-        catch(SQLException ex){
-            Log.e(TAG, ex.getMessage());
-        }
-        catch(DBNotAvailableException ex){
-            Log.e(TAG, ex.getMessage());
-        }
+        mAllStations = sds.retrieveAllStations();
     }
 }

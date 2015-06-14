@@ -42,19 +42,8 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
             // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
             if (stations.size() > 130) {
-                try {
-                    StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
-                    sds.open();
-                    sds.updateStoredStations(stations);
-                    sds.close();
-                } catch (SQLException ex) {
-                    Log.e(TAG, ex.toString(), ex);
-                } catch (DBNotAvailableException ex) {
-                    Log.e(TAG, ex.toString(), ex);
-                } catch (NullPointerException ex) {
-                    // TODO Figure out why nullpointexception thrown here on screen rotate
-                    Log.e(TAG, ex.toString(), ex);
-                }
+                StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
+                sds.updateStoredStations(stations);
             }
 
          }

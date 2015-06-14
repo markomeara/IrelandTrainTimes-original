@@ -53,15 +53,7 @@ public class StationNextTrainsFragment extends Fragment {
         if (getArguments() != null) {
             long stationId = getArguments().getLong(STATION_PARAM);
             StationsDataSource sds = new StationsDataSource(getActivity());
-            try {
-                sds.open();
-                displayedStation = sds.retrieveStationById(stationId);
-                sds.close();
-            } catch (SQLException ex) {
-                Log.e(TAG, ex.toString(), ex);
-            } catch(DBNotAvailableException ex){
-                Log.e(TAG, ex.toString(), ex);
-            }
+            displayedStation = sds.retrieveStationById(stationId);
         }
     }
 

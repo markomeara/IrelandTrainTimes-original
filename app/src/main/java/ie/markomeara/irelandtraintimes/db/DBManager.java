@@ -49,8 +49,18 @@ public class DBManager extends SQLiteOpenHelper {
             + COLUMN_TWEET_CREATE_DATE + " integer not null, "
             + COLUMN_TWEET_RT_COUNT + " integer);";
 
+    private static DBManager instance;
+
     public DBManager(Context context){
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static synchronized DBManager getDBManager(Context context){
+        if(instance == null) {
+            instance = new DBManager(context);
+        }
+
+        return instance;
     }
 
     @Override

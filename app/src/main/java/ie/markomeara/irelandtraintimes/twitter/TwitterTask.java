@@ -62,11 +62,10 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
             TweetsDataSource tds = new TweetsDataSource(currentContext);
 
-            tds.open();
             tds.createRelevantTweets(statuses);
-            tds.close();
 
-        }catch(TwitterException ex){
+        }
+        catch(TwitterException ex){
             Log.w(TAG, ex);
         }
 

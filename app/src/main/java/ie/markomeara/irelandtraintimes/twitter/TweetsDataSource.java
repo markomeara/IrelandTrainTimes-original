@@ -30,14 +30,9 @@ public class TweetsDataSource {
     private long oneDay = TimeUnit.DAYS.toMillis(1);
 
     public TweetsDataSource(Context context){
-        dbManager = new DBManager(context);
-    }
-
-    public void open() {
+        dbManager = DBManager.getDBManager(context);
         db = dbManager.getWritableDatabase();
     }
-
-    public void close() { dbManager.close(); }
 
     // TODO Remove tweets more than 24 hours old
 
