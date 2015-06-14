@@ -3,48 +3,48 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="50dp"
     android:background="@android:color/white"
     android:layout_marginBottom="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:paddingLeft="8dp"
+        android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/stationDistance"
             android:background="@drawable/distance_circle"
-            android:textColor="#000000"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="0.5km"
-            android:layout_marginLeft="10dp"
-            android:layout_alignLeft="@+id/stationName"
-            />
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:id="@+id/stationName"
             android:text="station name"
-            android:textColor="#000000"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:width="300dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            />
+            android:layout_alignTop="@+id/stationDistance"
+            android:layout_toLeftOf="@+id/stn_favourite"
+            android:layout_toRightOf="@+id/stationDistance"
+            android:layout_toEndOf="@+id/stationDistance" />
 
         <ImageButton
             android:id="@+id/stn_favourite"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:src="@android:drawable/star_off"
             android:background="@android:color/transparent"
-            android:layout_alignRight="@id/stationName"/>
+            android:layout_marginRight="8dp"
+            android:layout_alignTop="@+id/stationName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 </LinearLayout>
