@@ -26,7 +26,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:theme="@style/ToolbarTheme"
