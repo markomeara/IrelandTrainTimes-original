@@ -39,11 +39,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/twitter4j-core-4.0.2-customised.jar')
     compile 'org.jsoup:jsoup:1.8.1'
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:cardview-v7:22.1.1'
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.google.android.gms:play-services:7.5.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:design:22.2.1'
     compile('com.twitter.sdk.android:twitter:1.4.0@aar') {
         transitive = true;
     }

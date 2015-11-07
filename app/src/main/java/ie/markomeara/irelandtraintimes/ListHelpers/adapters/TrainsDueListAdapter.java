@@ -66,7 +66,7 @@ public class TrainsDueListAdapter extends ArrayAdapter<TrainListItem> {
     private View getHeaderView(TrainListHeader header, ViewGroup parent){
         View headerView;
 
-        headerView = inflater.inflate(R.layout.list_trains_header, parent, false);
+        headerView = inflater.inflate(R.layout.list_header_trains, parent, false);
 
         TextView headerTV = (TextView) headerView.findViewById(R.id.trainsDueListHeader);
         headerTV.setText(header.getHeadingText());
@@ -74,7 +74,7 @@ public class TrainsDueListAdapter extends ArrayAdapter<TrainListItem> {
     }
 
     private View getTrainItemView(final Train train, ViewGroup parent){
-        View trainDetailsView = inflater.inflate(R.layout.list_trains_item, parent, false);
+        View trainDetailsView = inflater.inflate(R.layout.list_item_trains, parent, false);
 
         View detailsContainer = trainDetailsView.findViewById(R.id.traindue_detailscontainer_RL);
 

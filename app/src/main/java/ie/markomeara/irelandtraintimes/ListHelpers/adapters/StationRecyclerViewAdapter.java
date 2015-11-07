@@ -1,7 +1,5 @@
 package ie.markomeara.irelandtraintimes.ListHelpers.adapters;
 
-import android.location.Location;
-import android.location.LocationListener;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +38,7 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
-        View createdView = mInflater.inflate(R.layout.list_station_item, parent, false);
+        View createdView = mInflater.inflate(R.layout.list_item_station, parent, false);
         return new ViewHolder(createdView);
     }
 
