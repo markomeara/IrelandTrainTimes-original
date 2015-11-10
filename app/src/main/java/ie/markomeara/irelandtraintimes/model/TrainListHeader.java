@@ -1,7 +1,6 @@
-package ie.markomeara.irelandtraintimes.views;
+package ie.markomeara.irelandtraintimes.model;
 
-import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueListAdapter;
-import ie.markomeara.irelandtraintimes.views.TrainListItem;
+import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapter;
 
 /**
  * Created by Mark on 16/11/2014.
@@ -15,8 +14,8 @@ public class TrainListHeader implements TrainListItem {
     }
 
     @Override
-    public int getListViewType() {
-        return TrainsDueListAdapter.RowType.HEADER.ordinal();
+    public int getViewType() {
+        return TrainsDueRecyclerViewAdapter.RowType.HEADER.ordinal();
     }
 
     public void setHeadingText(String text){

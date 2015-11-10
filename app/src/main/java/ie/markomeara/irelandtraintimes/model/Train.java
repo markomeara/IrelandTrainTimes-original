@@ -5,8 +5,7 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueListAdapter;
-import ie.markomeara.irelandtraintimes.views.TrainListItem;
+import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapter;
 
 /**
  * Created by Mark on 26/10/2014.
@@ -125,8 +124,8 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         return result;
     }
 
-    public int getListViewType(){
-        return TrainsDueListAdapter.RowType.TRAIN.ordinal();
+    public int getViewType(){
+        return TrainsDueRecyclerViewAdapter.RowType.TRAIN.ordinal();
     }
 
     public String getTrainCode() {
