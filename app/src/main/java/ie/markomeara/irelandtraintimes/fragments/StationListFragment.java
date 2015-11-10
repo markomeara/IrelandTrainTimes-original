@@ -160,7 +160,7 @@ public class StationListFragment extends Fragment {
 
     private void loadStoredStationData(){
         // TODO Populate station data
-        mAllStations = new ArrayList<Station>();
+        mAllStations = new ArrayList<>();
         StationsDataSource sds = new StationsDataSource(getActivity());
         mAllStations = sds.retrieveAllStations();
     }

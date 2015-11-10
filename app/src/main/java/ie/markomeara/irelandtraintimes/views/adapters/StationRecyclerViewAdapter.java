@@ -30,7 +30,7 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
                                       StationListFragment.OnStationClickedListener itemClickListener){
         super();
         this.mAllStations = stations;
-        this.mVisibleStations = new ArrayList<Station>();
+        this.mVisibleStations = new ArrayList<>();
         this.mVisibleStations.addAll(mAllStations);
         this.mItemClickListener = itemClickListener;
     }
