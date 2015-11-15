@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
@@ -38,6 +40,11 @@ public class StationNextTrainsFragment extends Fragment {
     private OnTrainSelectedListener onTrainSelectedListener;
     private LayoutInflater mLayoutInflater;
     private TrainsDueRecyclerViewAdapter mTrainsDueRecyclerViewAdapter;
+
+    @Bind(R.id.trainsDueAtStation_RV)
+    RecyclerView trainsDueRV;
+    @Bind(R.id.trainsDue_loading_TV)
+    TextView statusMsg_TV;   // TODO Switch to switcher view
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -64,7 +71,9 @@ public class StationNextTrainsFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
         mLayoutInflater = inflater;
-        return mLayoutInflater.inflate(R.layout.fragment_station_next_trains, container, false);
+        View view = mLayoutInflater.inflate(R.layout.fragment_station_next_trains, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -124,7 +133,6 @@ public class StationNextTrainsFragment extends Fragment {
                     trainListItems.add(trainsDue.get(i));
                 }
 
-                RecyclerView trainsDueRV = (RecyclerView) activityView.findViewById(R.id.trainsDueAtStation_RV);
                 mTrainsDueRecyclerViewAdapter = new TrainsDueRecyclerViewAdapter(trainListItems, this);
                 trainsDueRV.setLayoutManager(new LinearLayoutManager(getActivity()));
                 trainsDueRV.setAdapter(mTrainsDueRecyclerViewAdapter);
@@ -139,17 +147,15 @@ public class StationNextTrainsFragment extends Fragment {
         // TODO Move setting activity view to oncreate/onresume
         View activityView = getView();
         if(activityView != null){
-            View loadingMsg = activityView.findViewById(R.id.trainsDue_loading_TV);
-            loadingMsg.setVisibility(View.GONE);
+            statusMsg_TV.setVisibility(View.GONE);
         }
     }
 
     private void showNoResultsMessage(){
         // TODO Move setting activity view to oncreate/onresume
         View activityView = getView();
-        TextView trainsDueTV = (TextView) activityView.findViewById(R.id.trainsDue_loading_TV);
-        trainsDueTV.setText("No trains found");
-        trainsDueTV.setVisibility(View.VISIBLE);
+        statusMsg_TV.setText("No trains found");
+        statusMsg_TV.setVisibility(View.VISIBLE);
     }
 
     public void onTrainSelected(int position){

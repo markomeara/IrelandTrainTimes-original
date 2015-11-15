@@ -20,6 +20,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.views.adapters.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
@@ -33,11 +35,14 @@ public class StationListFragment extends Fragment {
 
     private static final String TAG = StationListFragment.class.getSimpleName();
 
-    private RecyclerView mStationRecyclerView;
+    @Bind(R.id.stationlistRV)
+    RecyclerView mStationRecyclerView;
+    @Bind(R.id.loadingStationsTV)
+    TextView mStationsLoadingTV;
+
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
-    private TextView stationsLoadingTV;
-    private OnStationClickedListener listener;
+    private OnStationClickedListener mListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +50,9 @@ public class StationListFragment extends Fragment {
         Log.d(TAG, "onCreateView called");
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stationlist, container, false);
+        View view = inflater.inflate(R.layout.fragment_stationlist, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class StationListFragment extends Fragment {
         super.onAttach(activity);
 
         try {
-            listener = (OnStationClickedListener) activity;
+            mListener = (OnStationClickedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnStationSelectedListener");
@@ -74,8 +81,6 @@ public class StationListFragment extends Fragment {
         else{
             Log.e(TAG, "Action bar is null");
         }
-        mStationRecyclerView = (RecyclerView) getView().findViewById(R.id.stationlistRV);
-        stationsLoadingTV = (TextView) getView().findViewById(R.id.loadingStationsTV);
     }
 
     @Override
@@ -90,7 +95,7 @@ public class StationListFragment extends Fragment {
         Log.d(TAG, "onResume called");
         super.onResume();
         // TODO Should some of this be in onStart??
-        mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, listener);
+        mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, mListener);
         mStationRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mStationRecyclerView.setAdapter(mStationRecyclerViewAdapter);
 
@@ -102,7 +107,7 @@ public class StationListFragment extends Fragment {
         }
         else{
             // Don't show 'Initializing stations' text if stations are being shown
-            stationsLoadingTV.setVisibility(View.GONE);
+            mStationsLoadingTV.setVisibility(View.GONE);
         }
         updateStoredStationsFromAPI(immediateDisplayRefresh);
     }
@@ -112,10 +117,10 @@ public class StationListFragment extends Fragment {
         Log.d(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.base_activity_actions, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint(getActivity().getString(R.string.action_search_stations));
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        SearchView mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView.setQueryHint(getActivity().getString(R.string.action_search_stations));
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "onQueryTextSubmit: " + query);
@@ -151,7 +156,7 @@ public class StationListFragment extends Fragment {
             toastMsg.setDuration(Toast.LENGTH_LONG);
             toastMsg.show();
         }
-        stationsLoadingTV.setVisibility(View.GONE);
+        mStationsLoadingTV.setVisibility(View.GONE);
     }
 
     public interface OnStationClickedListener {

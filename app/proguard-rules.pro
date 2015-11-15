@@ -18,3 +18,13 @@
 
 -ignorewarnings
 -include ../proguard-com.twitter.sdk.android.twitter.txt
+
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}

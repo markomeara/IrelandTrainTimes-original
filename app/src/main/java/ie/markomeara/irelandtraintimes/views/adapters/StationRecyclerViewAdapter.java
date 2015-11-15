@@ -10,6 +10,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
@@ -121,10 +123,15 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final View stnItem;
+        @Bind(R.id.stationName)
+        TextView stnName;
+        @Bind(R.id.stationDistance)
+        TextView stnDistance;
 
         public ViewHolder(View view) {
             super(view);
             stnItem = view;
+            ButterKnife.bind(this, view);
         }
 
         public View getView(){
@@ -132,12 +139,10 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
         }
 
         public void setStationDisplayName(String name){
-            TextView stnName = (TextView) stnItem.findViewById(R.id.stationName);
             stnName.setText(name);
         }
 
         public void setStnDistance(String distance){
-            TextView stnDistance = (TextView) stnItem.findViewById(R.id.stationDistance);
             stnDistance.setText(distance);
         }
     }

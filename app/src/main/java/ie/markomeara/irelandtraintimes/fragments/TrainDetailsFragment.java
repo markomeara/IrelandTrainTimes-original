@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.managers.ReminderStatusReceiver;
 import ie.markomeara.irelandtraintimes.model.Station;
@@ -33,17 +35,28 @@ public class TrainDetailsFragment extends Fragment {
     private Train mTrain;
     private Station mStation;
 
-    private TextView destination_TV;
-    private TextView scheduled_TV;
-    private TextView estimated_TV;
-    private TextView dueIn_TV;
-    private TextView latest_TV;
-    private TextView service_TV;
-    private TextView reminderMins_ET;
-    private TextView trackingActive_TV;
-    private Button setReminder_Btn;
-    private Button deleteReminder_Btn;
-    private LinearLayout trackingDetails_LL;
+    @Bind(R.id.trainDetails_dest_TV)
+    TextView destination_TV;
+    @Bind(R.id.trainDetails_scheduled_TV)
+    TextView scheduled_TV;
+    @Bind(R.id.trainDetails_estimated_TV)
+    TextView estimated_TV;
+    @Bind(R.id.trainDetails_dueIn_TV)
+    TextView dueIn_TV;
+    @Bind(R.id.trainDetails_latest_TV)
+    TextView latest_TV;
+    @Bind(R.id.trainDetails_service_TV)
+    TextView service_TV;
+    @Bind(R.id.trainDetails_remindermins_ET)
+    TextView reminderMins_ET;
+    @Bind(R.id.trainDetails_trackingActive_TV)
+    TextView trackingActive_TV;
+    @Bind(R.id.trainDetails_reminder_BTN)
+    Button setReminder_Btn;
+    @Bind(R.id.trainDetails_deletereminder_BTN)
+    Button deleteReminder_Btn;
+    @Bind(R.id.trackingDetails_RL)
+    LinearLayout trackingDetails_LL;
 
     public static String TRAIN_PARAM = "train";
     public static String STATION_PARAM = "station";
@@ -83,24 +96,14 @@ public class TrainDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_train_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_train_details, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        destination_TV = (TextView) getView().findViewById(R.id.trainDetails_dest_TV);
-        scheduled_TV = (TextView) getView().findViewById(R.id.trainDetails_scheduled_TV);
-        estimated_TV = (TextView) getView().findViewById(R.id.trainDetails_estimated_TV);
-        dueIn_TV = (TextView) getView().findViewById(R.id.trainDetails_dueIn_TV);
-        latest_TV = (TextView) getView().findViewById(R.id.trainDetails_latest_TV);
-        service_TV = (TextView) getView().findViewById(R.id.trainDetails_service_TV);
-        trackingActive_TV = (TextView) getView().findViewById(R.id.trainDetails_trackingActive_TV);
-        reminderMins_ET = (EditText) getView().findViewById(R.id.trainDetails_remindermins_ET);
-        setReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_reminder_BTN);
-        deleteReminder_Btn = (Button) getView().findViewById(R.id.trainDetails_deletereminder_BTN);
-        trackingDetails_LL = (LinearLayout) getView().findViewById(R.id.trackingDetails_RL);
         setReminder_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

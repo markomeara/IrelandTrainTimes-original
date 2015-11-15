@@ -7,6 +7,8 @@ import android.widget.ListView;
 import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
 import com.twitter.sdk.android.tweetui.UserTimeline;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 
 /**
@@ -14,13 +16,14 @@ import ie.markomeara.irelandtraintimes.R;
  */
 public class TwitterActivity extends AppCompatActivity {
 
+    @Bind(R.id.twittertimeline_LV)
     ListView twitter_LV;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_twitter);
-        twitter_LV = (ListView) findViewById(R.id.twittertimeline_LV);
+        ButterKnife.bind(this);
     }
 
     @Override

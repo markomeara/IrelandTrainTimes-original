@@ -5,11 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.fragments.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Train;
@@ -92,14 +93,16 @@ public class TrainsDueRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public static class TrainDirectionViewHolder extends RecyclerView.ViewHolder {
 
         private final View trainDirectionHeading;
+        @Bind(R.id.trainsDueListHeader)
+        TextView directionTV;
 
         public TrainDirectionViewHolder(View view){
             super(view);
             trainDirectionHeading = view;
+            ButterKnife.bind(this, view);
         }
 
         public void setDirection(String direction){
-            TextView directionTV = (TextView) trainDirectionHeading.findViewById(R.id.trainsDueListHeader);
             directionTV.setText(direction);
         }
     }
@@ -112,13 +115,23 @@ public class TrainsDueRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public static class TrainViewHolder extends RecyclerView.ViewHolder {
 
         private final View mTrainItem;
-        private final View mReminderBtn;
+        @Bind(R.id.reminderButton)
+        View mReminderBtn;
+        @Bind(R.id.traindue_dest_TV)
+        TextView trainDest_TV;
+        @Bind(R.id.traindue_mins_TV)
+        TextView trainDueMins_TV;
+        @Bind(R.id.traindue_delay_TV)
+        TextView trainDelayMins_TV;
+        @Bind(R.id.traindue_time_TV)
+        TextView trainDueTime_TV;
+
         private final StationNextTrainsFragment mListener;
 
         public TrainViewHolder(View view, StationNextTrainsFragment listener) {
             super(view);
             mTrainItem = view;
-            mReminderBtn = view.findViewById(R.id.reminderButton);
+            ButterKnife.bind(this, view);
             mListener = listener;
             createOnClickListeners();
         }
@@ -149,35 +162,29 @@ public class TrainsDueRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             }));
         }
         public void setTrainDestination(String destination){
-            TextView trainDest_TV = (TextView) mTrainItem.findViewById(R.id.traindue_dest_TV);
             trainDest_TV.setText(destination);
         }
 
         public void setTrainDueMins(int trainDueMins){
-            TextView trainDueMins_TV = (TextView) mTrainItem.findViewById(R.id.traindue_mins_TV);
             trainDueMins_TV.setText(Integer.toString(trainDueMins) + " mins");
         }
 
         public void setTrainDelayMins(int trainDelayMins){
-            TextView trainDelayMins_TV = (TextView) mTrainItem.findViewById(R.id.traindue_delay_TV);
             String trainDelayMinsDisp = formatDelayMinsToString(trainDelayMins);
             trainDelayMins_TV.setText(trainDelayMinsDisp);
 
             int delayColor = colorForDelayMins(trainDelayMins);
             if(delayColor != NO_COLOR){
                 trainDelayMins_TV.setTextColor(delayColor);
-                TextView trainDueMins_TV = (TextView) mTrainItem.findViewById(R.id.traindue_mins_TV);
                 trainDueMins_TV.setTextColor(delayColor);
             }
         }
 
         public void setTrainDueTime(String trainDueTime){
-            TextView trainDueTime_TV = (TextView) mTrainItem.findViewById(R.id.traindue_time_TV);
             trainDueTime_TV.setText(trainDueTime);
         }
 
         public void doSomethingWithReminderBtn(){
-            ImageButton reminderBtn = (ImageButton) mTrainItem.findViewById(R.id.reminderButton);
             // TODO Something
         }
 

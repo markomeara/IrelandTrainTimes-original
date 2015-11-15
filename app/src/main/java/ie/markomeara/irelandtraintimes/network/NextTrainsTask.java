@@ -39,7 +39,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
             String stnCode = station.getCode();
 
             try {
-                List<Train> allTrains = IrishRailAPI.getTrainsFromStationCode(stnCode);
+                List<Train> allTrains = IrishRailAPIUtil.getTrainsFromStationCode(stnCode);
                 relevantTrains = removeTrainsTerminatingAtStation(allTrains, station);
             }
 

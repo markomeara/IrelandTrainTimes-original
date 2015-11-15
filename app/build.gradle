@@ -33,6 +33,12 @@ android {
     }
     productFlavors {
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
@@ -44,6 +50,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:design:22.2.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
     compile('com.twitter.sdk.android:twitter:1.4.0@aar') {
         transitive = true;
     }

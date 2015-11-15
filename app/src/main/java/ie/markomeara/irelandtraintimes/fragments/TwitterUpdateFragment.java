@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.network.TweetsDataSource;
 import ie.markomeara.irelandtraintimes.network.TwitterTask;
@@ -21,11 +23,12 @@ public class TwitterUpdateFragment extends Fragment {
 
     private static final String TAG = TwitterUpdateFragment.class.getSimpleName();
     private List<Tweet> tweets;
-    private TextView tweetTextView;
     Timer tweetSwitchTimer;
     private int currentTweet;
-
     private TweetFragmentListener mListener;
+
+    @Bind(R.id.tweetdisplayedTV)
+    TextView tweetTextView;
 
     public TwitterUpdateFragment() {
         // Required empty public constructor
@@ -40,14 +43,14 @@ public class TwitterUpdateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_twitter_update, container, false);
+        View view = inflater.inflate(R.layout.fragment_twitter_update, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
-        tweetTextView = (TextView)  getView().findViewById(R.id.tweetdisplayedTV);
 
         new TwitterTask(getActivity()).execute();
 

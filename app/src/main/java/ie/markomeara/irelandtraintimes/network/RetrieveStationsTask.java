@@ -37,7 +37,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
         try {
 
-            List<Station> stations = IrishRailAPI.getAllStations();
+            List<Station> stations = IrishRailAPIUtil.getAllStations();
 
             // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
             if (stations.size() > 130) {
