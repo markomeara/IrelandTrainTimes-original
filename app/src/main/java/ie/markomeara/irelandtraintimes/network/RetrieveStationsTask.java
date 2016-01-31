@@ -3,16 +3,14 @@ package ie.markomeara.irelandtraintimes.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.xml.sax.SAXException;
+import com.mobprofs.retrofit.converters.SimpleXmlConverter;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
+import ie.markomeara.irelandtraintimes.model.StationList;
+import retrofit.RestAdapter;
 
 
 /**
@@ -30,27 +28,29 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     @Override
     protected Boolean doInBackground(Boolean[] updateUIParam) {
 
+        // TODO Move this creation to common static variable along with other creation
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.irishrail.ie/realtime/realtime.asmx")
+                .setConverter(new SimpleXmlConverter())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        IrishRailService irishRailService = restAdapter.create(IrishRailService.class);
+
         boolean updateUI = false;
         if(updateUIParam.length > 0){
             updateUI = updateUIParam[0];
         }
 
-        try {
 
-            List<Station> stations = IrishRailAPIUtil.getAllStations();
+        StationList stationList = irishRailService.getAllStations();
+        List<Station> stations = stationList.getStationList();
 
-            // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
-            if (stations.size() > 130) {
-                StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
-                sds.updateStoredStations(stations);
-            }
-
-         }
-
-        catch (MalformedURLException ex) { Log.w(TAG, ex); }
-        catch (ParserConfigurationException ex) { Log.w(TAG, ex); }
-        catch (IOException ex) { Log.w(TAG, ex); }
-        catch (SAXException ex) { Log.w(TAG, ex); }
+        // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
+        if (stations.size() > 130) {
+            StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
+            sds.updateStoredStations(stations);
+        }
 
         return updateUI;
     }

@@ -2,34 +2,45 @@ package ie.markomeara.irelandtraintimes.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 import java.util.Comparator;
 
 /**
  * Created by Mark on 04/10/2014.
  */
+@Root(name = "objStation", strict = false)
 public class Station implements Comparator, Parcelable{
 
     private static final String TAG = Station.class.getSimpleName();
 
+    @Element(name = "StationId")
     private long id;
+    @Element(name = "StationDesc")
     private String name;
+    @Element(name = "StationAlias", required = false)
     private String alias;
-    private String displayName;
+    @Element(name = "StationLatitude")
     private double latitude;
+    @Element(name = "StationLongitude")
     private double longitude;
+    @Element(name = "StationCode")
     private String code;
     private boolean favourite;
 
-    public Station(long id, String name, String alias, String displayName, double latitude, double longitude, String code) {
-        this(id, name, alias, displayName, latitude, longitude, code, false);
+    public Station(){ }
+
+    public Station(long id, String name, String alias, double latitude, double longitude, String code) {
+        this(id, name, alias, latitude, longitude, code, false);
     }
 
-    public Station(long id, String name, String alias, String displayName, double latitude, double longitude, String code, boolean fav) {
+    public Station(long id, String name, String alias, double latitude, double longitude, String code, boolean fav){
         this.id = id;
         this.name = name;
         this.alias = alias;
-        this.displayName = displayName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.code = code;
@@ -40,7 +51,6 @@ public class Station implements Comparator, Parcelable{
         this.id = in.readLong();
         this.name = in.readString();
         this.alias = in.readString();
-        this.displayName = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.code = in.readString();
@@ -61,11 +71,14 @@ public class Station implements Comparator, Parcelable{
         return name;
     }
 
+    @Nullable
     public String getAlias() {
         return alias;
     }
 
-    public String getDisplayName() { return displayName; }
+    public String getDisplayName() {
+        return (alias == null || alias.isEmpty()) ? name : alias;
+    }
 
     public double getLatitude() {
         return latitude;
@@ -95,7 +108,6 @@ public class Station implements Comparator, Parcelable{
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(alias);
-        dest.writeString(displayName);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(code);

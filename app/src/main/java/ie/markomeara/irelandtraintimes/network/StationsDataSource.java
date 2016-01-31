@@ -66,36 +66,22 @@ public class StationsDataSource {
          * VALUES (228,'Belfast Central','',54.6123,-5.91744,'BFSTC', (SELECT favourite FROM stations where _id = 228));
          */
 
-        StringBuilder stationInsertQuery = new StringBuilder();
-        stationInsertQuery.append("INSERT OR REPLACE INTO ").append(DBManager.TABLE_STATIONS).append(" ");
-        stationInsertQuery.append("(");
-        stationInsertQuery.append(DBManager.COLUMN_ID).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_NAME).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_ALIAS).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_DISPLAY_NAME).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_LAT).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_LONG).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_CODE).append(",");
-        stationInsertQuery.append(DBManager.COLUMN_STN_FAV);
-        stationInsertQuery.append(") ");
-        stationInsertQuery.append("VALUES (");
-        stationInsertQuery.append(stationToStore.getId()).append(",");
-        stationInsertQuery.append("'").append(stationToStore.getName()).append("',");
-        stationInsertQuery.append("'").append(stationToStore.getAlias()).append("',");
-        stationInsertQuery.append("'").append(stationToStore.getDisplayName()).append("',");
-        stationInsertQuery.append(stationToStore.getLatitude()).append(",");
-        stationInsertQuery.append(stationToStore.getLongitude()).append(",");
-        stationInsertQuery.append("'").append(stationToStore.getCode()).append("',");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBManager.COLUMN_ID, stationToStore.getId());
+        contentValues.put(DBManager.COLUMN_STN_NAME, stationToStore.getName());
+        contentValues.put(DBManager.COLUMN_STN_ALIAS, stationToStore.getAlias());
+        contentValues.put(DBManager.COLUMN_STN_DISPLAY_NAME, stationToStore.getDisplayName());
+        contentValues.put(DBManager.COLUMN_STN_LAT, stationToStore.getLatitude());
+        contentValues.put(DBManager.COLUMN_STN_LONG, stationToStore.getLongitude());
+        contentValues.put(DBManager.COLUMN_STN_CODE, stationToStore.getCode());
 
-        stationInsertQuery.append("( SELECT ").append(DBManager.COLUMN_STN_FAV);
-        stationInsertQuery.append(" FROM ").append(DBManager.TABLE_STATIONS);
-        stationInsertQuery.append(" WHERE ").append(DBManager.COLUMN_ID).append(" = " + stationToStore.getId());
-        stationInsertQuery.append(")").append(")");
+        // TODO Retrieve existing fav value and save it in overwrite
+        contentValues.put(DBManager.COLUMN_STN_FAV, false);
 
         boolean success = false;
 
         try {
-            db.execSQL(stationInsertQuery.toString());
+            db.insertWithOnConflict(DBManager.TABLE_STATIONS, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stationToStore.getId(), null, null, null, null);
 
             if (cursor.moveToFirst()) {
@@ -132,7 +118,7 @@ public class StationsDataSource {
 
         // Order by display name
         Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_DISPLAY_NAME);
-        List<Station> stns = new ArrayList<Station>();
+        List<Station> stns = new ArrayList<>();
 
         while(cursor.moveToNext()){
             stns.add(cursorToStation(cursor));
@@ -161,15 +147,14 @@ public class StationsDataSource {
         int id = cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_ID));
         String name = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_NAME));
         String alias = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_ALIAS));
-        String displayName = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_DISPLAY_NAME));
         double latitude = cursor.getDouble(cursor.getColumnIndex(DBManager.COLUMN_STN_LAT));
         double longitude = cursor.getDouble(cursor.getColumnIndex(DBManager.COLUMN_STN_LONG));
         String code = cursor.getString(cursor.getColumnIndex(DBManager.COLUMN_STN_CODE));
         boolean fav = (cursor.getInt(cursor.getColumnIndex(DBManager.COLUMN_STN_FAV)) > 0);
 
-        Station stn = new Station(id, name, alias, displayName, latitude, longitude, code, fav);
+        Station stn = new Station(id, name, alias, latitude, longitude, code, fav);
 
-        Log.d(TAG, "Returning station with id " + id);
+        Log.d(TAG, "Returning station with id " + id + ", name: " + name + ", alias: " + alias + ", displayname: " + stn.getDisplayName());
         return stn;
     }
 }

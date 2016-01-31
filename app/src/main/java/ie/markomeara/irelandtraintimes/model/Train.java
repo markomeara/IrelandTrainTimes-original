@@ -3,7 +3,8 @@ package ie.markomeara.irelandtraintimes.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapter;
 
@@ -13,35 +14,51 @@ import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapt
  * This is train info as seen from a particular station (I.E. the 'dueIn' var is relevant to only one station)
  * The 'stationCodeViewedFrom' variable shows which station this train info has been viewed from
  */
+@Root(name = "objStationData", strict = false)
 public class Train implements Comparable<Train>, TrainListItem, Parcelable {
 
     private static final String TAG = Train.class.getSimpleName();
 
     public static final int MAJORDELAY_MINS = 5;
 
+    @Element(name = "Traincode")
     private String trainCode;
+    @Element(name = "Origin")
     private String origin;
+    @Element(name = "Destination")
     private String destination;
+    @Element(name = "Lastlocation", required = false)
     private String latestInfo;
+    @Element(name = "Direction")
     private String direction;
+    @Element(name = "Traintype")
     private String trainType;
-    // TODO Populate this variable when relevant
+    @Element(name = "Stationfullname")
     private Station stationViewedFrom;
+    @Element(name = "Duein")
     private int dueIn;
+    @Element(name = "Late", required = false)
     private int delayMins;
-    private Date updateTime;
-
+    @Element(name = "Servertime")
+    private String updateTimeString;
+    @Element(name = "Status")
     private String status;
-
+    @Element(name = "Scharrival")
     private String schArrival;
+    @Element(name = "Exparrival")
     private String expArrival;
 
     // These will be 00:00 if train terminates at this station
+    @Element(name = "Schdepart")
     private String schDepart;
+    @Element(name = "Expdepart")
     private String expDepart;
 
+    @Element(name = "Destinationtime")
     private String destArrivalTime;
-    private String originTime;
+    @Element(name = "Origintime")
+    private String originDepartureTime;
+    @Element(name = "Traindate")
     private String trainDate;
 
     // No need to save train to DB as it doesn't need to persist, since it will go out of date pretty quickly
@@ -57,15 +74,14 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         this.trainType = in.readString();
         this.dueIn = in.readInt();
         this.delayMins = in.readInt();
-        long tmpUpdateTime = in.readLong();
-        this.updateTime = tmpUpdateTime == -1 ? null : new Date(tmpUpdateTime);
+        this.updateTimeString = in.readString();
         this.status = in.readString();
         this.schArrival = in.readString();
         this.expArrival = in.readString();
         this.schDepart = in.readString();
         this.expDepart = in.readString();
         this.destArrivalTime = in.readString();
-        this.originTime = in.readString();
+        this.originDepartureTime = in.readString();
         this.trainDate = in.readString();
     }
 
@@ -80,14 +96,14 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         dest.writeString(this.trainType);
         dest.writeInt(this.dueIn);
         dest.writeInt(this.delayMins);
-        dest.writeLong(updateTime != null ? updateTime.getTime() : -1);
+        dest.writeString(this.updateTimeString);
         dest.writeString(this.status);
         dest.writeString(this.schArrival);
         dest.writeString(this.expArrival);
         dest.writeString(this.schDepart);
         dest.writeString(this.expDepart);
         dest.writeString(this.destArrivalTime);
-        dest.writeString(this.originTime);
+        dest.writeString(this.originDepartureTime);
         dest.writeString(this.trainDate);
     }
 
@@ -136,12 +152,12 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         this.trainCode = trainCode;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getUpdateTimeString() {
+        return updateTimeString;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdateTimeString(String updateTimeString) {
+        this.updateTimeString = updateTimeString;
     }
 
     public String getOrigin() {
@@ -248,12 +264,12 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         this.destArrivalTime = destArrivalTime;
     }
 
-    public String getOriginTime() {
-        return originTime;
+    public String getOriginDepartureTime() {
+        return originDepartureTime;
     }
 
-    public void setOriginTime(String originTime) {
-        this.originTime = originTime;
+    public void setOriginDepartureTime(String originDepartureTime) {
+        this.originDepartureTime = originDepartureTime;
     }
 
     public String getTrainDate() {

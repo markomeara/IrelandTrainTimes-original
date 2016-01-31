@@ -3,18 +3,16 @@ package ie.markomeara.irelandtraintimes.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.xml.sax.SAXException;
+import com.mobprofs.retrofit.converters.SimpleXmlConverter;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.fragments.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
+import ie.markomeara.irelandtraintimes.model.TrainList;
+import retrofit.RestAdapter;
 
 /**
  * Created by Mark on 26/10/2014.
@@ -32,21 +30,24 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
     @Override
     protected List<Train> doInBackground(Station[] stationParams) {
 
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.irishrail.ie/realtime/realtime.asmx")
+                .setConverter(new SimpleXmlConverter())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        IrishRailService irishRailService = restAdapter.create(IrishRailService.class);
+
+
         List<Train> relevantTrains = null;
 
         if(stationParams.length >= 1){
             Station station = stationParams[0];
             String stnCode = station.getCode();
 
-            try {
-                List<Train> allTrains = IrishRailAPIUtil.getTrainsFromStationCode(stnCode);
-                relevantTrains = removeTrainsTerminatingAtStation(allTrains, station);
-            }
+            TrainList allTrains = irishRailService.getTrainsDueAtStation(stnCode);
+            relevantTrains = removeTrainsTerminatingAtStation(allTrains.getTrainList(), station);
 
-            catch(MalformedURLException ex) { Log.w(TAG, ex); }
-            catch(ParserConfigurationException ex){ Log.w(TAG, ex); }
-            catch(IOException ex){ Log.w(TAG, ex); }
-            catch(SAXException ex){ Log.w(TAG, ex); }
         }
         else{
             Log.w(TAG, "Parameters are not as expected");
@@ -63,7 +64,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
     private List<Train> removeTrainsTerminatingAtStation(List<Train> trains, Station station){
 
         String stationName = station.getName();
-        List<Train> reducedTrainList = new ArrayList<Train>();
+        List<Train> reducedTrainList = new ArrayList<>();
 
         for(Train selectedTrain : trains){
 

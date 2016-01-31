@@ -59,12 +59,7 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
             holder.setStnDistance(Integer.toString(distanceBetweenStnAndLocation) + "km");
         }
 
-        if(!currentStation.getAlias().isEmpty()){
-            holder.setStationDisplayName(currentStation.getAlias());
-        }
-        else{
-            holder.setStationDisplayName(currentStation.getName());
-        }
+        holder.setStationDisplayName(currentStation.getDisplayName());
 
         holder.getView().setOnClickListener(
                 new View.OnClickListener() {
@@ -105,7 +100,7 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
             mVisibleStations.clear();
             for(Station stn : mAllStations){
                 if (stn.getName().toUpperCase().contains(filterText.toUpperCase())
-                        || stn.getAlias().toUpperCase().contains(filterText.toUpperCase())){
+                        || (stn.getAlias() != null && stn.getAlias().toUpperCase().contains(filterText.toUpperCase()))){
                     mVisibleStations.add(stn);
                 }
             }
