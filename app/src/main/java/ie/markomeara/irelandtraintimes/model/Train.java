@@ -21,7 +21,7 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
 
     public static final int MAJORDELAY_MINS = 5;
 
-    @Element(name = "Traincode")
+    @Element(name = "Traincode", required = false)
     private String trainCode;
     @Element(name = "Origin")
     private String origin;
@@ -34,14 +34,14 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
     @Element(name = "Traintype")
     private String trainType;
     @Element(name = "Stationfullname")
-    private Station stationViewedFrom;
+    private String stationViewedFrom;
     @Element(name = "Duein")
     private int dueIn;
     @Element(name = "Late", required = false)
     private int delayMins;
     @Element(name = "Servertime")
     private String updateTimeString;
-    @Element(name = "Status")
+    @Element(name = "Status", required = false)
     private String status;
     @Element(name = "Scharrival")
     private String schArrival;
