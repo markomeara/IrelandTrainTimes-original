@@ -9,12 +9,12 @@
     android:orientation="vertical"
     tools:context=".Home">
 
-
-   <TextView
-       android:id="@+id/loadingStationsTV"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/loadingStations" />
+    <ProgressBar
+        android:id="@+id/loadingStations_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/stationlistRV"

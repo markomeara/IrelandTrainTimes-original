@@ -42,7 +42,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
             updateUI = updateUIParam[0];
         }
 
-
+        // TODO Handle timeout if there's no or weak internet
         StationList stationList = irishRailService.getAllStations();
         List<Station> stations = stationList.getStationList();
 

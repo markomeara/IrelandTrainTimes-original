@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class StationNextTrainsFragment extends Fragment {
     RecyclerView trainsDueRV;
     @Bind(R.id.trainsDue_loading_TV)
     TextView statusMsg_TV;   // TODO Switch to switcher view
+    @Bind(R.id.nexttrains_loading)
+    ProgressBar nextTrainsProgressBar;
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -110,7 +113,7 @@ public class StationNextTrainsFragment extends Fragment {
         // TODO Move setting activity view to oncreate/onresume
         View activityView = getView();
         if(activityView != null) {
-
+            nextTrainsProgressBar.setVisibility(View.GONE);
             if (trainsDue != null && !trainsDue.isEmpty()) {
 
                 // Sort trains by direction, then by due time
@@ -136,18 +139,9 @@ public class StationNextTrainsFragment extends Fragment {
                 mTrainsDueRecyclerViewAdapter = new TrainsDueRecyclerViewAdapter(trainListItems, this);
                 trainsDueRV.setLayoutManager(new LinearLayoutManager(getActivity()));
                 trainsDueRV.setAdapter(mTrainsDueRecyclerViewAdapter);
-                hideInfoMessage();
             } else {
                 showNoResultsMessage();
             }
-        }
-    }
-
-    private void hideInfoMessage(){
-        // TODO Move setting activity view to oncreate/onresume
-        View activityView = getView();
-        if(activityView != null){
-            statusMsg_TV.setVisibility(View.GONE);
         }
     }
 

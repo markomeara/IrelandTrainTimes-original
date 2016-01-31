@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -37,8 +37,8 @@ public class StationListFragment extends Fragment {
 
     @Bind(R.id.stationlistRV)
     RecyclerView mStationRecyclerView;
-    @Bind(R.id.loadingStationsTV)
-    TextView mStationsLoadingTV;
+    @Bind(R.id.loadingStations_progress)
+    ProgressBar mLoadingStationsProgressBar;
 
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
@@ -107,7 +107,7 @@ public class StationListFragment extends Fragment {
         }
         else{
             // Don't show 'Initializing stations' text if stations are being shown
-            mStationsLoadingTV.setVisibility(View.GONE);
+            mLoadingStationsProgressBar.setVisibility(View.GONE);
         }
         updateStoredStationsFromAPI(immediateDisplayRefresh);
     }
@@ -156,7 +156,7 @@ public class StationListFragment extends Fragment {
             toastMsg.setDuration(Toast.LENGTH_LONG);
             toastMsg.show();
         }
-        mStationsLoadingTV.setVisibility(View.GONE);
+        mLoadingStationsProgressBar.setVisibility(View.GONE);
     }
 
     public interface OnStationClickedListener {

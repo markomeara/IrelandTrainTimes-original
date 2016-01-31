@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.mobprofs.retrofit.converters.SimpleXmlConverter;
+
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -15,7 +17,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
+import ie.markomeara.irelandtraintimes.model.TrainList;
 import ie.markomeara.irelandtraintimes.network.IrishRailAPIUtil;
+import ie.markomeara.irelandtraintimes.network.IrishRailService;
+import retrofit.RestAdapter;
 
 /**
  * Created by mark on 16/03/15.
@@ -47,7 +52,17 @@ public class ReminderService extends IntentService {
         Log.i(TAG, station.getName() + " -- " + train.getTrainCode() + " -- " + reminderMins);
 
         try {
-            Train latestTrainInfo = IrishRailAPIUtil.getTrainAtStationCode(train.getTrainCode(), station.getCode());
+
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint("http://api.irishrail.ie/realtime/realtime.asmx")
+                    .setConverter(new SimpleXmlConverter())
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    .build();
+
+            IrishRailService irishRailService = restAdapter.create(IrishRailService.class);
+            TrainList trainList = irishRailService.getTrainsDueAtStation(station.getCode());
+
+            Train latestTrainInfo = IrishRailAPIUtil.extractTrainFromTrainList(train.getTrainCode(), trainList.getTrainList());
 
             if(latestTrainInfo == null){
                 trainHasGone();

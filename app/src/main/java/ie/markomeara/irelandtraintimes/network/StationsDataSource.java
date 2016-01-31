@@ -154,7 +154,7 @@ public class StationsDataSource {
 
         Station stn = new Station(id, name, alias, latitude, longitude, code, fav);
 
-        Log.d(TAG, "Returning station with id " + id + ", name: " + name + ", alias: " + alias + ", displayname: " + stn.getDisplayName());
+        Log.d(TAG, "Returning station with id " + id + ", name: " + name);
         return stn;
     }
 }
