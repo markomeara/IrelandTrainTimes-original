@@ -72,13 +72,22 @@ public class TweetsDataSource {
     public List<Tweet> getAllTweets(){
 
         // Ordering by tweet timestamp
-        Cursor cursor = db.query(DBManager.TABLE_TWEETS, allColumns, null, null, null, null, DBManager.COLUMN_TWEET_CREATE_DATE);
-        List<Tweet> tweets = new ArrayList<Tweet>();
+        List<Tweet> tweets = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(DBManager.TABLE_TWEETS, allColumns, null, null, null, null, DBManager.COLUMN_TWEET_CREATE_DATE);
+            tweets = new ArrayList<>();
 
-        while(cursor.moveToNext()){
-            tweets.add(cursorToTweet(cursor));
+            while (cursor.moveToNext()) {
+                tweets.add(cursorToTweet(cursor));
+            }
+        } catch(SQLiteConstraintException ex){
+            Log.e(TAG, ex.getMessage(), ex);
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
         }
-
         return tweets;
     }
 
@@ -123,19 +132,23 @@ public class TweetsDataSource {
         values.put(DBManager.COLUMN_TWEET_CREATE_DATE, createDate.getTime());
         values.put(DBManager.COLUMN_TWEET_RT_COUNT, rtCount);
 
+        Cursor cursor = null;
         try {
             db.insertOrThrow(DBManager.TABLE_TWEETS, null, values);
             Log.i(TAG, "Tweet created with id " + id);
 
-            Cursor cursor = db.query(DBManager.TABLE_TWEETS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
+            cursor = db.query(DBManager.TABLE_TWEETS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
 
             cursor.moveToFirst();
             if (!cursor.isAfterLast()) {
                 newTweet = cursorToTweet(cursor);
-                cursor.close();
             }
         } catch(SQLiteConstraintException ex){
             Log.i(TAG, ex.getMessage(), ex);
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
         }
         return newTweet;
     }

@@ -80,9 +80,10 @@ public class StationsDataSource {
 
         boolean success = false;
 
+        Cursor cursor = null;
         try {
             db.insertWithOnConflict(DBManager.TABLE_STATIONS, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stationToStore.getId(), null, null, null, null);
+            cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stationToStore.getId(), null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 Station updatedStation = cursorToStation(cursor);
@@ -93,35 +94,59 @@ public class StationsDataSource {
                     Log.e(TAG, "Error inserting station (id: " + stationToStore.getId() + ") into DB");
                 }
             }
-            cursor.close();
         } catch(SQLiteConstraintException ex){
             Log.e(TAG, ex.getMessage(), ex);
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
         }
         return success;
     }
 
     public Station updateFavourite(Station stn, boolean fav){
-        ContentValues cv = new ContentValues();
-        cv.put(DBManager.COLUMN_STN_FAV, false);
 
-        db.update(DBManager.TABLE_STATIONS, cv, DBManager.COLUMN_ID + " = " + stn.getId(), null);
+        Station updatedStation = null;
+        Cursor cursor = null;
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put(DBManager.COLUMN_STN_FAV, false);
 
-        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stn.getId(), null, null, null, null);
+            db.update(DBManager.TABLE_STATIONS, cv, DBManager.COLUMN_ID + " = " + stn.getId(), null);
 
-        cursor.moveToFirst();
-        Station updatedStation = cursorToStation(cursor);
-        cursor.close();
+            cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + stn.getId(), null, null, null, null);
+
+            cursor.moveToFirst();
+            updatedStation = cursorToStation(cursor);
+        } catch(SQLiteConstraintException ex){
+            Log.e(TAG, ex.getMessage(), ex);
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
         return updatedStation;
     }
 
     public List<Station> retrieveAllStations(){
 
-        // Order by display name
-        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_DISPLAY_NAME);
         List<Station> stns = new ArrayList<>();
 
-        while(cursor.moveToNext()){
-            stns.add(cursorToStation(cursor));
+        Cursor cursor = null;
+        try {
+            // Order by display name
+            cursor = db.query(DBManager.TABLE_STATIONS, allColumns, null, null, null, null, DBManager.COLUMN_STN_DISPLAY_NAME);
+
+            while (cursor.moveToNext()) {
+                stns.add(cursorToStation(cursor));
+            }
+
+        } catch(SQLiteConstraintException ex){
+            Log.e(TAG, ex.getMessage(), ex);
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
         }
 
         return stns;
@@ -129,9 +154,21 @@ public class StationsDataSource {
 
     public Station retrieveStationById(long id){
 
-        Cursor cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID +" = "+ id, null, null, null, null);
-        cursor.moveToFirst();
-        return cursorToStation(cursor);
+        Station station = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.query(DBManager.TABLE_STATIONS, allColumns, DBManager.COLUMN_ID + " = " + id, null, null, null, null);
+            cursor.moveToFirst();
+            station = cursorToStation(cursor);
+        } catch(SQLiteConstraintException ex){
+            Log.e(TAG, ex.getMessage(), ex);
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
+
+        return station;
 
     }
 
