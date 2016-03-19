@@ -33,8 +33,8 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
     private String direction;
     @Element(name = "Traintype")
     private String trainType;
-    @Element(name = "Stationfullname")
-    private Station stationViewedFrom;
+    @Element(name = "Stationcode")
+    private String stationCode;
     @Element(name = "Duein")
     private int dueIn;
     @Element(name = "Late", required = false)
@@ -199,6 +199,10 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
     public void setTrainType(String trainType) {
         this.trainType = trainType;
     }
+
+    public String getStationCode() { return stationCode; }
+
+    public void setStationCode(String code) { this.stationCode = code; }
 
     public int getDueIn() {
         return dueIn;
