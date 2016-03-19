@@ -16,11 +16,12 @@ import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.utils.LocationUtils;
+import ie.markomeara.irelandtraintimes.viewholder.StationViewHolder;
 
 /**
  * Created by markomeara on 03/05/2015.
  */
-public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecyclerViewAdapter.ViewHolder>
+public class StationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements LocationUtils.LocationListener {
 
     private static final String TAG = StationRecyclerViewAdapter.class.getSimpleName();
@@ -38,14 +39,17 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         View createdView = mInflater.inflate(R.layout.list_item_station, parent, false);
-        return new ViewHolder(createdView);
+        return new StationViewHolder(createdView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+
+        StationViewHolder stationViewHolder = (StationViewHolder) holder;
+
         final Station currentStation = mVisibleStations.get(position);
         double stationLatitude = currentStation.getLatitude();
         double stationLongitude = currentStation.getLongitude();
@@ -56,12 +60,12 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
             LocationUtils.notifyWhenLocationUpdated(this);
         }
         else {
-            holder.setStnDistance(Integer.toString(distanceBetweenStnAndLocation) + "km");
+            stationViewHolder.setStnDistance(Integer.toString(distanceBetweenStnAndLocation) + "km");
         }
 
-        holder.setStationDisplayName(currentStation.getDisplayName());
+        stationViewHolder.setStationDisplayName(currentStation.getDisplayName());
 
-        holder.getView().setOnClickListener(
+        stationViewHolder.getView().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -115,30 +119,4 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<StationRecy
         LocationUtils.removeNotificationListener(this);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        private final View stnItem;
-        @Bind(R.id.stationName)
-        TextView stnName;
-        @Bind(R.id.stationDistance)
-        TextView stnDistance;
-
-        public ViewHolder(View view) {
-            super(view);
-            stnItem = view;
-            ButterKnife.bind(this, view);
-        }
-
-        public View getView(){
-            return stnItem;
-        }
-
-        public void setStationDisplayName(String name){
-            stnName.setText(name);
-        }
-
-        public void setStnDistance(String distance){
-            stnDistance.setText(distance);
-        }
-    }
 }
