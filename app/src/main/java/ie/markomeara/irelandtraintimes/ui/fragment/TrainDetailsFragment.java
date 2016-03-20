@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.fragments;
+package ie.markomeara.irelandtraintimes.ui.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,10 +20,10 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.managers.ReminderStatusReceiver;
+import ie.markomeara.irelandtraintimes.manager.ReminderStatusReceiver;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
-import ie.markomeara.irelandtraintimes.managers.ReminderManager;
+import ie.markomeara.irelandtraintimes.manager.ReminderManager;
 
 public class TrainDetailsFragment extends Fragment {
 

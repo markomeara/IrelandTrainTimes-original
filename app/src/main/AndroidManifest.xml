@@ -9,12 +9,12 @@
         android:theme="@style/AppTheme" >
 
         <service
-            android:name=".managers.ReminderService"
+            android:name=".manager.ReminderService"
             android:exported="false" />
 
-        <receiver android:name=".managers.ReminderStartReceiver"></receiver>
+        <receiver android:name=".manager.ReminderStartReceiver"></receiver>
 
-        <activity android:name=".BaseActivity"
+        <activity android:name=".ui.activity.BaseActivity"
             android:label="Ireland Train Times"
             android:windowSoftInputMode="adjustPan">
             <meta-data android:name="android.app.searchable"
@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TwitterActivity"
+        <activity android:name=".ui.activity.TwitterActivity"
             android:label="Irish Rail Tweets"
             android:windowSoftInputMode="adjustPan">
         </activity>

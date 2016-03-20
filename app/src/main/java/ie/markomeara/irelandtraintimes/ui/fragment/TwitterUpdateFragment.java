@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.fragments;
+package ie.markomeara.irelandtraintimes.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;

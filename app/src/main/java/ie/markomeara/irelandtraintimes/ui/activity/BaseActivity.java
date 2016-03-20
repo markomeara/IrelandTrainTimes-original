@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes;
+package ie.markomeara.irelandtraintimes.ui.activity;
 
 import android.content.Intent;
 import android.location.Location;
@@ -18,12 +18,13 @@ import com.google.android.gms.location.LocationServices;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
+import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
-import ie.markomeara.irelandtraintimes.fragments.StationListFragment;
-import ie.markomeara.irelandtraintimes.fragments.StationNextTrainsFragment;
-import ie.markomeara.irelandtraintimes.fragments.TrainDetailsFragment;
-import ie.markomeara.irelandtraintimes.fragments.TwitterUpdateFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.StationListFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.TrainDetailsFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.TwitterUpdateFragment;
 import ie.markomeara.irelandtraintimes.utils.LocationUtils;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import io.fabric.sdk.android.Fabric;

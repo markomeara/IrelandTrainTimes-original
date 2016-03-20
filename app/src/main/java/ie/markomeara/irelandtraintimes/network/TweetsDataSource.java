@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import ie.markomeara.irelandtraintimes.managers.DBManager;
+import ie.markomeara.irelandtraintimes.manager.DBManager;
 import ie.markomeara.irelandtraintimes.model.Tweet;
 import twitter4j.Status;
 

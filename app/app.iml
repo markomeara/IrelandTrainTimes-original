@@ -100,32 +100,37 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="answers-1.3.6" level="project" />
-    <orderEntry type="library" exported="" name="crashlytics-core-2.3.8" level="project" />
-    <orderEntry type="library" exported="" name="digits-1.9.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-base-7.5.0" level="project" />
-    <orderEntry type="library" exported="" name="crashlytics-2.5.5" level="project" />
-    <orderEntry type="library" exported="" name="twitter-1.9.1" level="project" />
-    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
-    <orderEntry type="library" exported="" name="retrofit-1.8.0" level="project" />
-    <orderEntry type="library" exported="" name="fabric-1.3.10" level="project" />
-    <orderEntry type="library" exported="" name="twitter-core-1.6.0" level="project" />
-    <orderEntry type="library" exported="" name="tweet-ui-1.6.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-maps-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="butterknife-7.0.1" level="project" />
-    <orderEntry type="library" exported="" name="twitter-text-1.13.0" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="tweet-composer-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="digits-1.9.0" level="project" />
+    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="retrofit-simplexmlconverter-1.1" level="project" />
-    <orderEntry type="library" exported="" name="beta-1.1.4" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="simple-xml-2.7.1" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="retrofit-1.8.0" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.3" level="project" />
-    <orderEntry type="library" exported="" name="twitter4j-core-4.0.2-customised" level="project" />
     <orderEntry type="library" exported="" name="play-services-location-7.5.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-base-7.5.0" level="project" />
+    <orderEntry type="library" exported="" name="twitter-1.9.1" level="project" />
+    <orderEntry type="library" exported="" name="fabric-1.3.10" level="project" />
+    <orderEntry type="library" exported="" name="crashlytics-2.5.5" level="project" />
+    <orderEntry type="library" exported="" name="dagger-1.2.2" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.3" level="project" />
+    <orderEntry type="library" exported="" name="crashlytics-core-2.3.8" level="project" />
+    <orderEntry type="library" exported="" name="beta-1.1.4" level="project" />
+    <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
+    <orderEntry type="library" exported="" name="guava-15.0" level="project" />
+    <orderEntry type="library" exported="" name="tweet-ui-1.6.0" level="project" />
+    <orderEntry type="library" exported="" name="twitter4j-core-4.0.2-customised" level="project" />
+    <orderEntry type="library" exported="" name="twitter-text-1.13.0" level="project" />
+    <orderEntry type="library" exported="" name="tweet-composer-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="twitter-core-1.6.0" level="project" />
+    <orderEntry type="library" exported="" name="javawriter-2.5.0" level="project" />
+    <orderEntry type="library" exported="" name="answers-1.3.6" level="project" />
+    <orderEntry type="library" exported="" name="simple-xml-2.7.1" level="project" />
+    <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="dagger-compiler-1.2.2" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="play-services-maps-7.5.0" level="project" />
   </component>
 </module>

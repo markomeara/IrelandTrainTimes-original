@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.fragments;
+package ie.markomeara.irelandtraintimes.ui.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +27,7 @@ import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
 import ie.markomeara.irelandtraintimes.network.StationsDataSource;
 import ie.markomeara.irelandtraintimes.network.NextTrainsTask;
-import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapter;
+import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 /**
  * Created by Mark on 27/10/2014.

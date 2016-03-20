@@ -8,7 +8,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.fragments.StationNextTrainsFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Train;
 
 /**

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/twitterblue"
-    tools:context="ie.markomeara.irelandtraintimes.fragments.TwitterUpdateFragment">
+    tools:context=".ui.fragment.TwitterUpdateFragment">
 
     <!--TextSwitcher android:id="@+id/tweet_switcher"
         android:layout_width="match_parent"

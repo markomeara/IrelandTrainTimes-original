@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.fragments;
+package ie.markomeara.irelandtraintimes.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import ie.markomeara.irelandtraintimes.views.adapters.StationRecyclerViewAdapter;
+import ie.markomeara.irelandtraintimes.adapter.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.model.Station;

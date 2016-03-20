@@ -1,6 +1,5 @@
-package ie.markomeara.irelandtraintimes.views.adapters;
+package ie.markomeara.irelandtraintimes.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.fragments.StationNextTrainsFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Train;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;

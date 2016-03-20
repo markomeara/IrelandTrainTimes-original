@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapter;
+import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 /**
  * Created by Mark on 26/10/2014.

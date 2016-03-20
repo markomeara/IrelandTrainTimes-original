@@ -49,7 +49,7 @@
         android:layout_above="@+id/twitterupdatefragment"
         />
 
-    <fragment android:name="ie.markomeara.irelandtraintimes.fragments.TwitterUpdateFragment"
+    <fragment android:name="ie.markomeara.irelandtraintimes.ui.fragment.TwitterUpdateFragment"
         android:id="@+id/twitterupdatefragment"
         android:layout_weight="1"
         android:layout_width="match_parent"

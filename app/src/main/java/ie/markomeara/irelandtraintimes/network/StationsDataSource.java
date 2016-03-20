@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import ie.markomeara.irelandtraintimes.managers.DBManager;
+import ie.markomeara.irelandtraintimes.manager.DBManager;
 import ie.markomeara.irelandtraintimes.model.Station;
 
 /**

@@ -9,7 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ie.markomeara.irelandtraintimes.Injector;
-import ie.markomeara.irelandtraintimes.fragments.StationNextTrainsFragment;
+import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
 import ie.markomeara.irelandtraintimes.model.TrainList;

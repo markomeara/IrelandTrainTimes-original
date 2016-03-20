@@ -1,6 +1,6 @@
 package ie.markomeara.irelandtraintimes.model;
 
-import ie.markomeara.irelandtraintimes.views.adapters.TrainsDueRecyclerViewAdapter;
+import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 /**
  * Created by Mark on 16/11/2014.

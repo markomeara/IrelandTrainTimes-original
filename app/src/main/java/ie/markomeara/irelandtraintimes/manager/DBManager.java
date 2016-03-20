@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.managers;
+package ie.markomeara.irelandtraintimes.manager;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

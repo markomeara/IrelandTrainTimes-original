@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.managers;
+package ie.markomeara.irelandtraintimes.manager;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.BaseActivity;
-import ie.markomeara.irelandtraintimes.fragments.TrainDetailsFragment;
+import ie.markomeara.irelandtraintimes.ui.activity.BaseActivity;
+import ie.markomeara.irelandtraintimes.ui.fragment.TrainDetailsFragment;
 import ie.markomeara.irelandtraintimes.model.Train;
 
 /**

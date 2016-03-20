@@ -1,4 +1,4 @@
-package ie.markomeara.irelandtraintimes.managers;
+package ie.markomeara.irelandtraintimes.manager;
 
 import android.app.IntentService;
 import android.content.Intent;
