@@ -57,6 +57,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.mobprofs:retrofit-simplexmlconverter:1.1'
     compile 'org.simpleframework:simple-xml:2.7.1'
+    provided 'com.squareup.dagger:dagger-compiler:1.2.2'
+    compile 'com.squareup.dagger:dagger:1.2.2'
 
     // TODO Can this be changed to something like twitter-core?
     // This includes retrofit 1.8.0

@@ -7,20 +7,19 @@ import android.os.IBinder;
 import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.mobprofs.retrofit.converters.SimpleXmlConverter;
-
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 
+import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
 import ie.markomeara.irelandtraintimes.model.TrainList;
 import ie.markomeara.irelandtraintimes.network.IrishRailAPIUtil;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
-import retrofit.RestAdapter;
 
 /**
  * Created by mark on 16/03/15.
@@ -31,6 +30,9 @@ public class ReminderService extends IntentService {
 
     private final IBinder reminderServiceBinder = new ReminderServiceBinder();
 
+    @Inject
+    IrishRailService irishRailService;
+
     private Station station;
     private Train train;
     private int reminderMins = 0;
@@ -38,6 +40,7 @@ public class ReminderService extends IntentService {
     public ReminderService(){
         // Worker thread name: ReminderService
         super("ReminderService");
+        Injector.inject(this);
     }
 
     @Override
@@ -53,13 +56,6 @@ public class ReminderService extends IntentService {
 
         try {
 
-            RestAdapter restAdapter = new RestAdapter.Builder()
-                    .setEndpoint("http://api.irishrail.ie/realtime/realtime.asmx")
-                    .setConverter(new SimpleXmlConverter())
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
-                    .build();
-
-            IrishRailService irishRailService = restAdapter.create(IrishRailService.class);
             TrainList trainList = irishRailService.getTrainsDueAtStation(station.getCode());
 
             Train latestTrainInfo = IrishRailAPIUtil.extractTrainFromTrainList(train.getTrainCode(), trainList.getTrainList());

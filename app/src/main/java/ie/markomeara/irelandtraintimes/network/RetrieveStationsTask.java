@@ -3,14 +3,14 @@ package ie.markomeara.irelandtraintimes.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mobprofs.retrofit.converters.SimpleXmlConverter;
-
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.fragments.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.StationList;
-import retrofit.RestAdapter;
 
 
 /**
@@ -20,22 +20,19 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
     private static final String TAG = RetrieveStationsTask.class.getSimpleName();
 
+    @Inject
+    IrishRailService irishRailService;
+
     private StationListFragment stationListFragment;
 
 
-    public RetrieveStationsTask(StationListFragment fragment){ this.stationListFragment = fragment; }
+    public RetrieveStationsTask(StationListFragment fragment){
+        Injector.inject(this);
+        this.stationListFragment = fragment;
+    }
 
     @Override
     protected Boolean doInBackground(Boolean[] updateUIParam) {
-
-        // TODO Move this creation to common static variable along with other creation
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://api.irishrail.ie/realtime/realtime.asmx")
-                .setConverter(new SimpleXmlConverter())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
-
-        IrishRailService irishRailService = restAdapter.create(IrishRailService.class);
 
         boolean updateUI = false;
         if(updateUIParam.length > 0){
