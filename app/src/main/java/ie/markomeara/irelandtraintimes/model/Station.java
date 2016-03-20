@@ -23,11 +23,11 @@ public class Station implements Comparator, Parcelable{
     private String name;
     @Element(name = "StationAlias", required = false)
     private String alias;
-    @Element(name = "StationLatitude")
+    @Element(name = "StationLatitude", required = false)
     private double latitude;
-    @Element(name = "StationLongitude")
+    @Element(name = "StationLongitude", required = false)
     private double longitude;
-    @Element(name = "StationCode")
+    @Element(name = "StationCode", required = false)
     private String code;
     private boolean favourite;
 
