@@ -29,7 +29,6 @@ import ie.markomeara.irelandtraintimes.model.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
-import ie.markomeara.irelandtraintimes.network.StationsDataSource;
 import ie.markomeara.irelandtraintimes.network.NextTrainsTask;
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
@@ -53,7 +52,7 @@ public class StationNextTrainsFragment extends Fragment {
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
         Bundle args = new Bundle();
-        args.putLong(STATION_PARAM, selectedStation.getId());
+        args.putInt(STATION_PARAM, selectedStation.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +61,7 @@ public class StationNextTrainsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            long stationId = getArguments().getLong(STATION_PARAM);
+            int stationId = getArguments().getInt(STATION_PARAM);
             DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(mParentActivity);
             try {
                 Dao<Station, Integer> stationDao =  dbHelper.getStationDao();
@@ -153,7 +152,6 @@ public class StationNextTrainsFragment extends Fragment {
 
     private void showNoResultsMessage(){
         // TODO Move setting activity view to oncreate/onresume
-        View activityView = getView();
         statusMsg_TV.setText("No trains found");
         statusMsg_TV.setVisibility(View.VISIBLE);
     }

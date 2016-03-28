@@ -9,19 +9,14 @@ import com.j256.ormlite.field.DatabaseField;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import java.util.Comparator;
-
-/**
- * Created by Mark on 04/10/2014.
- */
 @Root(name = "objStation", strict = false)
 public class Station implements Comparable, Parcelable{
 
     private static final String TAG = Station.class.getSimpleName();
 
     @Element(name = "StationId")
-    @DatabaseField
-    private long id;
+    @DatabaseField(id = true, unique = true)
+    private int id;
 
     @Element(name = "StationDesc")
     @DatabaseField
@@ -48,11 +43,11 @@ public class Station implements Comparable, Parcelable{
 
     public Station(){ }
 
-    public Station(long id, String name, String alias, double latitude, double longitude, String code) {
+    public Station(int id, String name, String alias, double latitude, double longitude, String code) {
         this(id, name, alias, latitude, longitude, code, false);
     }
 
-    public Station(long id, String name, String alias, double latitude, double longitude, String code, boolean fav){
+    public Station(int id, String name, String alias, double latitude, double longitude, String code, boolean fav){
         this.id = id;
         this.name = name;
         this.alias = alias;
@@ -63,7 +58,7 @@ public class Station implements Comparable, Parcelable{
     }
 
     public Station(Parcel in){
-        this.id = in.readLong();
+        this.id = in.readInt();
         this.name = in.readString();
         this.alias = in.readString();
         this.latitude = in.readDouble();
@@ -108,7 +103,7 @@ public class Station implements Comparable, Parcelable{
         return code;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -141,6 +136,11 @@ public class Station implements Comparable, Parcelable{
         }
 
         return result;
+    }
+
+    @Override
+    public String toString(){
+        return "{id: " +id+ ", name: " +name+ ", alias: " +alias+ ", latitude: " +latitude+ ", longitude: " +longitude+ ", code: " +code+ ", favourite: " +favourite+ "}";
     }
 
     public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {

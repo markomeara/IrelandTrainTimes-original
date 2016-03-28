@@ -18,10 +18,6 @@ import ie.markomeara.irelandtraintimes.ui.fragment.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.StationList;
 
-
-/**
- * Created by Mark on 30/09/2014.
- */
 public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
     private static final String TAG = RetrieveStationsTask.class.getSimpleName();
@@ -81,7 +77,8 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
             if (!stations.isEmpty()) {
                 for(Station station : stations){
                     try {
-                        stationDao.create(station);
+                        Log.d(TAG, station.toString());
+                        stationDao.createOrUpdate(station);
                     } catch (SQLException e) {
                         Log.e(TAG, e.getMessage(), e);
                     }
