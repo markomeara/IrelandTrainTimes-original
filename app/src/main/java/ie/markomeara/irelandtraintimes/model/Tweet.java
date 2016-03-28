@@ -7,18 +7,18 @@ import java.util.Date;
 /**
  * Created by Mark on 24/10/2014.
  */
-public class Tweet {
+public class Tweet implements Comparable {
 
     private static final String TAG = Tweet.class.getSimpleName();
 
     // TODO Use something bigger than int for id in DB table
-    @DatabaseField
+    @DatabaseField(id = true, unique = true)
     private long id;
 
     @DatabaseField
     private String text;
 
-    @DatabaseField
+    @DatabaseField(columnName = "createdAt")
     private Date createdAt;
 
     @DatabaseField
@@ -26,6 +26,13 @@ public class Tweet {
 
     public Tweet(){
 
+    }
+
+    public Tweet(twitter4j.Status status){
+        this.id = status.getId();
+        this.text = status.getText();
+        this.createdAt = status.getCreatedAt();
+        this.retweetCount = status.getRetweetCount();
     }
 
     public Tweet(long id, String text, Date createdAt, int retweetCount){
@@ -51,4 +58,14 @@ public class Tweet {
         return retweetCount;
     }
 
+    @Override
+    public int compareTo(Object another) {
+        int result = 0;
+        if(another instanceof Tweet){
+            Tweet otherTweet = (Tweet) another;
+            // TODO Ensure this orders it correctly
+            result = this.getCreatedAt().compareTo(otherTweet.getCreatedAt());
+        }
+        return result;
+    }
 }

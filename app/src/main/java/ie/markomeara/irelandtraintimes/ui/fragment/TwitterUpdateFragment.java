@@ -3,11 +3,16 @@ package ie.markomeara.irelandtraintimes.ui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,8 +20,8 @@ import java.util.TimerTask;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.network.TweetsDataSource;
-import ie.markomeara.irelandtraintimes.network.TwitterTask;
+import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
+import ie.markomeara.irelandtraintimes.network.TweetUpdaterTask;
 import ie.markomeara.irelandtraintimes.model.Tweet;
 
 public class TwitterUpdateFragment extends Fragment {
@@ -52,10 +57,11 @@ public class TwitterUpdateFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        new TwitterTask(getActivity()).execute();
+        // TODO Refactor and extract some of this logic
 
-        TweetsDataSource tds = new TweetsDataSource(getActivity());
-        tweets = tds.getAllTweets();
+        new TweetUpdaterTask(getActivity()).execute();
+
+        refreshTweetList();
 
         currentTweet = 0;
         if(!tweets.isEmpty()) {
@@ -135,8 +141,14 @@ public class TwitterUpdateFragment extends Fragment {
     }
 
     private void refreshTweetList(){
-        TweetsDataSource tds = new TweetsDataSource(getActivity());
-        tweets = tds.getAllTweets();
+        try {
+            DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(getActivity());
+            Dao<Tweet, Integer> tweetDao = dbHelper.getTweetDao();
+            tweets = tweetDao.queryForAll();
+            Collections.sort(tweets);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
 }

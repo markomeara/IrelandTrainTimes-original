@@ -18,8 +18,8 @@ import ie.markomeara.irelandtraintimes.model.Tweet;
 
 public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
 
-    private static final String TAG = DBManager.class.getSimpleName();
-    private static final String DATABASE_NAME = "irelandtraintimes_orm.db";
+    private static final String TAG = DatabaseOrmHelper.class.getSimpleName();
+    private static final String DATABASE_NAME = "irelandtraintimes.db";
     private static final int DATABASE_VERSION = 2;
 
     private static DatabaseOrmHelper instance;
@@ -34,11 +34,10 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized DatabaseOrmHelper getDbHelper(Context context){
+    public static synchronized DatabaseOrmHelper getDbHelper(Context context) {
         if (instance == null) {
             Log.d(TAG, "Creating instance of DatabaseOrmHelper");
             instance = OpenHelperManager.getHelper(context, DatabaseOrmHelper.class);
-            instance.getWritableDatabase(); // In order to make sure DB is created
         }
         Log.d(TAG, "Returning instance of DatabaseOrmHelper");
         return instance;

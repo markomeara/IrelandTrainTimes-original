@@ -5,11 +5,19 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.Iterator;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
+import ie.markomeara.irelandtraintimes.model.Tweet;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import twitter4j.Paging;
 import twitter4j.RateLimitStatus;
@@ -18,17 +26,17 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-/**
- * Created by Mark on 21/10/2014.
- */
-public class TwitterTask extends AsyncTask<Void, Void, Void> {
 
-    private static final String TAG = TwitterTask.class.getSimpleName();
+public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
+
+    private static final String TAG = TweetUpdaterTask.class.getSimpleName();
+    private static final long IRISH_RAIL_TWITTER_ID = 15115986;
+    private static final long ONE_DAY = TimeUnit.DAYS.toMillis(1);
 
     private Context currentContext;
-    private static final long IRISH_RAIL_TWITTER_ID = 15115986;
 
-    public TwitterTask(Context c){
+
+    public TweetUpdaterTask(Context c){
         this.currentContext = c;
     }
 
@@ -58,11 +66,9 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
             Map<String, RateLimitStatus> limits = twitter.getRateLimitStatus();
 
             Set<String> keys = limits.keySet();
-            Iterator<String> iter = keys.iterator();
 
-            TweetsDataSource tds = new TweetsDataSource(currentContext);
+            refreshTweetsInDatabase(statuses);
 
-            tds.createRelevantTweets(statuses);
 
         }
         catch(TwitterException ex){
@@ -100,6 +106,72 @@ public class TwitterTask extends AsyncTask<Void, Void, Void> {
         }*/
 
         return null;
+    }
+
+    private void refreshTweetsInDatabase(List<twitter4j.Status> statuses){
+
+        Date tweetCutoffTime = new Date();
+        tweetCutoffTime.setTime(tweetCutoffTime.getTime() - ONE_DAY);
+
+        List<Tweet> tweetsToStore = relevantTweets(statuses, tweetCutoffTime);
+        DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(currentContext);
+
+        try {
+            deleteOldTweets(tweetCutoffTime, dbHelper);
+            insertNewTweets(tweetsToStore, dbHelper);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    private void insertNewTweets(List<Tweet> tweetsToStore, DatabaseOrmHelper dbHelper) throws SQLException {
+        Dao<Tweet, Integer> tweetDao = dbHelper.getTweetDao();
+        for(Tweet tweet : tweetsToStore){
+            tweetDao.createOrUpdate(tweet);
+        }
+    }
+
+    private List<Tweet> relevantTweets(List<twitter4j.Status> statuses, Date tweetCutoffTime){
+        List<Tweet> tweets = new ArrayList<>();
+
+        for(twitter4j.Status status : statuses){
+
+            Date createdDate = status.getCreatedAt();
+
+            if(isRelevantStatus(status) && createdDate.after(tweetCutoffTime)) {
+                Tweet tweet = new Tweet(status);
+                tweets.add(tweet);
+            }
+        }
+
+        return tweets;
+    }
+
+    private boolean isRelevantStatus(twitter4j.Status status){
+
+        boolean relevant = true;
+        String statusText = status.getText();
+
+        if(tweetIsAMention(statusText) || tweetContainsHashTag(statusText) || status.isRetweet()){
+            relevant = false;
+        }
+
+        return relevant;
+    }
+
+    private void deleteOldTweets(Date tweetCutoffTime, DatabaseOrmHelper dbHelper) throws SQLException {
+        Dao<Tweet, Integer> tweetDao = dbHelper.getTweetDao();
+        DeleteBuilder deleteBuilder = tweetDao.deleteBuilder();
+        deleteBuilder.where().lt("createdAt", tweetCutoffTime);
+        deleteBuilder.delete();
+    }
+
+    private boolean tweetIsAMention(String statusText){
+        return statusText.contains("@");
+    }
+
+    private boolean tweetContainsHashTag(String tweetText){
+        return tweetText.contains("#");
     }
 
     @Override
