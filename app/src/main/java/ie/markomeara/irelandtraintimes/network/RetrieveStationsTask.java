@@ -1,13 +1,19 @@
 package ie.markomeara.irelandtraintimes.network;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import ie.markomeara.irelandtraintimes.Injector;
+import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.ui.fragment.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.StationList;
@@ -24,11 +30,14 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     IrishRailService irishRailService;
 
     private StationListFragment stationListFragment;
+    private DatabaseOrmHelper databaseHelper;
 
 
-    public RetrieveStationsTask(StationListFragment fragment){
+    public RetrieveStationsTask(StationListFragment fragment) throws SQLException {
         Injector.inject(this);
         this.stationListFragment = fragment;
+        setDatabaseHelper(fragment.getActivity());
+
     }
 
     @Override
@@ -43,11 +52,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
         StationList stationList = irishRailService.getAllStations();
         List<Station> stations = stationList.getStationList();
 
-        // Using 130 as arbitrary value to just ensure we probably did get all the stations and not just rubbish
-        if (stations.size() > 130) {
-            StationsDataSource sds = new StationsDataSource(stationListFragment.getActivity());
-            sds.updateStoredStations(stations);
-        }
+        storeStationsInDatabase(stations);
 
         return updateUI;
     }
@@ -65,6 +70,28 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
     }
 
+    private void setDatabaseHelper(Context ctx) throws SQLException {
+        databaseHelper = OpenHelperManager.getHelper(ctx, DatabaseOrmHelper.class);
+    }
+
+    private void storeStationsInDatabase(List<Station> stations){
+        try {
+            Dao<Station, Integer> stationDao = databaseHelper.getStationDao();
+
+            if (!stations.isEmpty()) {
+                for(Station station : stations){
+                    try {
+                        stationDao.create(station);
+                    } catch (SQLException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+
+            }
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
 
 
 }

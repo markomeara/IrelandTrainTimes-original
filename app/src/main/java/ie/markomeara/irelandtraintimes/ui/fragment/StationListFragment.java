@@ -17,16 +17,19 @@ import android.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.adapter.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
+import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.model.Station;
-import ie.markomeara.irelandtraintimes.network.StationsDataSource;
 
 /**
  * Created by Mark on 27/10/2014.
@@ -140,7 +143,11 @@ public class StationListFragment extends Fragment {
 
     public void updateStoredStationsFromAPI(boolean updateUIWhenComplete){
         // TODO Network connection check
-        new RetrieveStationsTask(this).execute(updateUIWhenComplete);
+        try {
+            new RetrieveStationsTask(this).execute(updateUIWhenComplete);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     // TODO Think about lifecycle and how we refresh data when user goes back to home screen
@@ -164,9 +171,14 @@ public class StationListFragment extends Fragment {
     }
 
     private void loadStoredStationData(){
-        // TODO Populate station data
-        mAllStations = new ArrayList<>();
-        StationsDataSource sds = new StationsDataSource(getActivity());
-        mAllStations = sds.retrieveAllStations();
+        try {
+            DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(getActivity());
+            Dao<Station, Integer> stationDao = dbHelper.getStationDao();
+            mAllStations = stationDao.queryForAll();
+            Collections.sort(mAllStations);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+
     }
 }

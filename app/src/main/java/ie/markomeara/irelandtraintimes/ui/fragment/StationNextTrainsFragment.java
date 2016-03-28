@@ -14,12 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
@@ -29,9 +33,6 @@ import ie.markomeara.irelandtraintimes.network.StationsDataSource;
 import ie.markomeara.irelandtraintimes.network.NextTrainsTask;
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
-/**
- * Created by Mark on 27/10/2014.
- */
 public class StationNextTrainsFragment extends Fragment {
 
     private static final String TAG = StationNextTrainsFragment.class.getSimpleName();
@@ -62,8 +63,13 @@ public class StationNextTrainsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             long stationId = getArguments().getLong(STATION_PARAM);
-            StationsDataSource sds = new StationsDataSource(getActivity());
-            mDisplayedStation = sds.retrieveStationById(stationId);
+            DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(mParentActivity);
+            try {
+                Dao<Station, Integer> stationDao =  dbHelper.getStationDao();
+                mDisplayedStation = stationDao.queryForId(stationId);
+            } catch (SQLException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
         }
     }
 

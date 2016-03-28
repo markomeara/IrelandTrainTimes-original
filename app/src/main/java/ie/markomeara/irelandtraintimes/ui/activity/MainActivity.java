@@ -29,16 +29,13 @@ import ie.markomeara.irelandtraintimes.utils.LocationUtils;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import io.fabric.sdk.android.Fabric;
 
-/**
- * Created by Mark on 02/11/2014.
- */
-public class BaseActivity extends AppCompatActivity implements TwitterUpdateFragment.TweetFragmentListener,
+public class MainActivity extends AppCompatActivity implements TwitterUpdateFragment.TweetFragmentListener,
         StationListFragment.OnStationClickedListener, StationNextTrainsFragment.OnTrainSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // TODO Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
-    private static final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient mGoogleApiClient;
 
     // TODO Fragments should never communicate directly

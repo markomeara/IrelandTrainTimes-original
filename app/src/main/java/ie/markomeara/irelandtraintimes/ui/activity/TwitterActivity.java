@@ -11,9 +11,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 
-/**
- * Created by markomeara on 04/05/2015.
- */
 public class TwitterActivity extends AppCompatActivity {
 
     @Bind(R.id.twittertimeline_LV)

@@ -53,7 +53,7 @@ public class StationsDataSource {
      * @param stationToStore
      * @return false if station isn't entered in DB. This can happen if station with same name already exists.
      */
-    public boolean storeStation(Station stationToStore) {
+    private boolean storeStation(Station stationToStore) {
 
         /*
          *

@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import com.j256.ormlite.field.DatabaseField;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -13,22 +15,35 @@ import java.util.Comparator;
  * Created by Mark on 04/10/2014.
  */
 @Root(name = "objStation", strict = false)
-public class Station implements Comparator, Parcelable{
+public class Station implements Comparable, Parcelable{
 
     private static final String TAG = Station.class.getSimpleName();
 
     @Element(name = "StationId")
+    @DatabaseField
     private long id;
+
     @Element(name = "StationDesc")
+    @DatabaseField
     private String name;
+
     @Element(name = "StationAlias", required = false)
+    @DatabaseField
     private String alias;
+
     @Element(name = "StationLatitude", required = false)
+    @DatabaseField
     private double latitude;
+
     @Element(name = "StationLongitude", required = false)
+    @DatabaseField
     private double longitude;
+
     @Element(name = "StationCode", required = false)
+    @DatabaseField
     private String code;
+
+    @DatabaseField
     private boolean favourite;
 
     public Station(){ }
@@ -57,12 +72,13 @@ public class Station implements Comparator, Parcelable{
         this.favourite = in.readByte() != 0;
     }
 
-    public int compare(Object o1, Object o2){
+
+    @Override
+    public int compareTo(Object another) {
         int result = 0;
-        if(o1 instanceof Station && o2 instanceof Station){
-            Station s1 = (Station) o1;
-            Station s2 = (Station) o2;
-            result = s1.getName().compareToIgnoreCase(s2.getName());
+        if(another instanceof Station){
+            Station otherStation = (Station) another;
+            result = this.getName().compareToIgnoreCase(otherStation.getName());
         }
         return result;
     }
@@ -136,4 +152,5 @@ public class Station implements Comparator, Parcelable{
             return new Station[size];
         }
     };
+
 }

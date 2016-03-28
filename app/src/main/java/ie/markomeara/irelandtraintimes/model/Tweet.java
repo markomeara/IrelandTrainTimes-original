@@ -1,5 +1,7 @@
 package ie.markomeara.irelandtraintimes.model;
 
+import com.j256.ormlite.field.DatabaseField;
+
 import java.util.Date;
 
 /**
@@ -9,11 +11,22 @@ public class Tweet {
 
     private static final String TAG = Tweet.class.getSimpleName();
 
-    // TODO Use something bigger than int for id, and in DB table too
+    // TODO Use something bigger than int for id in DB table
+    @DatabaseField
     private long id;
+
+    @DatabaseField
     private String text;
+
+    @DatabaseField
     private Date createdAt;
+
+    @DatabaseField
     private int retweetCount;
+
+    public Tweet(){
+
+    }
 
     public Tweet(long id, String text, Date createdAt, int retweetCount){
         this.id = id;
