@@ -1,10 +1,8 @@
 package ie.markomeara.irelandtraintimes.network;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -33,8 +31,6 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     public RetrieveStationsTask(StationListFragment fragment) throws SQLException {
         Injector.inject(this);
         this.stationListFragment = fragment;
-        setDatabaseHelper(fragment.getActivity());
-
     }
 
     @Override
@@ -65,10 +61,6 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
         // .... but how can this be if it was passed updateUIImmediately (as this should only be passed
         // when no stations are displayed?!?
 
-    }
-
-    private void setDatabaseHelper(Context ctx) throws SQLException {
-        databaseHelper = OpenHelperManager.getHelper(ctx, DatabaseOrmHelper.class);
     }
 
     private void storeStationsInDatabase(List<Station> stations){

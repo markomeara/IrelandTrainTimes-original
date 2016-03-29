@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -21,8 +20,6 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseOrmHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "irelandtraintimes.db";
     private static final int DATABASE_VERSION = 2;
-
-    private static DatabaseOrmHelper instance;
 
     private Dao<Station, Integer> stationDao = null;
     private Dao<Tweet, Integer> tweetDao = null;
