@@ -16,6 +16,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.model.Tweet;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
@@ -33,10 +36,13 @@ public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
     private static final long IRISH_RAIL_TWITTER_ID = 15115986;
     private static final long ONE_DAY = TimeUnit.DAYS.toMillis(1);
 
+    @Inject
+    DatabaseOrmHelper databaseHelper;
+
     private Context currentContext;
 
-
     public TweetUpdaterTask(Context c){
+        Injector.inject(this);
         this.currentContext = c;
     }
 
@@ -114,11 +120,10 @@ public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
         tweetCutoffTime.setTime(tweetCutoffTime.getTime() - ONE_DAY);
 
         List<Tweet> tweetsToStore = relevantTweets(statuses, tweetCutoffTime);
-        DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(currentContext);
 
         try {
-            deleteOldTweets(tweetCutoffTime, dbHelper);
-            insertNewTweets(tweetsToStore, dbHelper);
+            deleteOldTweets(tweetCutoffTime, databaseHelper);
+            insertNewTweets(tweetsToStore, databaseHelper);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage(), e);
         }

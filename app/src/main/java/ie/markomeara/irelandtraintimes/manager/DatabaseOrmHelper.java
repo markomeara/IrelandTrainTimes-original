@@ -34,15 +34,6 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized DatabaseOrmHelper getDbHelper(Context context) {
-        if (instance == null) {
-            Log.d(TAG, "Creating instance of DatabaseOrmHelper");
-            instance = OpenHelperManager.getHelper(context, DatabaseOrmHelper.class);
-        }
-        Log.d(TAG, "Returning instance of DatabaseOrmHelper");
-        return instance;
-    }
-
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {

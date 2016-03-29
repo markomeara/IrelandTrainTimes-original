@@ -23,17 +23,17 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.adapter.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.model.Station;
 
-/**
- * Created by Mark on 27/10/2014.
- */
 public class StationListFragment extends Fragment {
 
     private static final String TAG = StationListFragment.class.getSimpleName();
@@ -43,9 +43,16 @@ public class StationListFragment extends Fragment {
     @Bind(R.id.loadingStations_progress)
     ProgressBar mLoadingStationsProgressBar;
 
+    @Inject
+    DatabaseOrmHelper databaseHelper;
+
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
     private OnStationClickedListener mListener;
+
+    public StationListFragment(){
+        Injector.inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -172,8 +179,7 @@ public class StationListFragment extends Fragment {
 
     private void loadStoredStationData(){
         try {
-            DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(getActivity());
-            Dao<Station, Integer> stationDao = dbHelper.getStationDao();
+            Dao<Station, Integer> stationDao = databaseHelper.getStationDao();
             mAllStations = stationDao.queryForAll();
             Collections.sort(mAllStations);
         } catch (SQLException e) {

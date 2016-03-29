@@ -25,9 +25,10 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     @Inject
     IrishRailService irishRailService;
 
-    private StationListFragment stationListFragment;
-    private DatabaseOrmHelper databaseHelper;
+    @Inject
+    DatabaseOrmHelper databaseHelper;
 
+    private StationListFragment stationListFragment;
 
     public RetrieveStationsTask(StationListFragment fragment) throws SQLException {
         Injector.inject(this);

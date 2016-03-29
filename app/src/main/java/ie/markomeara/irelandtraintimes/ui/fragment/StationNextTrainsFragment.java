@@ -21,8 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;
@@ -49,6 +52,13 @@ public class StationNextTrainsFragment extends Fragment {
     @Bind(R.id.nexttrains_loading)
     ProgressBar nextTrainsProgressBar;
 
+    @Inject
+    DatabaseOrmHelper databaseHelper;
+
+    public StationNextTrainsFragment(){
+        Injector.inject(this);
+    }
+
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
         Bundle args = new Bundle();
@@ -62,9 +72,8 @@ public class StationNextTrainsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             int stationId = getArguments().getInt(STATION_PARAM);
-            DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(mParentActivity);
             try {
-                Dao<Station, Integer> stationDao =  dbHelper.getStationDao();
+                Dao<Station, Integer> stationDao =  databaseHelper.getStationDao();
                 mDisplayedStation = stationDao.queryForId(stationId);
             } catch (SQLException e) {
                 Log.e(TAG, e.getMessage(), e);

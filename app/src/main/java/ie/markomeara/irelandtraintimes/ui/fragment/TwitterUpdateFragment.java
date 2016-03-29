@@ -17,8 +17,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.network.TweetUpdaterTask;
@@ -35,8 +38,11 @@ public class TwitterUpdateFragment extends Fragment {
     @Bind(R.id.tweetdisplayedTV)
     TextView tweetTextView;
 
+    @Inject
+    DatabaseOrmHelper databaseHelper;
+
     public TwitterUpdateFragment() {
-        // Required empty public constructor
+        Injector.inject(this);
     }
 
     @Override
@@ -142,8 +148,7 @@ public class TwitterUpdateFragment extends Fragment {
 
     private void refreshTweetList(){
         try {
-            DatabaseOrmHelper dbHelper = DatabaseOrmHelper.getDbHelper(getActivity());
-            Dao<Tweet, Integer> tweetDao = dbHelper.getTweetDao();
+            Dao<Tweet, Integer> tweetDao = databaseHelper.getTweetDao();
             tweets = tweetDao.queryForAll();
             Collections.sort(tweets);
         } catch (SQLException e) {
