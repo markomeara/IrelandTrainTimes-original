@@ -15,9 +15,6 @@ import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.utils.LocationUtils;
 import ie.markomeara.irelandtraintimes.viewholder.StationViewHolder;
 
-/**
- * Created by markomeara on 03/05/2015.
- */
 public class StationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements LocationUtils.LocationListener {
 

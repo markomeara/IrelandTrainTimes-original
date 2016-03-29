@@ -21,9 +21,6 @@ import ie.markomeara.irelandtraintimes.model.TrainList;
 import ie.markomeara.irelandtraintimes.network.IrishRailAPIUtil;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
 
-/**
- * Created by mark on 16/03/15.
- */
 public class ReminderService extends IntentService {
 
     private static final String TAG = ReminderService.class.getSimpleName();

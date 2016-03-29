@@ -5,9 +5,6 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-/**
- * Created by markomeara on 30/01/2016.
- */
 @Root(name = "ArrayOfObjStationData")
 public class TrainList {
 

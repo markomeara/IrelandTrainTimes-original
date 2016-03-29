@@ -14,9 +14,6 @@ import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
 import ie.markomeara.irelandtraintimes.model.TrainList;
 
-/**
- * Created by Mark on 26/10/2014.
- */
 public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
     private static final String TAG = NextTrainsTask.class.getSimpleName();

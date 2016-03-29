@@ -11,9 +11,6 @@ import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Train;
 
-/**
- * Created by markomeara on 20/03/2016.
- */
 public class TrainViewHolder extends RecyclerView.ViewHolder {
 
     private static final int NO_COLOR = -1;

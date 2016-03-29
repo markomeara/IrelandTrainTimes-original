@@ -2,9 +2,6 @@ package ie.markomeara.irelandtraintimes.model;
 
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
-/**
- * Created by Mark on 16/11/2014.
- */
 public class TrainListHeader implements TrainListItem {
 
     private String headingText;

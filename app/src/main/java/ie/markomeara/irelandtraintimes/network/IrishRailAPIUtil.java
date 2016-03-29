@@ -9,9 +9,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import ie.markomeara.irelandtraintimes.model.Train;
 
-/**
- * Created by mark on 16/03/15.
- */
 public class IrishRailAPIUtil {
 
     public static Train extractTrainFromTrainList(String trainCode, List<Train> trainList) throws ParserConfigurationException, SAXException, IOException {

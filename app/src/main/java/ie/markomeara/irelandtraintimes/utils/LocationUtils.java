@@ -5,9 +5,6 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by markomeara on 04/05/2015.
- */
 public class LocationUtils {
 
     private static Location lastLocation;

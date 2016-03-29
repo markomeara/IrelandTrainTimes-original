@@ -8,9 +8,6 @@ import android.util.Log;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
 
-/**
- * Created by mark on 21/03/15.
- */
 public class ReminderStartReceiver extends BroadcastReceiver{
 
     private static final String TAG = ReminderStartReceiver.class.getSimpleName();

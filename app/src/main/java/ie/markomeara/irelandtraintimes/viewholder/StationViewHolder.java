@@ -8,9 +8,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.R;
 
-/**
- * Created by markomeara on 19/03/2016.
- */
 public class StationViewHolder extends RecyclerView.ViewHolder{
 
     private final View stnItem;

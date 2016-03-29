@@ -11,7 +11,6 @@ import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
 
 /**
- * Created by Mark on 02/01/2015.
  *
  * ReminderManager is to be used as an access point to the ReminderService. All management of
  * the train reminder should be done through this manager class. This class controls the stopping

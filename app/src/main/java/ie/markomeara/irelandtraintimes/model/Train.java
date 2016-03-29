@@ -9,7 +9,6 @@ import org.simpleframework.xml.Root;
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 /**
- * Created by Mark on 26/10/2014.
  *
  * This is train info as seen from a particular station (I.E. the 'dueIn' var is relevant to only one station)
  * The 'stationCodeViewedFrom' variable shows which station this train info has been viewed from

@@ -17,9 +17,6 @@ import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;
 import ie.markomeara.irelandtraintimes.viewholder.TrainViewHolder;
 
-/**
- * Created by markomeara on 08/11/2015.
- */
 public class TrainsDueRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<TrainListItem> mListItems;

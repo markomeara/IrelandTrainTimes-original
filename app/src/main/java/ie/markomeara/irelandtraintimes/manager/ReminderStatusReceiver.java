@@ -12,9 +12,6 @@ import ie.markomeara.irelandtraintimes.ui.activity.MainActivity;
 import ie.markomeara.irelandtraintimes.ui.fragment.TrainDetailsFragment;
 import ie.markomeara.irelandtraintimes.model.Train;
 
-/**
- * Created by markomeara on 07/04/2015.
- */
 public class ReminderStatusReceiver extends BroadcastReceiver {
 
     private TrainDetailsFragment ui;

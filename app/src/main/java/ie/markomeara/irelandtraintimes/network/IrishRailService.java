@@ -5,9 +5,6 @@ import ie.markomeara.irelandtraintimes.model.TrainList;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
-/**
- * Created by markomeara on 15/11/2015.
- */
 public interface IrishRailService {
 
     // Synchronous

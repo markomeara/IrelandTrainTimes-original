@@ -4,9 +4,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.util.Date;
 
-/**
- * Created by Mark on 24/10/2014.
- */
 public class Tweet implements Comparable {
 
     private static final String TAG = Tweet.class.getSimpleName();
