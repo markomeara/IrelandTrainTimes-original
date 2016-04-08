@@ -19,11 +19,14 @@ public class Station implements Comparable, Parcelable{
     private int id;
 
     @Element(name = "StationDesc")
-    @DatabaseField
+    @DatabaseField(unique = true)
     private String name;
 
+    // TODO 'Unique' is non-deterministic. Depends what order stations are returned by API for what station
+    // is dumped. What if user sets reminder based on a station ID and then it's switched with station with different
+    // ID next time the list is refreshed from API
     @Element(name = "StationAlias", required = false)
-    @DatabaseField
+    @DatabaseField(unique = true)
     private String alias;
 
     @Element(name = "StationLatitude", required = false)

@@ -41,11 +41,13 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
             updateUI = updateUIParam[0];
         }
 
-        // TODO Handle timeout if there's no or weak internet
-        StationList stationList = irishRailService.getAllStations();
-        List<Station> stations = stationList.getStationList();
-
-        storeStationsInDatabase(stations);
+        // TODO Handle timeout / exception if there's no or weak internet
+        try {
+            copyStationsFromApiToDatabase();
+        }
+        catch(RuntimeException ex){
+            Log.e(TAG, ex.getMessage(), ex);
+        }
 
         return updateUI;
     }
@@ -61,6 +63,13 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
         // .... but how can this be if it was passed updateUIImmediately (as this should only be passed
         // when no stations are displayed?!?
 
+    }
+
+    private void copyStationsFromApiToDatabase() {
+        StationList stationList = irishRailService.getAllStations();
+        List<Station> stations = stationList.getStationList();
+
+        storeStationsInDatabase(stations);
     }
 
     private void storeStationsInDatabase(List<Station> stations){
