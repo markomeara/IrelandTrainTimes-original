@@ -1,225 +1,225 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:focusable="true"
     android:background="#CC00CC00">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Destination: "/>
-
-        <!-- TODO: Remove placeholder text -->
-        <TextView
-            android:id="@+id/trainDetails_dest_TV"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="PLACEHOLDER TEXT"
-            />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Scheduled: " />
-
-        <!-- TODO: Remove placeholder text -->
-        <TextView
-            android:id="@+id/trainDetails_scheduled_TV"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="PLACEHOLDER TEXT"
-            />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Estimated: " />
-
-        <!-- TODO: Remove placeholder text -->
-        <TextView
-            android:id="@+id/trainDetails_estimated_TV"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="PLACEHOLDER TEXT"
-            />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Due in: " />
-
-        <!-- TODO: Remove placeholder text -->
-        <TextView
-            android:id="@+id/trainDetails_dueIn_TV"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="PLACEHOLDER TEXT"
-            />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Latest: " />
-
-        <!-- TODO: Remove placeholder text -->
-        <TextView
-            android:id="@+id/trainDetails_latest_TV"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="PLACEHOLDER TEXT"
-            />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Service: " />
-
-        <!-- TODO: Remove placeholder text -->
-        <TextView
-            android:id="@+id/trainDetails_service_TV"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="PLACEHOLDER TEXT"
-            />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:text="Minutes: " />
-
-        <!-- TODO: Remove placeholder text -->
-        <EditText
-            android:id="@+id/trainDetails_remindermins_ET"
-            android:layout_alignParentRight="true"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:text="10"
-            />
-
-    </RelativeLayout>
-
-
-    <Button
-        android:id="@+id/trainDetails_reminder_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#FFFFFF"
-        android:visibility="visible"
-        android:text="Set Reminder"/>
+    <include layout="@layout/view_appbarlayout" />
 
     <LinearLayout
-        android:id="@+id/trackingDetails_RL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC00CC00"
+        android:focusable="true"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Destination: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <TextView
+                android:id="@+id/trainDetails_dest_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="PLACEHOLDER TEXT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Scheduled: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <TextView
+                android:id="@+id/trainDetails_scheduled_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="PLACEHOLDER TEXT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Estimated: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <TextView
+                android:id="@+id/trainDetails_estimated_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="PLACEHOLDER TEXT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Due in: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <TextView
+                android:id="@+id/trainDetails_dueIn_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="PLACEHOLDER TEXT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Latest: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <TextView
+                android:id="@+id/trainDetails_latest_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="PLACEHOLDER TEXT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Service: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <TextView
+                android:id="@+id/trainDetails_service_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="PLACEHOLDER TEXT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Minutes: "
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- TODO: Remove placeholder text -->
+            <EditText
+                android:id="@+id/trainDetails_remindermins_ET"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="10"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
 
         <Button
-            android:id="@+id/trainDetails_deletereminder_BTN"
+            android:id="@+id/trainDetails_reminder_BTN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="#FF0000"
+            android:text="Set Reminder"
             android:textColor="#FFFFFF"
-            android:text="Delete Reminder"/>
+            android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/trainDetails_trackingActive_TV"
+        <LinearLayout
+            android:id="@+id/trackingDetails_RL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="#FFFFFF"
-            android:text="" />
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/trainDetails_deletereminder_BTN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#FF0000"
+                android:text="Delete Reminder"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/trainDetails_trackingActive_TV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text=""
+                android:textColor="#FFFFFF" />
 
 
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

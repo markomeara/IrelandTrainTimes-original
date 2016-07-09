@@ -36,7 +36,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
         if(stationParams.length >= 1){
             Station station = stationParams[0];
             String stnCode = station.getCode();
-
+            // TODO Handle exception as defined in appmodule
             TrainList allTrains = irishRailService.getTrainsDueAtStation(stnCode);
             relevantTrains = removeTrainsTerminatingAtStation(allTrains.getTrainList(), station);
 

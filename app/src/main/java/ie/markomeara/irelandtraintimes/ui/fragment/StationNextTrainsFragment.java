@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,19 +42,21 @@ public class StationNextTrainsFragment extends Fragment {
     private static final String STATION_PARAM = "stationId";
     private Station mDisplayedStation;
     private AppCompatActivity mParentActivity;
-    private OnTrainSelectedListener onTrainSelectedListener;
+    private OnTrainSelectedListener mOnTrainSelectedListener;
     private LayoutInflater mLayoutInflater;
     private TrainsDueRecyclerViewAdapter mTrainsDueRecyclerViewAdapter;
 
     @Bind(R.id.trainsDueAtStation_RV)
-    RecyclerView trainsDueRV;
+    RecyclerView mTrainsDueRV;
     @Bind(R.id.trainsDue_loading_TV)
-    TextView statusMsg_TV;   // TODO Switch to switcher view
+    TextView mStatusMsgTv;   // TODO Switch to switcher view
     @Bind(R.id.nexttrains_loading)
-    ProgressBar nextTrainsProgressBar;
+    ProgressBar mNextTrainsProgressBar;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Inject
-    DatabaseOrmHelper databaseHelper;
+    DatabaseOrmHelper mDatabaseHelper;
 
     public StationNextTrainsFragment(){
         Injector.inject(this);
@@ -73,7 +76,7 @@ public class StationNextTrainsFragment extends Fragment {
         if (getArguments() != null) {
             int stationId = getArguments().getInt(STATION_PARAM);
             try {
-                Dao<Station, Integer> stationDao =  databaseHelper.getStationDao();
+                Dao<Station, Integer> stationDao =  mDatabaseHelper.getStationDao();
                 mDisplayedStation = stationDao.queryForId(stationId);
             } catch (SQLException e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -97,24 +100,13 @@ public class StationNextTrainsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mParentActivity = (AppCompatActivity) getActivity();
-        ActionBar actionBar = mParentActivity.getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(mDisplayedStation.getName());
-
-            // TODO Add 'ontouch' background change to the back button in action bar
-            // it's there by default in lollipop
-            actionBar.setDisplayHomeAsUpEnabled(true);
-
-        }
-        else{
-            Log.e(TAG, "Action bar is null");
-        }
-
+        configureToolbar();
+        mNextTrainsProgressBar.setVisibility(View.VISIBLE);
         AsyncTask<Station, Integer, List<Train>> nextTrainsTask = new NextTrainsTask(this);
         nextTrainsTask.execute(mDisplayedStation);
 
         if(mParentActivity instanceof OnTrainSelectedListener){
-            onTrainSelectedListener = (OnTrainSelectedListener) mParentActivity;
+            mOnTrainSelectedListener = (OnTrainSelectedListener) mParentActivity;
         }
         else{
             Log.e(TAG, "Parent activity is not instance of OnTrainSelectedListener");
@@ -127,7 +119,7 @@ public class StationNextTrainsFragment extends Fragment {
         // TODO Move setting activity view to oncreate/onresume
         View activityView = getView();
         if(activityView != null) {
-            nextTrainsProgressBar.setVisibility(View.GONE);
+            mNextTrainsProgressBar.setVisibility(View.GONE);
             if (trainsDue != null && !trainsDue.isEmpty()) {
 
                 // Sort trains by direction, then by due time
@@ -151,23 +143,37 @@ public class StationNextTrainsFragment extends Fragment {
                 }
 
                 mTrainsDueRecyclerViewAdapter = new TrainsDueRecyclerViewAdapter(trainListItems, this);
-                trainsDueRV.setLayoutManager(new LinearLayoutManager(getActivity()));
-                trainsDueRV.setAdapter(mTrainsDueRecyclerViewAdapter);
+                mTrainsDueRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+                mTrainsDueRV.setAdapter(mTrainsDueRecyclerViewAdapter);
             } else {
                 showNoResultsMessage();
             }
         }
     }
 
+    private void configureToolbar(){
+        mParentActivity.setSupportActionBar(mToolbar);
+        mToolbar.setTitle(null);
+        ActionBar actionBar = mParentActivity.getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(mDisplayedStation.getName());
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        else{
+            Log.w(TAG, "Action bar is null");
+        }
+    }
+
     private void showNoResultsMessage(){
         // TODO Move setting activity view to oncreate/onresume
-        statusMsg_TV.setText("No trains found");
-        statusMsg_TV.setVisibility(View.VISIBLE);
+        mStatusMsgTv.setText("No trains found");
+        mStatusMsgTv.setVisibility(View.VISIBLE);
     }
 
     public void onTrainSelected(int position){
         Train selectedTrain = mTrainsDueRecyclerViewAdapter.getTrainAtPosition(position);
-        onTrainSelectedListener.onTrainSelected(selectedTrain, mDisplayedStation);
+        mOnTrainSelectedListener.onTrainSelected(selectedTrain, mDisplayedStation);
     }
 
     public interface OnTrainSelectedListener{

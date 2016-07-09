@@ -5,6 +5,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,35 +33,38 @@ public class TrainDetailsFragment extends Fragment {
 
     private static final String TAG = TrainDetailsFragment.class.getSimpleName();
 
-    // TODO Be consistent of naming member vars throughout app... start with 'm' or not
+    // TODO Be consistent of naming member vars throughout app... start with 'm'
     private Train mTrain;
     private Station mStation;
+    private AppCompatActivity mParentActivity;
 
     @Bind(R.id.trainDetails_dest_TV)
-    TextView destination_TV;
+    TextView mDestination_TV;
     @Bind(R.id.trainDetails_scheduled_TV)
-    TextView scheduled_TV;
+    TextView mScheduled_TV;
     @Bind(R.id.trainDetails_estimated_TV)
-    TextView estimated_TV;
+    TextView mEstimated_TV;
     @Bind(R.id.trainDetails_dueIn_TV)
-    TextView dueIn_TV;
+    TextView mDueIn_TV;
     @Bind(R.id.trainDetails_latest_TV)
-    TextView latest_TV;
+    TextView mLatest_TV;
     @Bind(R.id.trainDetails_service_TV)
-    TextView service_TV;
+    TextView mService_TV;
     @Bind(R.id.trainDetails_remindermins_ET)
-    TextView reminderMins_ET;
+    TextView mReminderMins_ET;
     @Bind(R.id.trainDetails_trackingActive_TV)
-    TextView trackingActive_TV;
+    TextView mTrackingActive_TV;
     @Bind(R.id.trainDetails_reminder_BTN)
-    Button setReminder_Btn;
+    Button mSetReminder_Btn;
     @Bind(R.id.trainDetails_deletereminder_BTN)
-    Button deleteReminder_Btn;
+    Button mDeleteReminder_Btn;
     @Bind(R.id.trackingDetails_RL)
-    LinearLayout trackingDetails_LL;
+    LinearLayout mTrackingDetails_LL;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
-    public static String TRAIN_PARAM = "train";
-    public static String STATION_PARAM = "station";
+    public static final String TRAIN_PARAM = "train";
+    public static final String STATION_PARAM = "station";
 
     private BroadcastReceiver trackingUpdateReceiver = new ReminderStatusReceiver(this);
 
@@ -103,19 +109,20 @@ public class TrainDetailsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setReminder_Btn.setOnClickListener(new View.OnClickListener() {
+        mSetReminder_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setReminder();
             }
         });
-        deleteReminder_Btn.setOnClickListener(new View.OnClickListener(){
+        mDeleteReminder_Btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 deleteReminder();
             }
         });
-
+        mParentActivity = (AppCompatActivity) getActivity();
+        configureToolbar();
         displayTrainDetails();
         if(trainIsBeingTracked()){
             automaticallyRefreshTrainDetails();
@@ -123,13 +130,34 @@ public class TrainDetailsFragment extends Fragment {
 
     }
 
+    // Called from broadcaster when an update has been received for the train being tracked
+    public void newTrainDetailsReceived(Train trainDetails){
+        this.mTrain = trainDetails;
+        displayTrainDetails();
+        updateTrackingUpdateTime();
+    }
+
+    private void configureToolbar(){
+        mParentActivity.setSupportActionBar(mToolbar);
+        mToolbar.setTitle(null);
+        ActionBar actionBar = mParentActivity.getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(mStation.getDisplayName());
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        else{
+            Log.w(TAG, "Action bar is null");
+        }
+    }
+
     private void displayTrainDetails(){
-        destination_TV.setText(mTrain.getDestination());
-        scheduled_TV.setText(mTrain.getSchDepart());
-        estimated_TV.setText(mTrain.getExpDepart());
-        dueIn_TV.setText(Integer.toString(mTrain.getDueIn()));
-        latest_TV.setText(mTrain.getLatestInfo());
-        service_TV.setText(mTrain.getTrainType());
+        mDestination_TV.setText(mTrain.getDestination());
+        mScheduled_TV.setText(mTrain.getSchDepart());
+        mEstimated_TV.setText(mTrain.getExpDepart());
+        mDueIn_TV.setText(Integer.toString(mTrain.getDueIn()));
+        mLatest_TV.setText(mTrain.getLatestInfo());
+        mService_TV.setText(mTrain.getTrainType());
     }
 
     private boolean trainIsBeingTracked(){
@@ -148,14 +176,14 @@ public class TrainDetailsFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(trackingUpdateReceiver,
                 new IntentFilter(ReminderManager.BROADCAST_NAME));
         updateTrackingUpdateTime();
-        setReminder_Btn.setVisibility(View.GONE);
-        trackingDetails_LL.setVisibility(View.VISIBLE);
+        mSetReminder_Btn.setVisibility(View.GONE);
+        mTrackingDetails_LL.setVisibility(View.VISIBLE);
     }
 
     private void setReminder(){
 
         automaticallyRefreshTrainDetails();
-        int enteredReminderMins = Integer.parseInt(reminderMins_ET.getText().toString());
+        int enteredReminderMins = Integer.parseInt(mReminderMins_ET.getText().toString());
         ReminderManager.setReminder(mTrain, mStation, enteredReminderMins, this.getActivity());
 
     }
@@ -163,8 +191,8 @@ public class TrainDetailsFragment extends Fragment {
     private void deleteReminder(){
         ReminderManager.clearReminder(getActivity());
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(trackingUpdateReceiver);
-        trackingDetails_LL.setVisibility(View.GONE);
-        setReminder_Btn.setVisibility(View.VISIBLE);
+        mTrackingDetails_LL.setVisibility(View.GONE);
+        mSetReminder_Btn.setVisibility(View.VISIBLE);
     }
 
     private void updateTrackingUpdateTime(){
@@ -175,14 +203,7 @@ public class TrainDetailsFragment extends Fragment {
         String currTimeDisp = dateFormat.format(currTime);
 
         String formattedTrackingMsg = String.format(TRACKING_ACTIVE_MSG, currTimeDisp);
-        trackingActive_TV.setText(formattedTrackingMsg);
-    }
-
-    // Called from broadcaster when an update has been received for the train being tracked
-    public void newTrainDetailsReceived(Train trainDetails){
-        this.mTrain = trainDetails;
-        displayTrainDetails();
-        updateTrackingUpdateTime();
+        mTrackingActive_TV.setText(formattedTrackingMsg);
     }
 
 }

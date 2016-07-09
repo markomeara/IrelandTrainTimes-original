@@ -7,13 +7,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -42,13 +43,16 @@ public class StationListFragment extends Fragment {
     RecyclerView mStationRecyclerView;
     @Bind(R.id.loadingStations_progress)
     ProgressBar mLoadingStationsProgressBar;
+    @Bind(R.id.stationListToolbar)
+    Toolbar mToolbar;
 
     @Inject
-    DatabaseOrmHelper databaseHelper;
+    DatabaseOrmHelper mDatabaseHelper;
 
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
     private OnStationClickedListener mListener;
+    private AppCompatActivity mParentActivity;
 
     public StationListFragment(){
         Injector.inject(this);
@@ -82,15 +86,8 @@ public class StationListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
-        AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
-        ActionBar actionBar = parentActivity.getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.app_name);
-            actionBar.setDisplayHomeAsUpEnabled(false);
-        }
-        else{
-            Log.e(TAG, "Action bar is null");
-        }
+        mParentActivity = (AppCompatActivity) getActivity();
+        configureToolbar();
     }
 
     @Override
@@ -177,9 +174,22 @@ public class StationListFragment extends Fragment {
         void onStationSelected(Station station);
     }
 
+    private void configureToolbar(){
+        mParentActivity.setSupportActionBar(mToolbar);
+        mToolbar.setTitle(null);
+        ActionBar actionBar = mParentActivity.getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+        else{
+            Log.w(TAG, "Action bar is null");
+        }
+    }
+
     private void loadStoredStationData(){
         try {
-            Dao<Station, Integer> stationDao = databaseHelper.getStationDao();
+            Dao<Station, Integer> stationDao = mDatabaseHelper.getStationDao();
             mAllStations = stationDao.queryForAll();
             Collections.sort(mAllStations);
         } catch (SQLException e) {

@@ -1,23 +1,23 @@
-<RelativeLayout
-    android:id="@+id/nexttrains_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/trainsDueInfo_LL"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/nexttrains_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/view_appbarlayout" />
+
         <TextView
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
             android:id="@+id/trainsDue_loading_TV"
-            android:text="@string/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="@string/loading"
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/trainsDueAtStation_RV"
@@ -26,19 +26,11 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/reminderoverlay_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-
     <ProgressBar
         android:id="@+id/nexttrains_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="visible" />
-
-</RelativeLayout>
+</FrameLayout>

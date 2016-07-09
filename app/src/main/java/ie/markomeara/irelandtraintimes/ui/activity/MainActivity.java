@@ -60,9 +60,6 @@ public class MainActivity extends AppCompatActivity implements TwitterUpdateFrag
             ft.commit();
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
     }
 
     @Override

@@ -46,6 +46,7 @@ public class AppModule {
     @Singleton
     IrishRailService providesIrishRailService() {
         Log.d(TAG, "Returning Irish Rail service");
+        // TODO Handle exception - this is thrown if, eg, site is down or internet is down
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(API_ENDPOINT)
                 .setConverter(new SimpleXmlConverter())

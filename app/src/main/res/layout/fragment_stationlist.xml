@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/stationlistLL"
     android:layout_width="match_parent"
@@ -7,20 +8,42 @@
     android:layout_alignParentTop="true"
     android:layout_above="@id/twitterupdatefragment"
     android:orientation="vertical"
-    tools:context=".Home">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activity.MainActivity">
 
-    <ProgressBar
-        android:id="@+id/loadingStations_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/stationlistRV"
-        android:scrollbars="vertical"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/topbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/twitterupdatefragment">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/stationListToolbar"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:theme="@style/ToolbarTheme" />
+
+    </android.support.design.widget.AppBarLayout>
+
+        <ProgressBar
+            android:id="@+id/loadingStations_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/stationlistRV"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
