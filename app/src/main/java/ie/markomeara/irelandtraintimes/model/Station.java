@@ -76,7 +76,7 @@ public class Station implements Comparable, Parcelable{
         int result = 0;
         if(another instanceof Station){
             Station otherStation = (Station) another;
-            result = this.getName().compareToIgnoreCase(otherStation.getName());
+            result = this.getDisplayName().compareToIgnoreCase(otherStation.getDisplayName());
         }
         return result;
     }
