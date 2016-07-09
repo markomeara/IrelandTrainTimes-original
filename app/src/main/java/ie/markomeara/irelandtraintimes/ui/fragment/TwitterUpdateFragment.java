@@ -30,16 +30,16 @@ import ie.markomeara.irelandtraintimes.model.Tweet;
 public class TwitterUpdateFragment extends Fragment {
 
     private static final String TAG = TwitterUpdateFragment.class.getSimpleName();
-    private List<Tweet> tweets;
-    Timer tweetSwitchTimer;
-    private int currentTweet;
+    private List<Tweet> mTweets;
+    private Timer mTweetSwitchTimer;
+    private int mCurrentTweet;
     private TweetFragmentListener mListener;
 
     @Bind(R.id.tweetdisplayedTV)
-    TextView tweetTextView;
+    protected TextView mTweetTextView;
 
     @Inject
-    DatabaseOrmHelper databaseHelper;
+    protected DatabaseOrmHelper mDatabaseHelper;
 
     public TwitterUpdateFragment() {
         Injector.inject(this);
@@ -69,15 +69,15 @@ public class TwitterUpdateFragment extends Fragment {
 
         refreshTweetList();
 
-        currentTweet = 0;
-        if(!tweets.isEmpty()) {
-            tweetTextView.setText(tweets.get(currentTweet).getText());
+        mCurrentTweet = 0;
+        if(!mTweets.isEmpty()) {
+            mTweetTextView.setText(mTweets.get(mCurrentTweet).getText());
         }
 
         scheduleTweetSwitching();
 
         // OnClick
-        tweetTextView.setOnClickListener(new View.OnClickListener() {
+        mTweetTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onTweetFragmentClicked();
@@ -107,7 +107,7 @@ public class TwitterUpdateFragment extends Fragment {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        tweetSwitchTimer.cancel();
+        mTweetSwitchTimer.cancel();
     }
 
     public interface TweetFragmentListener {
@@ -116,28 +116,28 @@ public class TwitterUpdateFragment extends Fragment {
     }
 
     private void scheduleTweetSwitching(){
-        tweetSwitchTimer = new Timer("tweet_switcher");
-        tweetSwitchTimer.scheduleAtFixedRate(
+        mTweetSwitchTimer = new Timer("tweet_switcher");
+        mTweetSwitchTimer.scheduleAtFixedRate(
                 new TimerTask() {
                     public void run() {
                         getActivity().runOnUiThread( new Runnable(){
 
                             @Override
                             public void run() {
-                                if(currentTweet < (tweets.size() - 1)){
-                                    currentTweet++;
+                                if(mCurrentTweet < (mTweets.size() - 1)){
+                                    mCurrentTweet++;
                                 }
                                 else{
                                     // Refresh tweets when we're about to go back to start
                                     refreshTweetList();
-                                    currentTweet = 0;
+                                    mCurrentTweet = 0;
                                 }
 
-                                if(!tweets.isEmpty()) {
-                                    tweetTextView.setText(tweets.get(currentTweet).getText());
+                                if(!mTweets.isEmpty()) {
+                                    mTweetTextView.setText(mTweets.get(mCurrentTweet).getText());
                                 }
                                 else{
-                                    tweetTextView.setText(getString(R.string.no_tweets));
+                                    mTweetTextView.setText(getString(R.string.no_tweets));
                                 }
                             }
                         });
@@ -148,9 +148,9 @@ public class TwitterUpdateFragment extends Fragment {
 
     private void refreshTweetList(){
         try {
-            Dao<Tweet, Integer> tweetDao = databaseHelper.getTweetDao();
-            tweets = tweetDao.queryForAll();
-            Collections.sort(tweets);
+            Dao<Tweet, Integer> tweetDao = mDatabaseHelper.getTweetDao();
+            mTweets = tweetDao.queryForAll();
+            Collections.sort(mTweets);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage(), e);
         }

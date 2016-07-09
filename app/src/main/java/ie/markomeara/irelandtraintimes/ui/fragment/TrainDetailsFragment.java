@@ -33,40 +33,39 @@ public class TrainDetailsFragment extends Fragment {
 
     private static final String TAG = TrainDetailsFragment.class.getSimpleName();
 
-    // TODO Be consistent of naming member vars throughout app... start with 'm'
+    public static final String TRAIN_PARAM = "train";
+    public static final String STATION_PARAM = "station";
+
     private Train mTrain;
     private Station mStation;
     private AppCompatActivity mParentActivity;
 
+    private BroadcastReceiver mTrackingUpdateReceiver = new ReminderStatusReceiver(this);
+
     @Bind(R.id.trainDetails_dest_TV)
-    TextView mDestination_TV;
+    protected TextView mDestination_TV;
     @Bind(R.id.trainDetails_scheduled_TV)
-    TextView mScheduled_TV;
+    protected TextView mScheduled_TV;
     @Bind(R.id.trainDetails_estimated_TV)
-    TextView mEstimated_TV;
+    protected TextView mEstimated_TV;
     @Bind(R.id.trainDetails_dueIn_TV)
-    TextView mDueIn_TV;
+    protected TextView mDueIn_TV;
     @Bind(R.id.trainDetails_latest_TV)
-    TextView mLatest_TV;
+    protected TextView mLatest_TV;
     @Bind(R.id.trainDetails_service_TV)
-    TextView mService_TV;
+    protected TextView mService_TV;
     @Bind(R.id.trainDetails_remindermins_ET)
-    TextView mReminderMins_ET;
+    protected TextView mReminderMins_ET;
     @Bind(R.id.trainDetails_trackingActive_TV)
-    TextView mTrackingActive_TV;
+    protected TextView mTrackingActive_TV;
     @Bind(R.id.trainDetails_reminder_BTN)
-    Button mSetReminder_Btn;
+    protected Button mSetReminder_Btn;
     @Bind(R.id.trainDetails_deletereminder_BTN)
-    Button mDeleteReminder_Btn;
+    protected Button mDeleteReminder_Btn;
     @Bind(R.id.trackingDetails_RL)
-    LinearLayout mTrackingDetails_LL;
+    protected LinearLayout mTrackingDetails_LL;
     @Bind(R.id.toolbar)
-    Toolbar mToolbar;
-
-    public static final String TRAIN_PARAM = "train";
-    public static final String STATION_PARAM = "station";
-
-    private BroadcastReceiver trackingUpdateReceiver = new ReminderStatusReceiver(this);
+    protected Toolbar mToolbar;
 
     private static final String TRACKING_ACTIVE_MSG = "Tracking Active. Details last updated at %s. This screen" +
             " will refresh automatically with your train details.";
@@ -173,7 +172,7 @@ public class TrainDetailsFragment extends Fragment {
     }
 
     private void automaticallyRefreshTrainDetails(){
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(trackingUpdateReceiver,
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTrackingUpdateReceiver,
                 new IntentFilter(ReminderManager.BROADCAST_NAME));
         updateTrackingUpdateTime();
         mSetReminder_Btn.setVisibility(View.GONE);
@@ -190,7 +189,7 @@ public class TrainDetailsFragment extends Fragment {
 
     private void deleteReminder(){
         ReminderManager.clearReminder(getActivity());
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(trackingUpdateReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTrackingUpdateReceiver);
         mTrackingDetails_LL.setVisibility(View.GONE);
         mSetReminder_Btn.setVisibility(View.VISIBLE);
     }

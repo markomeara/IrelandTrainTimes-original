@@ -37,13 +37,13 @@ public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
     private static final long ONE_DAY = TimeUnit.DAYS.toMillis(1);
 
     @Inject
-    DatabaseOrmHelper databaseHelper;
+    protected DatabaseOrmHelper mDatabaseHelper;
 
-    private Context currentContext;
+    private Context mCurrentContext;
 
     public TweetUpdaterTask(Context c){
         Injector.inject(this);
-        this.currentContext = c;
+        this.mCurrentContext = c;
     }
 
     @Override
@@ -122,8 +122,8 @@ public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
         List<Tweet> tweetsToStore = relevantTweets(statuses, tweetCutoffTime);
 
         try {
-            deleteOldTweets(tweetCutoffTime, databaseHelper);
-            insertNewTweets(tweetsToStore, databaseHelper);
+            deleteOldTweets(tweetCutoffTime, mDatabaseHelper);
+            insertNewTweets(tweetsToStore, mDatabaseHelper);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage(), e);
         }
@@ -182,7 +182,7 @@ public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void param) {
         Log.i(TAG, "Tweets have been updated");
-        Toast t = Toast.makeText(currentContext, "Tweets updated", Toast.LENGTH_SHORT);
+        Toast t = Toast.makeText(mCurrentContext, "Tweets updated", Toast.LENGTH_SHORT);
         t.show();
 
     }

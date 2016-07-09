@@ -25,10 +25,10 @@ public class ReminderService extends IntentService {
 
     private static final String TAG = ReminderService.class.getSimpleName();
 
-    private final IBinder reminderServiceBinder = new ReminderServiceBinder();
+    private final IBinder mReminderServiceBinder = new ReminderServiceBinder();
 
     @Inject
-    IrishRailService irishRailService;
+    protected IrishRailService mIrishRailService;
 
     private Station station;
     private Train train;
@@ -53,7 +53,7 @@ public class ReminderService extends IntentService {
 
         try {
 
-            TrainList trainList = irishRailService.getTrainsDueAtStation(station.getCode());
+            TrainList trainList = mIrishRailService.getTrainsDueAtStation(station.getCode());
 
             Train latestTrainInfo = IrishRailAPIUtil.extractTrainFromTrainList(train.getTrainCode(), trainList.getTrainList());
 
@@ -102,7 +102,7 @@ public class ReminderService extends IntentService {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return reminderServiceBinder;
+        return mReminderServiceBinder;
     }
 
     public class ReminderServiceBinder extends Binder {

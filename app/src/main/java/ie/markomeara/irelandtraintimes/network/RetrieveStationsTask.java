@@ -21,10 +21,10 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     private static final String TAG = RetrieveStationsTask.class.getSimpleName();
 
     @Inject
-    IrishRailService irishRailService;
+    protected IrishRailService mIrishRailService;
 
     @Inject
-    DatabaseOrmHelper databaseHelper;
+    protected DatabaseOrmHelper mDatabaseHelper;
 
     private StationListFragment stationListFragment;
 
@@ -66,7 +66,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     }
 
     private void copyStationsFromApiToDatabase() {
-        StationList stationList = irishRailService.getAllStations();
+        StationList stationList = mIrishRailService.getAllStations();
         List<Station> stations = stationList.getStationList();
 
         storeStationsInDatabase(stations);
@@ -74,7 +74,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
     private void storeStationsInDatabase(List<Station> stations){
         try {
-            Dao<Station, Integer> stationDao = databaseHelper.getStationDao();
+            Dao<Station, Integer> stationDao = mDatabaseHelper.getStationDao();
 
             if (!stations.isEmpty()) {
                 for(Station station : stations){

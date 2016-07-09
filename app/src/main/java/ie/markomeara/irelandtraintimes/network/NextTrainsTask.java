@@ -19,13 +19,13 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
     private static final String TAG = NextTrainsTask.class.getSimpleName();
 
     @Inject
-    IrishRailService irishRailService;
+    protected IrishRailService mIrishRailService;
 
-    private StationNextTrainsFragment callingFragment;
+    private StationNextTrainsFragment mCallingFragment;
 
     public NextTrainsTask(StationNextTrainsFragment fragment){
         Injector.inject(this);
-        this.callingFragment = fragment;
+        this.mCallingFragment = fragment;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
             Station station = stationParams[0];
             String stnCode = station.getCode();
             // TODO Handle exception as defined in appmodule
-            TrainList allTrains = irishRailService.getTrainsDueAtStation(stnCode);
+            TrainList allTrains = mIrishRailService.getTrainsDueAtStation(stnCode);
             relevantTrains = removeTrainsTerminatingAtStation(allTrains.getTrainList(), station);
 
         }
@@ -49,7 +49,7 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
     @Override
     protected void onPostExecute(List<Train> trainsDue) {
-        callingFragment.displayTimes(trainsDue);
+        mCallingFragment.displayTimes(trainsDue);
     }
 
 

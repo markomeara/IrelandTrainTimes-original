@@ -14,7 +14,7 @@ import ie.markomeara.irelandtraintimes.R;
 public class TwitterActivity extends AppCompatActivity {
 
     @Bind(R.id.twittertimeline_LV)
-    ListView twitter_LV;
+    protected ListView mTwitter_LV;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -28,6 +28,6 @@ public class TwitterActivity extends AppCompatActivity {
         super.onResume();
         UserTimeline userTimeline = new UserTimeline.Builder().screenName("irishrail").build();
         final TweetTimelineListAdapter adapter = new TweetTimelineListAdapter(this, userTimeline);
-        twitter_LV.setAdapter(adapter);
+        mTwitter_LV.setAdapter(adapter);
     }
 }

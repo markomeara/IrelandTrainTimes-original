@@ -10,28 +10,28 @@ import ie.markomeara.irelandtraintimes.R;
 
 public class StationViewHolder extends RecyclerView.ViewHolder{
 
-    private final View stnItem;
+    private final View mStnItem;
     @Bind(R.id.stationName)
-    TextView stnName;
+    protected TextView mStnName;
     @Bind(R.id.stationDistance)
-    TextView stnDistance;
+    protected TextView mStnDistance;
 
     public StationViewHolder(View view) {
         super(view);
-        stnItem = view;
+        mStnItem = view;
         ButterKnife.bind(this, view);
     }
 
     public View getView(){
-        return stnItem;
+        return mStnItem;
     }
 
     public void setStationDisplayName(String name){
-        stnName.setText(name);
+        mStnName.setText(name);
     }
 
     public void setStnDistance(String distance){
-        stnDistance.setText(distance);
+        mStnDistance.setText(distance);
     }
 
 }

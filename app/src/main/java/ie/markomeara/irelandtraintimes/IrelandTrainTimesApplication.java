@@ -4,16 +4,16 @@ import android.app.Application;
 
 public class IrelandTrainTimesApplication extends Application {
 
-    private static IrelandTrainTimesApplication mInstance;
+    private static IrelandTrainTimesApplication sInstance;
 
     @Override
     public void onCreate(){
         super.onCreate();
-        mInstance = this;
+        sInstance = this;
     }
 
     public static IrelandTrainTimesApplication getInstance(){
-        return mInstance;
+        return sInstance;
     }
 
 }

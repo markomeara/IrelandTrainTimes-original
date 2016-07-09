@@ -9,10 +9,10 @@ import java.util.List;
 public class StationList {
 
     @ElementList(inline = true)
-    List<Station> stations;
+    private List<Station> mStations;
 
     public List<Station> getStationList(){
-        return this.stations;
+        return this.mStations;
     }
 
 }

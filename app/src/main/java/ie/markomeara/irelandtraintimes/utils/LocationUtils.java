@@ -7,18 +7,18 @@ import java.util.List;
 
 public class LocationUtils {
 
-    private static Location lastLocation;
     public static final int LOCATION_UNKNOWN = -1;
-    public static List<LocationListener> listeners = new ArrayList<LocationListener>();
+    private static Location sLastLocation;
+    public static List<LocationListener> sListeners = new ArrayList<LocationListener>();
 
     // This code was mainly taken from stackoverflow
     public static int distFromCurrentLocation(double lat2, double lng2) {
 
         int distanceKm = LOCATION_UNKNOWN;
-        if(lastLocation != null) {
+        if(sLastLocation != null) {
 
-            double lat1 = lastLocation.getLatitude();
-            double lng1 = lastLocation.getLongitude();
+            double lat1 = sLastLocation.getLatitude();
+            double lng1 = sLastLocation.getLongitude();
 
             double earthRadius = 6371000; //metres
             double dLat = Math.toRadians(lat2 - lat1);
@@ -35,31 +35,31 @@ public class LocationUtils {
     }
 
     public static void updateLastLocation(Location location){
-        lastLocation = location;
+        sLastLocation = location;
 
         // Notify listeners
-        for(LocationListener listener : listeners){
+        for(LocationListener listener : sListeners){
             listener.locationUpdated();
         }
     }
 
     public static void notifyWhenLocationUpdated(LocationListener listener){
         boolean inListAlready = false;
-        for(LocationListener existingListener : listeners){
+        for(LocationListener existingListener : sListeners){
             if(existingListener == listener){
                 inListAlready = true;
                 break;
             }
         }
         if(!inListAlready){
-            listeners.add(listener);
+            sListeners.add(listener);
         }
     }
 
     public static void removeNotificationListener(LocationListener listener){
-        for(int i = 0; i < listeners.size(); i++){
-            if(listeners.get(i) == listener){
-                listeners.remove(i);
+        for(int i = 0; i < sListeners.size(); i++){
+            if(sListeners.get(i) == listener){
+                sListeners.remove(i);
                 break;
             }
         }

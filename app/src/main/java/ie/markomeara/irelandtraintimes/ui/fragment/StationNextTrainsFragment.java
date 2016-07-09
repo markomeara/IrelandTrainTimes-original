@@ -47,16 +47,16 @@ public class StationNextTrainsFragment extends Fragment {
     private TrainsDueRecyclerViewAdapter mTrainsDueRecyclerViewAdapter;
 
     @Bind(R.id.trainsDueAtStation_RV)
-    RecyclerView mTrainsDueRV;
+    protected RecyclerView mTrainsDueRV;
     @Bind(R.id.trainsDue_loading_TV)
-    TextView mStatusMsgTv;   // TODO Switch to switcher view
+    protected TextView mStatusMsgTv;   // TODO Switch to switcher view
     @Bind(R.id.nexttrains_loading)
-    ProgressBar mNextTrainsProgressBar;
+    protected ProgressBar mNextTrainsProgressBar;
     @Bind(R.id.toolbar)
-    Toolbar mToolbar;
+    protected Toolbar mToolbar;
 
     @Inject
-    DatabaseOrmHelper mDatabaseHelper;
+    protected DatabaseOrmHelper mDatabaseHelper;
 
     public StationNextTrainsFragment(){
         Injector.inject(this);

@@ -17,15 +17,15 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
 
     private final View mTrainItem;
     @Bind(R.id.reminderButton)
-    View mReminderBtn;
+    protected View mReminderBtn;
     @Bind(R.id.traindue_dest_TV)
-    TextView trainDest_TV;
+    protected TextView mTrainDest_TV;
     @Bind(R.id.traindue_mins_TV)
-    TextView trainDueMins_TV;
+    protected TextView mTrainDueMins_TV;
     @Bind(R.id.traindue_delay_TV)
-    TextView trainDelayMins_TV;
+    protected TextView mTrainDelayMins_TV;
     @Bind(R.id.traindue_time_TV)
-    TextView trainDueTime_TV;
+    protected TextView mTrainDueTime_TV;
 
     private final StationNextTrainsFragment mListener;
 
@@ -63,26 +63,26 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
         }));
     }
     public void setTrainDestination(String destination){
-        trainDest_TV.setText(destination);
+        mTrainDest_TV.setText(destination);
     }
 
     public void setTrainDueMins(int trainDueMins){
-        trainDueMins_TV.setText(Integer.toString(trainDueMins) + " mins");
+        mTrainDueMins_TV.setText(Integer.toString(trainDueMins) + " mins");
     }
 
     public void setTrainDelayMins(int trainDelayMins){
         String trainDelayMinsDisp = formatDelayMinsToString(trainDelayMins);
-        trainDelayMins_TV.setText(trainDelayMinsDisp);
+        mTrainDelayMins_TV.setText(trainDelayMinsDisp);
 
         int delayColor = colorForDelayMins(trainDelayMins);
         if(delayColor != NO_COLOR){
-            trainDelayMins_TV.setTextColor(delayColor);
-            trainDueMins_TV.setTextColor(delayColor);
+            mTrainDelayMins_TV.setTextColor(delayColor);
+            mTrainDueMins_TV.setTextColor(delayColor);
         }
     }
 
     public void setTrainDueTime(String trainDueTime){
-        trainDueTime_TV.setText(trainDueTime);
+        mTrainDueTime_TV.setText(trainDueTime);
     }
 
     public void doSomethingWithReminderBtn(){

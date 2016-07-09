@@ -40,14 +40,14 @@ public class StationListFragment extends Fragment {
     private static final String TAG = StationListFragment.class.getSimpleName();
 
     @Bind(R.id.stationlistRV)
-    RecyclerView mStationRecyclerView;
+    protected RecyclerView mStationRecyclerView;
     @Bind(R.id.loadingStations_progress)
-    ProgressBar mLoadingStationsProgressBar;
+    protected ProgressBar mLoadingStationsProgressBar;
     @Bind(R.id.stationListToolbar)
-    Toolbar mToolbar;
+    protected Toolbar mToolbar;
 
     @Inject
-    DatabaseOrmHelper mDatabaseHelper;
+    protected DatabaseOrmHelper mDatabaseHelper;
 
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;

@@ -14,18 +14,18 @@ import ie.markomeara.irelandtraintimes.model.Train;
 
 public class ReminderStatusReceiver extends BroadcastReceiver {
 
-    private TrainDetailsFragment ui;
+    private TrainDetailsFragment mFragmentUi;
 
-    public ReminderStatusReceiver(TrainDetailsFragment f){
+    public ReminderStatusReceiver(TrainDetailsFragment fragment){
         super();
-        this.ui = f;
+        this.mFragmentUi = fragment;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // Get extra data included in the Intent
         Train trainDetails = intent.getParcelableExtra("trainDetails");
-        ui.newTrainDetailsReceived(trainDetails);
+        mFragmentUi.newTrainDetailsReceived(trainDetails);
         notification(context, trainDetails);
     }
 

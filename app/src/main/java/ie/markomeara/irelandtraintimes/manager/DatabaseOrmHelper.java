@@ -21,11 +21,11 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "irelandtraintimes.db";
     private static final int DATABASE_VERSION = 2;
 
-    private Dao<Station, Integer> stationDao = null;
-    private Dao<Tweet, Integer> tweetDao = null;
+    private Dao<Station, Integer> mStationDao = null;
+    private Dao<Tweet, Integer> mTweetDao = null;
 
-    private RuntimeExceptionDao<Station, Integer> stationRuntimeDao = null;
-    private RuntimeExceptionDao<Tweet, Integer> tweetRuntimeDao = null;
+    private RuntimeExceptionDao<Station, Integer> mStationRuntimeDao = null;
+    private RuntimeExceptionDao<Tweet, Integer> mTweetRuntimeDao = null;
 
     public DatabaseOrmHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,39 +58,39 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<Station, Integer> getStationDao() throws SQLException {
-        if (stationDao == null) {
-            stationDao = getDao(Station.class);
+        if (mStationDao == null) {
+            mStationDao = getDao(Station.class);
         }
-        return stationDao;
+        return mStationDao;
     }
 
     public Dao<Tweet, Integer> getTweetDao() throws SQLException {
-        if (tweetDao == null) {
-            tweetDao = getDao(Tweet.class);
+        if (mTweetDao == null) {
+            mTweetDao = getDao(Tweet.class);
         }
-        return tweetDao;
+        return mTweetDao;
     }
 
     public RuntimeExceptionDao<Station, Integer> getStationRuntimeDao() {
-        if (stationRuntimeDao == null) {
-            stationRuntimeDao = getRuntimeExceptionDao(Station.class);
+        if (mStationRuntimeDao == null) {
+            mStationRuntimeDao = getRuntimeExceptionDao(Station.class);
         }
-        return stationRuntimeDao;
+        return mStationRuntimeDao;
     }
 
     public RuntimeExceptionDao<Tweet, Integer> getTweetRuntimeDao() {
-        if (tweetRuntimeDao == null) {
-            tweetRuntimeDao = getRuntimeExceptionDao(Tweet.class);
+        if (mTweetRuntimeDao == null) {
+            mTweetRuntimeDao = getRuntimeExceptionDao(Tweet.class);
         }
-        return tweetRuntimeDao;
+        return mTweetRuntimeDao;
     }
 
     @Override
     public void close() {
         super.close();
-        stationDao = null;
-        tweetDao = null;
-        stationRuntimeDao = null;
-        tweetRuntimeDao = null;
+        mStationDao = null;
+        mTweetDao = null;
+        mStationRuntimeDao = null;
+        mTweetRuntimeDao = null;
     }
 }

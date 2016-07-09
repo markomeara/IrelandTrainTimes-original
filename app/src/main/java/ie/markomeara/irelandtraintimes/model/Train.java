@@ -21,89 +21,89 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
     public static final int MAJORDELAY_MINS = 5;
 
     @Element(name = "Traincode", required = false)
-    private String trainCode;
+    private String mTrainCode;
     @Element(name = "Origin")
-    private String origin;
+    private String mOrigin;
     @Element(name = "Destination")
-    private String destination;
+    private String mDestination;
     @Element(name = "Lastlocation", required = false)
-    private String latestInfo;
+    private String mLatestInfo;
     @Element(name = "Direction")
-    private String direction;
+    private String mDirection;
     @Element(name = "Traintype")
-    private String trainType;
+    private String mTrainType;
     @Element(name = "Stationcode")
-    private String stationCode;
+    private String mStationCode;
     @Element(name = "Duein")
-    private int dueIn;
+    private int mDueIn;
     @Element(name = "Late", required = false)
-    private int delayMins;
+    private int mDelayMins;
     @Element(name = "Servertime")
-    private String updateTimeString;
+    private String mUpdateTimeString;
     @Element(name = "Status", required = false)
-    private String status;
+    private String mStatus;
     @Element(name = "Scharrival")
-    private String schArrival;
+    private String mSchArrival;
     @Element(name = "Exparrival")
-    private String expArrival;
+    private String mExpArrival;
 
     // These will be 00:00 if train terminates at this station
     @Element(name = "Schdepart")
-    private String schDepart;
+    private String mSchDepart;
     @Element(name = "Expdepart")
-    private String expDepart;
+    private String mExpDepart;
 
     @Element(name = "Destinationtime")
-    private String destArrivalTime;
+    private String mDestArrivalTime;
     @Element(name = "Origintime")
-    private String originDepartureTime;
+    private String mOriginDepartureTime;
     @Element(name = "Traindate")
-    private String trainDate;
+    private String mTrainDate;
 
     // No need to save train to DB as it doesn't need to persist, since it will go out of date pretty quickly
 
     public Train(){ }
 
     private Train(Parcel in) {
-        this.trainCode = in.readString();
-        this.origin = in.readString();
-        this.destination = in.readString();
-        this.latestInfo = in.readString();
-        this.direction = in.readString();
-        this.trainType = in.readString();
-        this.dueIn = in.readInt();
-        this.delayMins = in.readInt();
-        this.updateTimeString = in.readString();
-        this.status = in.readString();
-        this.schArrival = in.readString();
-        this.expArrival = in.readString();
-        this.schDepart = in.readString();
-        this.expDepart = in.readString();
-        this.destArrivalTime = in.readString();
-        this.originDepartureTime = in.readString();
-        this.trainDate = in.readString();
+        this.mTrainCode = in.readString();
+        this.mOrigin = in.readString();
+        this.mDestination = in.readString();
+        this.mLatestInfo = in.readString();
+        this.mDirection = in.readString();
+        this.mTrainType = in.readString();
+        this.mDueIn = in.readInt();
+        this.mDelayMins = in.readInt();
+        this.mUpdateTimeString = in.readString();
+        this.mStatus = in.readString();
+        this.mSchArrival = in.readString();
+        this.mExpArrival = in.readString();
+        this.mSchDepart = in.readString();
+        this.mExpDepart = in.readString();
+        this.mDestArrivalTime = in.readString();
+        this.mOriginDepartureTime = in.readString();
+        this.mTrainDate = in.readString();
     }
 
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.trainCode);
-        dest.writeString(this.origin);
-        dest.writeString(this.destination);
-        dest.writeString(this.latestInfo);
-        dest.writeString(this.direction);
-        dest.writeString(this.trainType);
-        dest.writeInt(this.dueIn);
-        dest.writeInt(this.delayMins);
-        dest.writeString(this.updateTimeString);
-        dest.writeString(this.status);
-        dest.writeString(this.schArrival);
-        dest.writeString(this.expArrival);
-        dest.writeString(this.schDepart);
-        dest.writeString(this.expDepart);
-        dest.writeString(this.destArrivalTime);
-        dest.writeString(this.originDepartureTime);
-        dest.writeString(this.trainDate);
+        dest.writeString(this.mTrainCode);
+        dest.writeString(this.mOrigin);
+        dest.writeString(this.mDestination);
+        dest.writeString(this.mLatestInfo);
+        dest.writeString(this.mDirection);
+        dest.writeString(this.mTrainType);
+        dest.writeInt(this.mDueIn);
+        dest.writeInt(this.mDelayMins);
+        dest.writeString(this.mUpdateTimeString);
+        dest.writeString(this.mStatus);
+        dest.writeString(this.mSchArrival);
+        dest.writeString(this.mExpArrival);
+        dest.writeString(this.mSchDepart);
+        dest.writeString(this.mExpDepart);
+        dest.writeString(this.mDestArrivalTime);
+        dest.writeString(this.mOriginDepartureTime);
+        dest.writeString(this.mTrainDate);
     }
 
     public static final Parcelable.Creator<Train> CREATOR = new Parcelable.Creator<Train>() {
@@ -117,14 +117,14 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
     };
 
     public int compareTo(Train other){
-        if(!this.direction.equals(other.getDirection())){
-            return this.direction.compareTo(other.getDirection());
+        if(!this.mDirection.equals(other.getDirection())){
+            return this.mDirection.compareTo(other.getDirection());
         }
-        else if(this.dueIn != other.getDueIn()){
-            return this.dueIn > other.getDueIn() ? 1 : 0;
+        else if(this.mDueIn != other.getDueIn()){
+            return this.mDueIn > other.getDueIn() ? 1 : 0;
         }
         else{
-            return this.destination.compareTo(other.getDestination());
+            return this.mDestination.compareTo(other.getDestination());
         }
     }
 
@@ -144,143 +144,143 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
     }
 
     public String getTrainCode() {
-        return trainCode;
+        return mTrainCode;
     }
 
     public void setTrainCode(String trainCode) {
-        this.trainCode = trainCode;
+        this.mTrainCode = trainCode;
     }
 
     public String getUpdateTimeString() {
-        return updateTimeString;
+        return mUpdateTimeString;
     }
 
     public void setUpdateTimeString(String updateTimeString) {
-        this.updateTimeString = updateTimeString;
+        this.mUpdateTimeString = updateTimeString;
     }
 
     public String getOrigin() {
-        return origin;
+        return mOrigin;
     }
 
     public void setOrigin(String origin) {
-        this.origin = origin;
+        this.mOrigin = origin;
     }
 
     public String getDestination() {
-        return destination;
+        return mDestination;
     }
 
     public void setDestination(String destination) {
-        this.destination = destination;
+        this.mDestination = destination;
     }
 
     public String getLatestInfo() {
-        return latestInfo;
+        return mLatestInfo;
     }
 
     public void setLatestInfo(String latestInfo) {
-        this.latestInfo = latestInfo;
+        this.mLatestInfo = latestInfo;
     }
 
     public String getDirection() {
-        return direction;
+        return mDirection;
     }
 
     public void setDirection(String direction) {
-        this.direction = direction;
+        this.mDirection = direction;
     }
 
     public String getTrainType() {
-        return trainType;
+        return mTrainType;
     }
 
     public void setTrainType(String trainType) {
-        this.trainType = trainType;
+        this.mTrainType = trainType;
     }
 
-    public String getStationCode() { return stationCode; }
+    public String getStationCode() { return mStationCode; }
 
-    public void setStationCode(String code) { this.stationCode = code; }
+    public void setStationCode(String code) { this.mStationCode = code; }
 
     public int getDueIn() {
-        return dueIn;
+        return mDueIn;
     }
 
     public void setDueIn(int dueIn) {
-        this.dueIn = dueIn;
+        this.mDueIn = dueIn;
     }
 
     public int getDelayMins() {
-        return delayMins;
+        return mDelayMins;
     }
 
     public void setDelayMins(int delayMins) {
-        this.delayMins = delayMins;
+        this.mDelayMins = delayMins;
     }
 
     public String getStatus() {
-        return status;
+        return mStatus;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.mStatus = status;
     }
 
     public String getSchArrival() {
-        return schArrival;
+        return mSchArrival;
     }
 
     public void setSchArrival(String schArrival) {
-        this.schArrival = schArrival;
+        this.mSchArrival = schArrival;
     }
 
     public String getExpArrival() {
-        return expArrival;
+        return mExpArrival;
     }
 
     public void setExpArrival(String expArrival) {
-        this.expArrival = expArrival;
+        this.mExpArrival = expArrival;
     }
 
     public String getSchDepart() {
-        return schDepart;
+        return mSchDepart;
     }
 
     public void setSchDepart(String schDepart) {
-        this.schDepart = schDepart;
+        this.mSchDepart = schDepart;
     }
 
     public String getExpDepart() {
-        return expDepart;
+        return mExpDepart;
     }
 
     public void setExpDepart(String expDepart) {
-        this.expDepart = expDepart;
+        this.mExpDepart = expDepart;
     }
 
     public String getDestArrivalTime() {
-        return destArrivalTime;
+        return mDestArrivalTime;
     }
 
     public void setDestArrivalTime(String destArrivalTime) {
-        this.destArrivalTime = destArrivalTime;
+        this.mDestArrivalTime = destArrivalTime;
     }
 
     public String getOriginDepartureTime() {
-        return originDepartureTime;
+        return mOriginDepartureTime;
     }
 
     public void setOriginDepartureTime(String originDepartureTime) {
-        this.originDepartureTime = originDepartureTime;
+        this.mOriginDepartureTime = originDepartureTime;
     }
 
     public String getTrainDate() {
-        return trainDate;
+        return mTrainDate;
     }
 
     public void setTrainDate(String trainDate) {
-        this.trainDate = trainDate;
+        this.mTrainDate = trainDate;
     }
 
     @Override

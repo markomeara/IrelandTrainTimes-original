@@ -19,9 +19,9 @@ public class StationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         implements LocationUtils.LocationListener {
 
     private static final String TAG = StationRecyclerViewAdapter.class.getSimpleName();
-    public List<Station> mAllStations;
-    public List<Station> mVisibleStations;
-    public StationListFragment.OnStationClickedListener mItemClickListener;
+    private List<Station> mAllStations;
+    private List<Station> mVisibleStations;
+    private StationListFragment.OnStationClickedListener mItemClickListener;
 
     public StationRecyclerViewAdapter(List<Station> stations,
                                       StationListFragment.OnStationClickedListener itemClickListener){

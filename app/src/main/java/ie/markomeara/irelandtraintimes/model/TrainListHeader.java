@@ -4,10 +4,10 @@ import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 public class TrainListHeader implements TrainListItem {
 
-    private String headingText;
+    private String mHeadingText;
 
     public TrainListHeader(String direction){
-        this.headingText = direction;
+        this.mHeadingText = direction;
     }
 
     @Override
@@ -16,10 +16,10 @@ public class TrainListHeader implements TrainListItem {
     }
 
     public void setHeadingText(String text){
-        this.headingText = text;
+        this.mHeadingText = text;
     }
 
     public String getHeadingText(){
-        return this.headingText;
+        return this.mHeadingText;
     }
 }

@@ -9,9 +9,9 @@ import java.util.List;
 public class TrainList {
 
     @ElementList(inline = true, required = false, empty = false)
-    List<Train> trains;
+    private List<Train> mTrains;
 
     public List<Train> getTrainList(){
-        return this.trains;
+        return this.mTrains;
     }
 }
