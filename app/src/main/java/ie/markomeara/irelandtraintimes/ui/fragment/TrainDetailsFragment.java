@@ -141,7 +141,7 @@ public class TrainDetailsFragment extends Fragment {
         mToolbar.setTitle(null);
         ActionBar actionBar = mParentActivity.getSupportActionBar();
         if(actionBar != null) {
-            actionBar.setTitle(mStation.getDisplayName());
+            actionBar.setTitle(mStation.getName());
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

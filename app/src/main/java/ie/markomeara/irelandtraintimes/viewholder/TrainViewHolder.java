@@ -3,6 +3,7 @@ package ie.markomeara.irelandtraintimes.viewholder;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -16,8 +17,8 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
     private static final int NO_COLOR = -1;
 
     private final View mTrainItem;
-    @Bind(R.id.reminderButton)
-    protected View mReminderBtn;
+    @Bind(R.id.traindue_statusimg)
+    protected ImageView mTrainStatusImg;
     @Bind(R.id.traindue_dest_TV)
     protected TextView mTrainDest_TV;
     @Bind(R.id.traindue_mins_TV)
@@ -52,15 +53,6 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        mReminderBtn.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPosition = getAdapterPosition();
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    // TODO Something
-                }
-            }
-        }));
     }
     public void setTrainDestination(String destination){
         mTrainDest_TV.setText(destination);
@@ -75,18 +67,16 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
         mTrainDelayMins_TV.setText(trainDelayMinsDisp);
 
         int delayColor = colorForDelayMins(trainDelayMins);
+        // TODO Cleanup (currently delayColor will never be NO_COLOR)
         if(delayColor != NO_COLOR){
             mTrainDelayMins_TV.setTextColor(delayColor);
             mTrainDueMins_TV.setTextColor(delayColor);
+            mTrainStatusImg.setColorFilter(delayColor);
         }
     }
 
     public void setTrainDueTime(String trainDueTime){
         mTrainDueTime_TV.setText(trainDueTime);
-    }
-
-    public void doSomethingWithReminderBtn(){
-        // TODO Something
     }
 
     private String formatDelayMinsToString(int delayMins){
@@ -110,8 +100,8 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
     private int colorForDelayMins(int delayMins){
         Context ctx = mListener.getActivity();
         int colorId = NO_COLOR;
-        if(delayMins < 0){
-            // Train is early
+        if(delayMins <= 0){
+            // Train is early or on time
             colorId = ctx.getResources().getColor(R.color.irishrailgreen);
         }
         else if(delayMins > 0 &&  delayMins < Train.MAJORDELAY_MINS){

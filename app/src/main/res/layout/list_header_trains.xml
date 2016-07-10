@@ -3,16 +3,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="1dp">
+    android:paddingTop="12dp"
+    android:layout_marginBottom="2dp"
+    android:paddingLeft="32dp"
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/trainsDueListHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:text="Northbound"
-        android:gravity="center_horizontal"
-        android:textStyle="bold"
-        android:background="@android:color/white" />
+        android:text="NORTHBOUND"/>
 
 </LinearLayout>

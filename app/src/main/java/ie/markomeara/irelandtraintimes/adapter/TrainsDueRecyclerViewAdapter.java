@@ -99,7 +99,7 @@ public class TrainsDueRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         }
 
         public void setDirection(String direction){
-            directionTV.setText(direction);
+            directionTV.setText(direction.toUpperCase());
         }
     }
 
