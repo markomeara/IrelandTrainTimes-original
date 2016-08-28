@@ -1,6 +1,7 @@
 package ie.markomeara.irelandtraintimes.viewholder;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,6 +29,8 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.traindue_time_TV)
     protected TextView mTrainDueTime_TV;
 
+    private Context mContext;
+
     private final StationNextTrainsFragment mListener;
 
     public TrainViewHolder(View view, StationNextTrainsFragment listener) {
@@ -35,6 +38,7 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
         mTrainItem = view;
         ButterKnife.bind(this, view);
         mListener = listener;
+        mContext = mTrainItem.getContext();
         createOnClickListeners();
     }
 
@@ -65,14 +69,7 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
     public void setTrainDelayMins(int trainDelayMins){
         String trainDelayMinsDisp = formatDelayMinsToString(trainDelayMins);
         mTrainDelayMins_TV.setText(trainDelayMinsDisp);
-
-        int delayColor = colorForDelayMins(trainDelayMins);
-        // TODO Cleanup (currently delayColor will never be NO_COLOR)
-        if(delayColor != NO_COLOR){
-            mTrainDelayMins_TV.setTextColor(delayColor);
-            mTrainDueMins_TV.setTextColor(delayColor);
-            mTrainStatusImg.setColorFilter(delayColor);
-        }
+        colorForDelayMins(trainDelayMins);
     }
 
     public void setTrainDueTime(String trainDueTime){
@@ -97,22 +94,21 @@ public class TrainViewHolder extends RecyclerView.ViewHolder {
         return delayMinsDisplay.toString();
     }
 
-    private int colorForDelayMins(int delayMins){
-        Context ctx = mListener.getActivity();
-        int colorId = NO_COLOR;
+    private void colorForDelayMins(int delayMins){
         if(delayMins <= 0){
             // Train is early or on time
-            colorId = ctx.getResources().getColor(R.color.irishrailgreen);
+            mTrainStatusImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trainstatus_ontime_circle));
+            mTrainDueMins_TV.setTextColor(mContext.getResources().getColor(R.color.ontime));
         }
         else if(delayMins > 0 &&  delayMins < Train.MAJORDELAY_MINS){
-            // Train has minor delay
-            colorId = ctx.getResources().getColor(R.color.minordelay);
+            mTrainStatusImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trainstatus_minordelay_circle));
+            mTrainDueMins_TV.setTextColor(mContext.getResources().getColor(R.color.minordelay));
+
         }
         else if(delayMins >= Train.MAJORDELAY_MINS){
-            // Train has major delay
-            colorId = ctx.getResources().getColor(R.color.majordelay);
+            mTrainStatusImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trainstatus_majordelay_circle));
+            mTrainDueMins_TV.setTextColor(mContext.getResources().getColor(R.color.majordelay));
         }
-        return colorId;
 
     }
 

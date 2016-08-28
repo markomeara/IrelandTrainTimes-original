@@ -5,8 +5,11 @@
     <color name="tweettext">#ffffff</color>
     <color name="irishrailgreen">#4c882f</color>
     <color name="minordelay">#FFA500</color>
+    <color name="minordelay_transparent">#50FFA500</color>
     <color name="majordelay">#FF0000</color>
-    <color name="ontime">#00FF00</color>
+    <color name="majordelay_transparent">#50FF0000</color>
+    <color name="ontime">#4CAF50</color>
+    <color name="ontime_transparent">#504CAF50</color>
 
     <!-- Custom color palette -->
     <color name="primary">#4CAF50</color>

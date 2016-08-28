@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.util.Comparator;
+
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 /**
@@ -126,6 +128,17 @@ public class Train implements Comparable<Train>, TrainListItem, Parcelable {
         else{
             return this.mDestination.compareTo(other.getDestination());
         }
+    }
+
+    public static Comparator<Train> dueTimeComparator(){
+        return new Comparator<Train>() {
+            @Override
+            public int compare(Train lhs, Train rhs) {
+                if(lhs.getDueIn() == rhs.getDueIn())
+                    return 0;
+                return lhs.getDueIn() < rhs.getDueIn() ? -1 : 1;
+            }
+        };
     }
 
     public boolean equals(Object obj){

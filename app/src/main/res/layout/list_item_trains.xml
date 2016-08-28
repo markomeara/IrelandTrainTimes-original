@@ -11,13 +11,13 @@
 
         <ImageView
             android:id="@+id/traindue_statusimg"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:scaleType="center"
-            android:src="@drawable/trainstatus_circle" />
+            android:background="@drawable/trainstatus_ontime_circle" />
 
     </FrameLayout>
 
@@ -41,7 +41,6 @@
             android:id="@+id/traindue_mins_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/traindue_delay_TV"
             android:layout_alignParentBottom="true"
             android:text="38 mins" />
 
@@ -49,20 +48,18 @@
             android:id="@+id/traindue_time_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="48dp"
+            android:layout_toRightOf="@id/traindue_mins_TV"
+            android:layout_alignBottom="@id/traindue_mins_TV"
+            android:layout_marginLeft="72dp"
             android:text="22:22" />
 
         <TextView
             android:id="@+id/traindue_delay_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
+            android:layout_toRightOf="@id/traindue_time_TV"
+            android:layout_alignBottom="@id/traindue_time_TV"
+            android:layout_marginLeft="12dp"
             android:text="(+99)" />
 
     </RelativeLayout>
