@@ -3,12 +3,12 @@ package ie.markomeara.irelandtraintimes.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
@@ -23,9 +23,9 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
 
     private StationNextTrainsFragment mCallingFragment;
 
-    public NextTrainsTask(StationNextTrainsFragment fragment){
-        Injector.inject(this);
-        this.mCallingFragment = fragment;
+    public NextTrainsTask(StationNextTrainsFragment fragment, IrishRailService irishRailService){
+        mCallingFragment = fragment;
+        mIrishRailService = irishRailService;
     }
 
     @Override
@@ -36,9 +36,12 @@ public class NextTrainsTask extends AsyncTask<Station, Integer, List<Train>> {
         if(stationParams.length >= 1){
             Station station = stationParams[0];
             String stnCode = station.getCode();
-            // TODO Handle exception as defined in appmodule
-            TrainList allTrains = mIrishRailService.getTrainsDueAtStation(stnCode);
-            relevantTrains = removeTrainsTerminatingAtStation(allTrains.getTrainList(), station);
+            try {
+                TrainList allTrains = mIrishRailService.getTrainsDueAtStation(stnCode).execute().body();
+                relevantTrains = removeTrainsTerminatingAtStation(allTrains.getTrainList(), station);
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
 
         }
         else{

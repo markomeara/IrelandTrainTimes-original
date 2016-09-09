@@ -8,6 +8,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -24,6 +25,8 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -47,6 +50,7 @@ configurations {
 }
 
 dependencies {
+    // TODO Remove use of customised twitter4j..
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
@@ -58,17 +62,36 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:7.5.0'
     compile 'com.android.support:design:22.2.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.mobprofs:retrofit-simplexmlconverter:1.1'
+    compile 'com.squareup.retrofit2:converter-simplexml:2.1.0'
     compile 'org.simpleframework:simple-xml:2.7.1'
-    provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.google.dagger:dagger:2.5'
+    apt 'com.google.dagger:dagger-compiler:2.5'
 
-    // TODO Can this be changed to something like twitter-core?
-    // This includes retrofit 1.8.0
-    compile('com.twitter.sdk.android:twitter:1.9.1@aar') {
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
+    compile('com.twitter.sdk.android:twitter:2.0.0@aar') {
         transitive = true;
     }
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
+    }
+
+    compile('com.squareup.retrofit2:retrofit:2.1.0') {
+        exclude group: 'com.squareup.okhttp3', module:'okhttp'
+        exclude group: 'com.squareup.okhttp3', module: 'mockwebserver'
+    }
+
+    androidTestCompile('com.squareup.okhttp3:mockwebserver:3.4.1') {
+        exclude group: 'com.squareup.okio', module: 'okio';
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp3';
+    }
+
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test:runner:0.5') {
+        exclude module: 'support-annotations'
     }
 }

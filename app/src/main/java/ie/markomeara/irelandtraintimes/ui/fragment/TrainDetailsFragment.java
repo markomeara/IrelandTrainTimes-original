@@ -30,7 +30,6 @@ import ie.markomeara.irelandtraintimes.manager.ReminderManager;
 
 public class TrainDetailsFragment extends Fragment {
 
-
     private static final String TAG = TrainDetailsFragment.class.getSimpleName();
 
     public static final String TRAIN_PARAM = "train";

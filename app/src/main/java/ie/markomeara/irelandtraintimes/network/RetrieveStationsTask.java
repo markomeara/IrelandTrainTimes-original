@@ -5,16 +5,15 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.ui.fragment.StationListFragment;
 import ie.markomeara.irelandtraintimes.model.Station;
-import ie.markomeara.irelandtraintimes.model.StationList;
 
 public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
 
@@ -26,11 +25,12 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     @Inject
     protected DatabaseOrmHelper mDatabaseHelper;
 
-    private StationListFragment stationListFragment;
+    private StationListFragment mStationListFragment;
 
-    public RetrieveStationsTask(StationListFragment fragment) throws SQLException {
-        Injector.inject(this);
-        this.stationListFragment = fragment;
+    public RetrieveStationsTask(StationListFragment fragment, DatabaseOrmHelper databaseOrmHelper, IrishRailService irishRailService) throws SQLException {
+        mStationListFragment = fragment;
+        mDatabaseHelper = databaseOrmHelper;
+        mIrishRailService = irishRailService;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     protected void onPostExecute(Boolean updateUIImmediately) {
         // If station list is being initialized for first time, then refresh UI immediately
         if(updateUIImmediately){
-            stationListFragment.refreshStationListDisplay();
+            mStationListFragment.refreshStationListDisplay();
         }
         Log.i(TAG, "Stations have been updated");
         // TODO This returns null pointer exception if we've already changed activity
@@ -66,10 +66,13 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     }
 
     private void copyStationsFromApiToDatabase() {
-        StationList stationList = mIrishRailService.getAllStations();
-        List<Station> stations = stationList.getStationList();
 
-        storeStationsInDatabase(stations);
+        try {
+            List<Station> stations = mIrishRailService.getAllStations().execute().body().getStationList();
+            storeStationsInDatabase(stations);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     private void storeStationsInDatabase(List<Station> stations){

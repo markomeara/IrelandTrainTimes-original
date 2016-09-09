@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.model.Tweet;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
@@ -41,8 +40,8 @@ public class TweetUpdaterTask extends AsyncTask<Void, Void, Void> {
 
     private Context mCurrentContext;
 
-    public TweetUpdaterTask(Context c){
-        Injector.inject(this);
+    public TweetUpdaterTask(Context c, DatabaseOrmHelper databaseOrmHelper){
+        mDatabaseHelper = databaseOrmHelper;
         this.mCurrentContext = c;
     }
 

@@ -34,6 +34,7 @@ import ie.markomeara.irelandtraintimes.model.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
+import ie.markomeara.irelandtraintimes.network.IrishRailService;
 import ie.markomeara.irelandtraintimes.network.NextTrainsTask;
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
@@ -62,9 +63,8 @@ public class StationNextTrainsFragment extends Fragment {
     @Inject
     protected DatabaseOrmHelper mDatabaseHelper;
 
-    public StationNextTrainsFragment(){
-        Injector.inject(this);
-    }
+    @Inject
+    protected IrishRailService mIrishRailService;
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -77,6 +77,7 @@ public class StationNextTrainsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Injector.get().inject(this);
         if (getArguments() != null) {
             int stationId = getArguments().getInt(STATION_PARAM);
             try {
@@ -106,7 +107,7 @@ public class StationNextTrainsFragment extends Fragment {
         mParentActivity = (AppCompatActivity) getActivity();
         configureToolbar();
         mNextTrainsProgressBar.setVisibility(View.VISIBLE);
-        AsyncTask<Station, Integer, List<Train>> nextTrainsTask = new NextTrainsTask(this);
+        AsyncTask<Station, Integer, List<Train>> nextTrainsTask = new NextTrainsTask(this, mIrishRailService);
         nextTrainsTask.execute(mDisplayedStation);
 
         if(mParentActivity instanceof OnTrainSelectedListener){

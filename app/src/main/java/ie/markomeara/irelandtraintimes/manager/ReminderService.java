@@ -37,7 +37,7 @@ public class ReminderService extends IntentService {
     public ReminderService(){
         // Worker thread name: ReminderService
         super("ReminderService");
-        Injector.inject(this);
+        Injector.get().inject(this);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class ReminderService extends IntentService {
         Log.i(TAG, station.getName() + " -- " + train.getTrainCode() + " -- " + reminderMins);
 
         try {
-
-            TrainList trainList = mIrishRailService.getTrainsDueAtStation(station.getCode());
+            // TODO Handle error
+            TrainList trainList = mIrishRailService.getTrainsDueAtStation(station.getCode()).execute().body();
 
             Train latestTrainInfo = IrishRailAPIUtil.extractTrainFromTrainList(train.getTrainCode(), trainList.getTrainList());
 

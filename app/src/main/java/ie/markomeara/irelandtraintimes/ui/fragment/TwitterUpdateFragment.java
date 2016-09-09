@@ -41,13 +41,10 @@ public class TwitterUpdateFragment extends Fragment {
     @Inject
     protected DatabaseOrmHelper mDatabaseHelper;
 
-    public TwitterUpdateFragment() {
-        Injector.inject(this);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Injector.get().inject(this);
     }
 
     @Override
@@ -65,7 +62,7 @@ public class TwitterUpdateFragment extends Fragment {
 
         // TODO Refactor and extract some of this logic
 
-        new TweetUpdaterTask(getActivity()).execute();
+        new TweetUpdaterTask(getActivity(), mDatabaseHelper).execute();
 
         refreshTweetList();
 

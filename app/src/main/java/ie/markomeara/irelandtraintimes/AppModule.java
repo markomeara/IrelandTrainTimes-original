@@ -1,73 +1,63 @@
 package ie.markomeara.irelandtraintimes;
 
-import android.app.Application;
-
+import android.content.Context;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.mobprofs.retrofit.converters.SimpleXmlConverter;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
-import ie.markomeara.irelandtraintimes.manager.ReminderService;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
-import ie.markomeara.irelandtraintimes.network.NextTrainsTask;
-import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
-import ie.markomeara.irelandtraintimes.network.TweetUpdaterTask;
-import ie.markomeara.irelandtraintimes.ui.fragment.StationListFragment;
-import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
-import ie.markomeara.irelandtraintimes.ui.fragment.TwitterUpdateFragment;
-import retrofit.ErrorHandler;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-@Module(
-    injects = {NextTrainsTask.class, ReminderService.class, RetrieveStationsTask.class,
-            TwitterUpdateFragment.class, StationListFragment.class, StationNextTrainsFragment.class,
-            TweetUpdaterTask.class}
-)
+@Module
 public class AppModule {
 
     private static final String TAG = AppModule.class.getSimpleName();
 
-//    private static final String API_ENDPOINT = "http://demo0511310.mockable.io/";
-    private static final String API_ENDPOINT = "http://api.irishrail.ie/realtime/realtime.asmx";
+    // TODO Move to build.gradle
+    private static final String API_ENDPOINT = "http://api.irishrail.ie/realtime/realtime.asmx/";
 
-    private Application mApplication;
+    private Context mContext;
 
-    public AppModule(Application application){
-        mApplication = application;
+    public AppModule(Context context){
+        mContext = context;
     }
 
     @Provides
     @Singleton
-    IrishRailService providesIrishRailService() {
+    public IrishRailService providesIrishRailApi() {
         Log.d(TAG, "Returning Irish Rail service");
+        return createIrishRailApi(API_ENDPOINT);
+    }
+
+    protected IrishRailService createIrishRailApi(String serverUrl) {
         // TODO Handle exception - this is thrown if, eg, site is down or internet is down
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(API_ENDPOINT)
-                .setConverter(new SimpleXmlConverter())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setErrorHandler(new ErrorHandler() {
-                    @Override
-                    public Throwable handleError(RetrofitError cause) {
-                        throw new RuntimeException("Error contacting Irish Rail API");
-                    }
-                })
-                .build();
 
-        IrishRailService irishRailService = restAdapter.create(IrishRailService.class);
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        return irishRailService;
+        OkHttpClient.Builder okClientBuilder = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor);
+
+        return new Retrofit.Builder()
+                .baseUrl(serverUrl)
+                .client(okClientBuilder.build())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .build()
+                .create(IrishRailService.class);
     }
 
     @Provides
     @Singleton
     DatabaseOrmHelper getDbHelper(){
         Log.d(TAG, "Returning database helper");
-        return OpenHelperManager.getHelper(mApplication, DatabaseOrmHelper.class);
+        return OpenHelperManager.getHelper(mContext, DatabaseOrmHelper.class);
     }
 }

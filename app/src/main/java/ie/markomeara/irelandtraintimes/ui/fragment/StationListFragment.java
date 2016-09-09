@@ -32,6 +32,7 @@ import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.adapter.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
+import ie.markomeara.irelandtraintimes.network.IrishRailService;
 import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
 import ie.markomeara.irelandtraintimes.model.Station;
 
@@ -49,13 +50,16 @@ public class StationListFragment extends Fragment {
     @Inject
     protected DatabaseOrmHelper mDatabaseHelper;
 
+    @Inject
+    protected IrishRailService mIrishRailService;
+
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
     private OnStationClickedListener mListener;
     private AppCompatActivity mParentActivity;
 
     public StationListFragment(){
-        Injector.inject(this);
+        Injector.get().inject(this);
     }
 
     @Override
@@ -148,7 +152,7 @@ public class StationListFragment extends Fragment {
     public void updateStoredStationsFromAPI(boolean updateUIWhenComplete){
         // TODO Network connection check
         try {
-            new RetrieveStationsTask(this).execute(updateUIWhenComplete);
+            new RetrieveStationsTask(this, mDatabaseHelper, mIrishRailService).execute(updateUIWhenComplete);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage(), e);
         }

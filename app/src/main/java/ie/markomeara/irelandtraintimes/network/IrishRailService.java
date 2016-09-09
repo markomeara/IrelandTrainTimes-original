@@ -2,15 +2,16 @@ package ie.markomeara.irelandtraintimes.network;
 
 import ie.markomeara.irelandtraintimes.model.StationList;
 import ie.markomeara.irelandtraintimes.model.TrainList;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+import retrofit2.Call;
 
 public interface IrishRailService {
 
     // Synchronous
-    @GET("/getStationDataByCodeXML")
-    TrainList getTrainsDueAtStation(@Query("StationCode") String stationCode);
+    @GET("getStationDataByCodeXML")
+    Call<TrainList> getTrainsDueAtStation(@Query("StationCode") String stationCode);
 
-    @GET("/getAllStationsXML")
-    StationList getAllStations();
+    @GET("getAllStationsXML")
+    Call<StationList> getAllStations();
 }
