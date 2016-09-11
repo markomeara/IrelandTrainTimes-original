@@ -3,16 +3,16 @@ package ie.markomeara.irelandtraintimes.ui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import com.twitter.sdk.android.core.models.Tweet;
 
-import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,13 +23,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
-import ie.markomeara.irelandtraintimes.network.TweetUpdaterTask;
-import ie.markomeara.irelandtraintimes.model.Tweet;
+import ie.markomeara.irelandtraintimes.network.TwitterService;
 
 public class TwitterUpdateFragment extends Fragment {
 
     private static final String TAG = TwitterUpdateFragment.class.getSimpleName();
+
     private List<Tweet> mTweets;
     private Timer mTweetSwitchTimer;
     private int mCurrentTweet;
@@ -39,20 +38,24 @@ public class TwitterUpdateFragment extends Fragment {
     protected TextView mTweetTextView;
 
     @Inject
-    protected DatabaseOrmHelper mDatabaseHelper;
+    TwitterService mTwitterService;
+
+    @Inject
+    EventBus mEventBus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Injector.get().inject(this);
+        mTweets = Lists.newArrayList();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_twitter_update, container, false);
         ButterKnife.bind(this, view);
+        mEventBus.register(this);
         return view;
     }
 
@@ -60,15 +63,11 @@ public class TwitterUpdateFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        // TODO Refactor and extract some of this logic
-
-        new TweetUpdaterTask(getActivity(), mDatabaseHelper).execute();
-
-        refreshTweetList();
+        mTwitterService.fetchFilteredTweets();
 
         mCurrentTweet = 0;
         if(!mTweets.isEmpty()) {
-            mTweetTextView.setText(mTweets.get(mCurrentTweet).getText());
+            mTweetTextView.setText(mTweets.get(mCurrentTweet).text);
         }
 
         scheduleTweetSwitching();
@@ -126,12 +125,12 @@ public class TwitterUpdateFragment extends Fragment {
                                 }
                                 else{
                                     // Refresh tweets when we're about to go back to start
-                                    refreshTweetList();
+                                    mTwitterService.fetchFilteredTweets();
                                     mCurrentTweet = 0;
                                 }
 
                                 if(!mTweets.isEmpty()) {
-                                    mTweetTextView.setText(mTweets.get(mCurrentTweet).getText());
+                                    mTweetTextView.setText(mTweets.get(mCurrentTweet).text);
                                 }
                                 else{
                                     mTweetTextView.setText(getString(R.string.no_tweets));
@@ -143,14 +142,9 @@ public class TwitterUpdateFragment extends Fragment {
                 }, 5000, 5000);
     }
 
-    private void refreshTweetList(){
-        try {
-            Dao<Tweet, Integer> tweetDao = mDatabaseHelper.getTweetDao();
-            mTweets = tweetDao.queryForAll();
-            Collections.sort(mTweets);
-        } catch (SQLException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
+    @Subscribe
+    private void onTweetsReceived(List<Tweet> tweets) {
+        mTweets = tweets;
     }
 
 }

@@ -4,16 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.common.eventbus.EventBus;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.network.IrishRailApi;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
+import ie.markomeara.irelandtraintimes.network.TwitterService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -65,14 +64,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    DatabaseOrmHelper getDbHelper(){
-        Log.d(TAG, "Returning database helper");
-        return OpenHelperManager.getHelper(mContext, DatabaseOrmHelper.class);
+    TwitterService providesTwitterService(EventBus eventBus) {
+        return new TwitterService(eventBus);
     }
 
     @Provides
     @Singleton
-    EventBus provideEventBus() {
+    EventBus providesEventBus() {
         return new EventBus();
     }
 

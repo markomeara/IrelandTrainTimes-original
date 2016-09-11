@@ -33,7 +33,6 @@ import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.adapter.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
-import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.model.StationList;
 import ie.markomeara.irelandtraintimes.network.ApiCallback;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
@@ -49,9 +48,6 @@ public class StationListFragment extends Fragment {
     protected ProgressBar mLoadingStationsProgressBar;
     @Bind(R.id.stationListToolbar)
     protected Toolbar mToolbar;
-
-  //  @Inject
-  //  protected DatabaseOrmHelper mDatabaseHelper;
 
     @Inject
     IrishRailService mIrishRailService;

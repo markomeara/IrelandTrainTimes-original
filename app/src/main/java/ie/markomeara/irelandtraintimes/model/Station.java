@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-import com.j256.ormlite.field.DatabaseField;
-
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -15,33 +13,23 @@ public class Station implements Comparable, Parcelable{
     private static final String TAG = Station.class.getSimpleName();
 
     @Element(name = "StationId")
-    @DatabaseField(id = true, unique = true)
     private int id;
 
     @Element(name = "StationDesc")
-    @DatabaseField(unique = true)
     private String name;
 
-    // TODO 'Unique' is non-deterministic. Depends what order stations are returned by API for what station
-    // is dumped. What if user sets reminder based on a station ID and then it's switched with station with different
-    // ID next time the list is refreshed from API
     @Element(name = "StationAlias", required = false)
-    @DatabaseField(unique = true)
     private String alias;
 
     @Element(name = "StationLatitude", required = false)
-    @DatabaseField
     private double latitude;
 
     @Element(name = "StationLongitude", required = false)
-    @DatabaseField
     private double longitude;
 
     @Element(name = "StationCode", required = false)
-    @DatabaseField
     private String code;
 
-    @DatabaseField
     private boolean favourite;
 
     public Station(){ }
