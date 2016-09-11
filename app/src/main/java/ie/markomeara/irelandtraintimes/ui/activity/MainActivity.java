@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationServices;
 
 import com.google.common.eventbus.EventBus;
 import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.BuildConfig;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import javax.inject.Inject;
@@ -54,7 +55,11 @@ public class MainActivity extends AppCompatActivity implements TwitterUpdateFrag
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(SecretKeys.FABRIC_TWITTER_KEY,
                 SecretKeys.FABRIC_TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig), new Crashlytics());
+        if(BuildConfig.DEBUG) {
+            Fabric.with(this, new Twitter(authConfig));
+        } else {
+            Fabric.with(this, new Twitter(authConfig), new Crashlytics());
+        }
         setContentView(R.layout.activity_home_container);
         buildGoogleApiClient();
 

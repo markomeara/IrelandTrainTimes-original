@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.Injector;
-import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
 import ie.markomeara.irelandtraintimes.model.StationList;
 import ie.markomeara.irelandtraintimes.model.TrainList;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
@@ -61,9 +60,6 @@ public class StationNextTrainsFragment extends Fragment {
     protected ProgressBar mNextTrainsProgressBar;
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
-
-    @Inject
-    DatabaseOrmHelper mDatabaseHelper;
 
     @Inject
     IrishRailService mIrishRailService;
