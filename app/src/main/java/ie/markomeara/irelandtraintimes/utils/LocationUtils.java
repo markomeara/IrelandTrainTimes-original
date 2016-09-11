@@ -34,7 +34,7 @@ public class LocationUtils {
         return distanceKm;
     }
 
-    public static void updateLastLocation(Location location){
+    public synchronized static void updateLastLocation(Location location){
         sLastLocation = location;
 
         // Notify listeners

@@ -27,6 +27,7 @@ public class ApiCallback<T> implements Callback<T> {
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
         if(response.isSuccessful()) {
+            processResult(response.body());
             mEventBus.post(response.body());
         } else {
             postFailure();
@@ -36,6 +37,10 @@ public class ApiCallback<T> implements Callback<T> {
     @Override
     public void onFailure(Call<T> call, Throwable t) {
         postFailure();
+    }
+
+    protected void processResult(T result) {
+
     }
 
     private void postFailure() {

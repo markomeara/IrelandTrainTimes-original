@@ -1,6 +1,6 @@
 package ie.markomeara.irelandtraintimes.ui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -15,12 +15,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.SearchView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,8 +34,9 @@ import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.adapter.StationRecyclerViewAdapter;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
-import ie.markomeara.irelandtraintimes.network.IrishRailApi;
-import ie.markomeara.irelandtraintimes.network.RetrieveStationsTask;
+import ie.markomeara.irelandtraintimes.model.StationList;
+import ie.markomeara.irelandtraintimes.network.ApiCallback;
+import ie.markomeara.irelandtraintimes.network.IrishRailService;
 import ie.markomeara.irelandtraintimes.model.Station;
 
 public class StationListFragment extends Fragment {
@@ -47,11 +50,14 @@ public class StationListFragment extends Fragment {
     @Bind(R.id.stationListToolbar)
     protected Toolbar mToolbar;
 
-    @Inject
-    protected DatabaseOrmHelper mDatabaseHelper;
+  //  @Inject
+  //  protected DatabaseOrmHelper mDatabaseHelper;
 
     @Inject
-    IrishRailApi mIrishRailApi;
+    IrishRailService mIrishRailService;
+
+    @Inject
+    EventBus mEventBus;
 
     private List<Station> mAllStations;
     private StationRecyclerViewAdapter mStationRecyclerViewAdapter;
@@ -70,20 +76,8 @@ public class StationListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stationlist, container, false);
         ButterKnife.bind(this, view);
+        mEventBus.register(this);
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity){
-        Log.d(TAG, "onAttach called");
-        super.onAttach(activity);
-
-        try {
-            mListener = (OnStationClickedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnStationSelectedListener");
-        }
     }
 
     @Override
@@ -91,36 +85,15 @@ public class StationListFragment extends Fragment {
         Log.d(TAG, "onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
         mParentActivity = (AppCompatActivity) getActivity();
+        try {
+            mListener = (OnStationClickedListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString()
+                    + " must implement OnStationSelectedListener");
+        }
+        initStationList();
+        mIrishRailService.fetchAllStations(false);
         configureToolbar();
-    }
-
-    @Override
-    public void onStart() {
-        Log.d(TAG, "onStart called");
-        super.onStart();
-        loadStoredStationData();
-    }
-
-    @Override
-    public void onResume() {
-        Log.d(TAG, "onResume called");
-        super.onResume();
-        // TODO Should some of this be in onStart??
-        mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(mAllStations, mListener);
-        mStationRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mStationRecyclerView.setAdapter(mStationRecyclerViewAdapter);
-
-        boolean immediateDisplayRefresh = false;
-        if(mAllStations.isEmpty()){
-            // If no stations are being displayed to user then update the display
-            // as soon as API returns with latest list of stations
-            immediateDisplayRefresh = true;
-        }
-        else{
-            // Don't show 'Initializing stations' text if stations are being shown
-            mLoadingStationsProgressBar.setVisibility(View.GONE);
-        }
-        updateStoredStationsFromAPI(immediateDisplayRefresh);
     }
 
     @Override
@@ -149,28 +122,39 @@ public class StationListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void updateStoredStationsFromAPI(boolean updateUIWhenComplete){
-        // TODO Network connection check
-        try {
-            new RetrieveStationsTask(this, mDatabaseHelper, mIrishRailApi).execute(updateUIWhenComplete);
-        } catch (SQLException e) {
-            Log.e(TAG, e.getMessage(), e);
+    @Override
+    public void onStop() {
+        super.onStop();
+        View view = getActivity().getCurrentFocus();
+        if(view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
-    // TODO Think about lifecycle and how we refresh data when user goes back to home screen
-    public void refreshStationListDisplay(){
+    private void initStationList() {
+        mStationRecyclerViewAdapter = new StationRecyclerViewAdapter(Lists.<Station>newArrayList(), mListener);
+        mStationRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mStationRecyclerView.setAdapter(mStationRecyclerViewAdapter);
+    }
 
-        loadStoredStationData();
-        if(!mAllStations.isEmpty()) {
-            mStationRecyclerViewAdapter.updateDataSet(mAllStations);
-        }
-        else{
-            Toast toastMsg = new Toast(getActivity());
-            toastMsg.setText("No stations could be retrieved from Irish Rail website.");
-            toastMsg.setDuration(Toast.LENGTH_LONG);
-            toastMsg.show();
-        }
+    @Subscribe
+    private void onLatestStationListReceived(StationList stationList) {
+        List<Station> stations = stationList.getStationList();
+        Collections.sort(stations);
+        mAllStations = stations;
+        mStationRecyclerViewAdapter.updateDataSet(mAllStations);
+        mLoadingStationsProgressBar.setVisibility(View.GONE);
+
+    }
+
+    @Subscribe
+    private void onStationRetrievalError(ApiCallback.ApiFailureEvent apiFailureEvent) {
+        Toast toastMsg = new Toast(getActivity());
+        toastMsg.setText("No stations could be retrieved from Irish Rail website.");
+        toastMsg.setDuration(Toast.LENGTH_LONG);
+        toastMsg.show();
+
         mLoadingStationsProgressBar.setVisibility(View.GONE);
     }
 
@@ -189,16 +173,5 @@ public class StationListFragment extends Fragment {
         else{
             Log.w(TAG, "Action bar is null");
         }
-    }
-
-    private void loadStoredStationData(){
-        try {
-            Dao<Station, Integer> stationDao = mDatabaseHelper.getStationDao();
-            mAllStations = stationDao.queryForAll();
-            Collections.sort(mAllStations);
-        } catch (SQLException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-
     }
 }

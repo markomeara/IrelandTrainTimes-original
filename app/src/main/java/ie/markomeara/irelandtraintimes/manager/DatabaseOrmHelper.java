@@ -12,7 +12,6 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Tweet;
 
 public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
@@ -21,10 +20,8 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "irelandtraintimes.db";
     private static final int DATABASE_VERSION = 2;
 
-    private Dao<Station, Integer> mStationDao = null;
     private Dao<Tweet, Integer> mTweetDao = null;
 
-    private RuntimeExceptionDao<Station, Integer> mStationRuntimeDao = null;
     private RuntimeExceptionDao<Tweet, Integer> mTweetRuntimeDao = null;
 
     public DatabaseOrmHelper(Context context) {
@@ -35,7 +32,6 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             Log.i(TAG, "onCreate Database helper");
-            TableUtils.createTable(connectionSource, Station.class);
             TableUtils.createTable(connectionSource, Tweet.class);
         } catch (SQLException e) {
             Log.e(TAG, "Can't create database", e);
@@ -47,7 +43,6 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             Log.i(TAG, "onUpgrade");
-            TableUtils.dropTable(connectionSource, Station.class, true);
             TableUtils.dropTable(connectionSource, Tweet.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource);
@@ -57,25 +52,11 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public Dao<Station, Integer> getStationDao() throws SQLException {
-        if (mStationDao == null) {
-            mStationDao = getDao(Station.class);
-        }
-        return mStationDao;
-    }
-
     public Dao<Tweet, Integer> getTweetDao() throws SQLException {
         if (mTweetDao == null) {
             mTweetDao = getDao(Tweet.class);
         }
         return mTweetDao;
-    }
-
-    public RuntimeExceptionDao<Station, Integer> getStationRuntimeDao() {
-        if (mStationRuntimeDao == null) {
-            mStationRuntimeDao = getRuntimeExceptionDao(Station.class);
-        }
-        return mStationRuntimeDao;
     }
 
     public RuntimeExceptionDao<Tweet, Integer> getTweetRuntimeDao() {
@@ -88,9 +69,7 @@ public class DatabaseOrmHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-        mStationDao = null;
         mTweetDao = null;
-        mStationRuntimeDao = null;
         mTweetRuntimeDao = null;
     }
 }

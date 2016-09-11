@@ -35,8 +35,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public IrishRailService providesIrishRailService(IrishRailApi irishRailApi) {
-        return new IrishRailService(irishRailApi);
+    public IrishRailService providesIrishRailService(IrishRailApi irishRailApi, EventBus eventBus) {
+        return new IrishRailService(irishRailApi, eventBus);
     }
 
     @Provides

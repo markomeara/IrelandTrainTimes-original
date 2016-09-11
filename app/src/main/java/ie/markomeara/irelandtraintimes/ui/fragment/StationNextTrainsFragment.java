@@ -17,9 +17,7 @@ import android.widget.TextView;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.j256.ormlite.dao.Dao;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
+import ie.markomeara.irelandtraintimes.model.StationList;
 import ie.markomeara.irelandtraintimes.model.TrainList;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;
@@ -85,15 +84,7 @@ public class StationNextTrainsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Injector.get().inject(this);
         mEventBus.register(this);
-        if (getArguments() != null) {
-            int stationId = getArguments().getInt(STATION_PARAM);
-            try {
-                Dao<Station, Integer> stationDao =  mDatabaseHelper.getStationDao();
-                mDisplayedStation = stationDao.queryForId(stationId);
-            } catch (SQLException e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-        }
+        loadDisplayedStation();
     }
 
     @Override
@@ -101,7 +92,6 @@ public class StationNextTrainsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
-        // Inflate the layout for this fragment
         mLayoutInflater = inflater;
         View view = mLayoutInflater.inflate(R.layout.fragment_station_next_trains, container, false);
         ButterKnife.bind(this, view);
@@ -121,6 +111,20 @@ public class StationNextTrainsFragment extends Fragment {
         }
         else{
             Log.e(TAG, "Parent activity is not instance of OnTrainSelectedListener");
+        }
+    }
+
+    private void loadDisplayedStation() {
+        if (getArguments() != null) {
+            int stationId = getArguments().getInt(STATION_PARAM);
+
+            StationList stationList = mIrishRailService.getCachedStationList();
+            for(Station station : stationList.getStationList()) {
+                if(station.getId() == stationId) {
+                    mDisplayedStation = station;
+                    break;
+                }
+            }
         }
     }
 

@@ -14,8 +14,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import com.google.common.eventbus.EventBus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import javax.inject.Inject;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.model.Station;
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements TwitterUpdateFrag
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient mGoogleApiClient;
+
+    @Inject
+    EventBus mEventBus;
 
     // TODO Fragments should never communicate directly
     // Change implementation so Activity handles comms and fragment changing
