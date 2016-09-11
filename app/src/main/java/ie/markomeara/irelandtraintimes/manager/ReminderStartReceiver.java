@@ -6,25 +6,34 @@ import android.content.Intent;
 import android.util.Log;
 
 import ie.markomeara.irelandtraintimes.model.Station;
-import ie.markomeara.irelandtraintimes.model.Train;
 
-public class ReminderStartReceiver extends BroadcastReceiver{
+public class ReminderStartReceiver extends BroadcastReceiver {
 
     private static final String TAG = ReminderStartReceiver.class.getSimpleName();
+
+    public static final String TRAIN_CODE = "trainCode";
+    public static final String STATION = "station";
+    public static final String REMINDER_MINS = "reminderMins";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Broadcast received");
-        Train train = intent.getParcelableExtra("train");
-        Station station = intent.getParcelableExtra("station");
-        int reminderMins = intent.getIntExtra("reminderMins", 0);
+        String trainCode = intent.getStringExtra(TRAIN_CODE);
+        Station station = intent.getParcelableExtra(STATION);
+        int reminderMins = intent.getIntExtra(REMINDER_MINS, 0);
 
-        Intent reminderServiceIntent = new Intent(context, ReminderService.class);
-        reminderServiceIntent.putExtra("train", train);
-        reminderServiceIntent.putExtra("station", station);
-        reminderServiceIntent.putExtra("reminderMins", reminderMins);
+        Intent reminderServiceIntent = ReminderService.prepareIntent(context, trainCode, station, reminderMins);
 
         context.startService(reminderServiceIntent);
+    }
+
+    public static Intent prepareIntent(Context ctx, String trainCode, Station station, int reminderMins) {
+        Intent intent = new Intent(ctx.getApplicationContext(), ReminderStartReceiver.class);
+        intent.setAction("abc");
+        intent.putExtra(TRAIN_CODE, trainCode);
+        intent.putExtra(STATION, station);
+        intent.putExtra(REMINDER_MINS, reminderMins);
+        return intent;
     }
 
 }

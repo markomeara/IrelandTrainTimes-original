@@ -1,11 +1,14 @@
 package ie.markomeara.irelandtraintimes.manager;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
+
+import com.google.common.eventbus.Subscribe;
 
 import org.xml.sax.SAXException;
 
@@ -25,18 +28,27 @@ public class ReminderService extends IntentService {
 
     private static final String TAG = ReminderService.class.getSimpleName();
 
+    public static final String TRAIN_CODE = "trainCode";
+    public static final String STATION = "station";
+    public static final String REMINDER_MINS = "reminderMins";
+
     private final IBinder mReminderServiceBinder = new ReminderServiceBinder();
 
     @Inject
-    protected IrishRailService mIrishRailService;
+    IrishRailService mIrishRailService;
 
-    private Station station;
-    private Train train;
-    private int reminderMins = 0;
+    private Station mStation;
+    private String mTrainCode;
+    private int mReminderMins = 0;
 
     public ReminderService(){
         // Worker thread name: ReminderService
         super("ReminderService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         Injector.get().inject(this);
     }
 
@@ -45,44 +57,40 @@ public class ReminderService extends IntentService {
 
         Log.i(TAG, "ReminderService is running");
 
-        train = intent.getParcelableExtra("train");
-        station = intent.getParcelableExtra("station");
-        reminderMins = intent.getIntExtra("reminderMins", 0);
+        mTrainCode = intent.getParcelableExtra(TRAIN_CODE);
+        mStation = intent.getParcelableExtra(STATION);
+        mReminderMins = intent.getIntExtra(REMINDER_MINS, 0);
 
-        Log.i(TAG, station.getName() + " -- " + train.getTrainCode() + " -- " + reminderMins);
+        Log.i(TAG, mStation.getName() + " -- " + mTrainCode + " -- " + mReminderMins);
 
-        try {
-            // TODO Handle error
-            TrainList trainList = mIrishRailService.getTrainsDueAtStation(station.getCode()).execute().body();
-
-            Train latestTrainInfo = IrishRailAPIUtil.extractTrainFromTrainList(train.getTrainCode(), trainList.getTrainList());
-
-            if(latestTrainInfo == null){
-                trainHasGone();
-            }
-            else{
-                Log.d(TAG, "DUE: " + latestTrainInfo.getDueIn());
-
-                notifyUIWithReminderDetails(latestTrainInfo);
-
-                if(latestTrainInfo.getDueIn() <= reminderMins && !ReminderManager.isAlertShown()){
-                    showTrainAlert();
-                }
-            }
-
-        } catch (ParserConfigurationException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } catch (SAXException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-        // TODO Call startForeground
+        mIrishRailService.fetchTrainsDueAtStation(mStation.getCode());
     }
 
-    private void trainHasGone(){
-        Log.i(TAG, "Train has gone");
-        ReminderManager.clearReminder(this);
+    @Subscribe
+    private void onTrainsDueReceived(TrainList trainList) {
+        try {
+            Train latestTrainInfo = IrishRailAPIUtil.extractTrainFromTrainList(mTrainCode, trainList.getTrainList());
+            processLatestTrainInfo(latestTrainInfo);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    private void processLatestTrainInfo(Train latestTrainInfo) {
+        if(latestTrainInfo == null){
+            Log.i(TAG, "Train has gone");
+            ReminderManager.clearReminder(this);
+        } else {
+            Log.d(TAG, "DUE: " + latestTrainInfo.getDueIn());
+
+            notifyUIWithReminderDetails(latestTrainInfo);
+
+            if(latestTrainInfo.getDueIn() <= mReminderMins && !ReminderManager.isAlertShown()){
+                showTrainAlert();
+            }
+        }
+
+        // TODO Call startForeground
     }
 
     private void notifyUIWithReminderDetails(Train trainInfo){
@@ -90,11 +98,9 @@ public class ReminderService extends IntentService {
         Intent broadcastIntent = new Intent(ReminderManager.BROADCAST_NAME);
         broadcastIntent.putExtra("trainDetails", trainInfo);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
-
     }
 
     private void showTrainAlert(){
-
         Log.i(TAG, "Train is due!!");
         ReminderManager.setAlertShown();
     }
@@ -103,6 +109,14 @@ public class ReminderService extends IntentService {
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
         return mReminderServiceBinder;
+    }
+
+    public static Intent prepareIntent(Context ctx, String trainCode, Station station, int reminderMins) {
+        Intent intent = new Intent(ctx, ReminderService.class);
+        intent.putExtra(TRAIN_CODE, trainCode);
+        intent.putExtra(STATION, station);
+        intent.putExtra(REMINDER_MINS, reminderMins);
+        return intent;
     }
 
     public class ReminderServiceBinder extends Binder {

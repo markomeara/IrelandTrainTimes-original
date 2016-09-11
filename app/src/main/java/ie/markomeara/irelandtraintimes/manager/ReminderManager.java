@@ -40,10 +40,7 @@ public class ReminderManager {
         sReminderMins = mins;
         sAlertShown = false;
 
-        Intent alarm = new Intent(ctx, ReminderStartReceiver.class);
-        alarm.putExtra("train", sTrainBeingTracked);
-        alarm.putExtra("station", sStationBeingTracked);
-        alarm.putExtra("reminderMins", sReminderMins);
+        Intent alarm = ReminderStartReceiver.prepareIntent(ctx, sTrainBeingTracked.getTrainCode(), sStationBeingTracked, sReminderMins);
 
         sPendingIntent = PendingIntent.getBroadcast(ctx, 0, alarm, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);

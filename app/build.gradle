@@ -64,6 +64,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.retrofit2:converter-simplexml:2.1.0'
     compile 'org.simpleframework:simple-xml:2.7.1'
+    compile 'com.google.guava:guava:19.0'
     compile 'com.google.dagger:dagger:2.5'
     apt 'com.google.dagger:dagger-compiler:2.5'
 

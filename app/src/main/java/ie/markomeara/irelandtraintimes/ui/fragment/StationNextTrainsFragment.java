@@ -1,6 +1,5 @@
 package ie.markomeara.irelandtraintimes.ui.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -16,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -29,18 +30,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ie.markomeara.irelandtraintimes.Injector;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
+import ie.markomeara.irelandtraintimes.model.TrainList;
 import ie.markomeara.irelandtraintimes.model.TrainListHeader;
 import ie.markomeara.irelandtraintimes.model.TrainListItem;
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.model.Station;
 import ie.markomeara.irelandtraintimes.model.Train;
+import ie.markomeara.irelandtraintimes.network.ApiCallback;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
-import ie.markomeara.irelandtraintimes.network.NextTrainsTask;
 import ie.markomeara.irelandtraintimes.adapter.TrainsDueRecyclerViewAdapter;
 
 public class StationNextTrainsFragment extends Fragment {
 
     private static final String TAG = StationNextTrainsFragment.class.getSimpleName();
+
     private static final String STATION_PARAM = "stationId";
     private static final String NORTHBOUND = "Northbound";
     private static final String SOUTHBOUND = "Southbound";
@@ -61,10 +64,13 @@ public class StationNextTrainsFragment extends Fragment {
     protected Toolbar mToolbar;
 
     @Inject
-    protected DatabaseOrmHelper mDatabaseHelper;
+    DatabaseOrmHelper mDatabaseHelper;
 
     @Inject
-    protected IrishRailService mIrishRailService;
+    IrishRailService mIrishRailService;
+
+    @Inject
+    EventBus mEventBus;
 
     public static StationNextTrainsFragment newInstance(Station selectedStation) {
         StationNextTrainsFragment fragment = new StationNextTrainsFragment();
@@ -78,6 +84,7 @@ public class StationNextTrainsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Injector.get().inject(this);
+        mEventBus.register(this);
         if (getArguments() != null) {
             int stationId = getArguments().getInt(STATION_PARAM);
             try {
@@ -107,8 +114,7 @@ public class StationNextTrainsFragment extends Fragment {
         mParentActivity = (AppCompatActivity) getActivity();
         configureToolbar();
         mNextTrainsProgressBar.setVisibility(View.VISIBLE);
-        AsyncTask<Station, Integer, List<Train>> nextTrainsTask = new NextTrainsTask(this, mIrishRailService);
-        nextTrainsTask.execute(mDisplayedStation);
+        mIrishRailService.fetchTrainsDueAtStation(mDisplayedStation.getCode());
 
         if(mParentActivity instanceof OnTrainSelectedListener){
             mOnTrainSelectedListener = (OnTrainSelectedListener) mParentActivity;
@@ -118,8 +124,35 @@ public class StationNextTrainsFragment extends Fragment {
         }
     }
 
-    // Called by NextTrainsTask
-    public void displayTimes(List<Train> trainsDue){
+    @Subscribe
+    private void onNextTrainsReceived(TrainList trainList) {
+        List<Train> relevantTrains = removeTrainsTerminatingAtStation(trainList.getTrainList());
+        displayTimes(relevantTrains);
+    }
+
+    @Subscribe
+    private void onApiError(ApiCallback.ApiFailureEvent failure){
+        // TODO Extract to String resource
+        mStatusMsgTv.setText("Error occurred while retrieving data");
+        mStatusMsgTv.setVisibility(View.VISIBLE);
+        mNextTrainsProgressBar.setVisibility(View.GONE);
+    }
+
+    private List<Train> removeTrainsTerminatingAtStation(List<Train> trains){
+
+        String stationName = mDisplayedStation.getName();
+        List<Train> reducedTrainList = new ArrayList<>();
+
+        for(Train selectedTrain : trains){
+            String trainDest = selectedTrain.getDestination();
+            if(!trainDest.equals(stationName)){
+                reducedTrainList.add(selectedTrain);
+            }
+        }
+        return reducedTrainList;
+    }
+
+    private void displayTimes(List<Train> trainsDue){
 
         // TODO Move setting activity view to oncreate/onresume
         View activityView = getView();

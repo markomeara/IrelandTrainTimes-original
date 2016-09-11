@@ -3,13 +3,16 @@ package ie.markomeara.irelandtraintimes;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.common.eventbus.EventBus;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import ie.markomeara.irelandtraintimes.manager.DatabaseOrmHelper;
+import ie.markomeara.irelandtraintimes.network.IrishRailApi;
 import ie.markomeara.irelandtraintimes.network.IrishRailService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -32,12 +35,18 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public IrishRailService providesIrishRailApi() {
+    public IrishRailService providesIrishRailService(IrishRailApi irishRailApi) {
+        return new IrishRailService(irishRailApi);
+    }
+
+    @Provides
+    @Singleton
+    public IrishRailApi providesIrishRailApi() {
         Log.d(TAG, "Returning Irish Rail service");
         return createIrishRailApi(API_ENDPOINT);
     }
 
-    protected IrishRailService createIrishRailApi(String serverUrl) {
+    protected IrishRailApi createIrishRailApi(String serverUrl) {
         // TODO Handle exception - this is thrown if, eg, site is down or internet is down
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -51,7 +60,7 @@ public class AppModule {
                 .client(okClientBuilder.build())
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build()
-                .create(IrishRailService.class);
+                .create(IrishRailApi.class);
     }
 
     @Provides
@@ -59,5 +68,16 @@ public class AppModule {
     DatabaseOrmHelper getDbHelper(){
         Log.d(TAG, "Returning database helper");
         return OpenHelperManager.getHelper(mContext, DatabaseOrmHelper.class);
+    }
+
+    @Provides
+    @Singleton
+    EventBus provideEventBus() {
+        return new EventBus();
+    }
+
+    public static class InjectorHelper {
+        @Inject
+        public EventBus mEventBus;
     }
 }

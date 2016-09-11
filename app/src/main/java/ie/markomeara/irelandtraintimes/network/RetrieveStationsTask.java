@@ -20,17 +20,17 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     private static final String TAG = RetrieveStationsTask.class.getSimpleName();
 
     @Inject
-    protected IrishRailService mIrishRailService;
+    IrishRailApi mIrishRailApi;
 
     @Inject
     protected DatabaseOrmHelper mDatabaseHelper;
 
     private StationListFragment mStationListFragment;
 
-    public RetrieveStationsTask(StationListFragment fragment, DatabaseOrmHelper databaseOrmHelper, IrishRailService irishRailService) throws SQLException {
+    public RetrieveStationsTask(StationListFragment fragment, DatabaseOrmHelper databaseOrmHelper, IrishRailApi irishRailApi) throws SQLException {
         mStationListFragment = fragment;
         mDatabaseHelper = databaseOrmHelper;
-        mIrishRailService = irishRailService;
+        mIrishRailApi = irishRailApi;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RetrieveStationsTask extends AsyncTask<Boolean, Integer, Boolean> {
     private void copyStationsFromApiToDatabase() {
 
         try {
-            List<Station> stations = mIrishRailService.getAllStations().execute().body().getStationList();
+            List<Station> stations = mIrishRailApi.getAllStations().execute().body().getStationList();
             storeStationsInDatabase(stations);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage(), e);
