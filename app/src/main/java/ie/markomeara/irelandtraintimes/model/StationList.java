@@ -11,8 +11,12 @@ public class StationList {
     @ElementList(inline = true)
     private List<Station> mStations;
 
-    public List<Station> getStationList(){
+    public List<Station> getStations(){
         return this.mStations;
+    }
+
+    public void setStations(List<Station> stations) {
+        mStations = stations;
     }
 
 }

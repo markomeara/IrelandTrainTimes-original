@@ -115,7 +115,7 @@ public class StationNextTrainsFragment extends Fragment {
             int stationId = getArguments().getInt(STATION_PARAM);
 
             StationList stationList = mIrishRailService.getCachedStationList();
-            for(Station station : stationList.getStationList()) {
+            for(Station station : stationList.getStations()) {
                 if(station.getId() == stationId) {
                     mDisplayedStation = station;
                     break;

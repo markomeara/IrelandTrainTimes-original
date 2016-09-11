@@ -138,7 +138,7 @@ public class StationListFragment extends Fragment {
 
     @Subscribe
     private void onLatestStationListReceived(StationList stationList) {
-        List<Station> stations = stationList.getStationList();
+        List<Station> stations = stationList.getStations();
         Collections.sort(stations);
         mAllStations = stations;
         mStationRecyclerViewAdapter.updateDataSet(mAllStations);
