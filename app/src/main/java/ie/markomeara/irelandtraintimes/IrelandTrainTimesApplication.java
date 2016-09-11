@@ -7,7 +7,7 @@ public class IrelandTrainTimesApplication extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        Injector.init(this);
+        Injector.init();
     }
 
 }

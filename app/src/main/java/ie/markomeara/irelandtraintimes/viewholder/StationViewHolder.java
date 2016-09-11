@@ -11,10 +11,12 @@ import ie.markomeara.irelandtraintimes.R;
 public class StationViewHolder extends RecyclerView.ViewHolder{
 
     private final View mStnItem;
+
     @Bind(R.id.stationName)
-    protected TextView mStnName;
+    TextView mStnName;
+
     @Bind(R.id.stationDistance)
-    protected TextView mStnDistance;
+    TextView mStnDistance;
 
     public StationViewHolder(View view) {
         super(view);

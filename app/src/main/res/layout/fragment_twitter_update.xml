@@ -1,24 +1,16 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/twitterblue"
-    tools:context=".ui.fragment.TwitterUpdateFragment">
+    xmlns:twittersdk="http://schemas.android.com/apk/res-auto">
 
-    <!--TextSwitcher android:id="@+id/tweet_switcher"
+    <com.twitter.sdk.android.tweetui.CompactTweetView
+        android:id="@+id/tweetView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"/-->
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        style="@style/tw__TweetDarkStyle"
+        twittersdk:tw__tweet_id="774849949473337344"/>
+    <!-- Starts with a placeholder ID - should be replaced before view is set to visible -->
 
-    <TextView
-        android:id="@+id/tweetdisplayedTV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/no_tweets"
-        android:gravity="center"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:textColor="@color/tweettext"/>
-
-</LinearLayout>
+</FrameLayout>

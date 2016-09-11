@@ -1,17 +1,16 @@
 package ie.markomeara.irelandtraintimes.ui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.tweetui.CompactTweetView;
 
 import java.util.List;
 import java.util.Timer;
@@ -29,13 +28,13 @@ public class TwitterUpdateFragment extends Fragment {
 
     private static final String TAG = TwitterUpdateFragment.class.getSimpleName();
 
-    private List<Tweet> mTweets;
+    private List<Tweet> mDisplayTweets;
+    private List<Tweet> mMostRecentlyLoadedTweets;
     private Timer mTweetSwitchTimer;
-    private int mCurrentTweet;
-    private TweetFragmentListener mListener;
+    private int mCurrentTweetIndx;
 
-    @Bind(R.id.tweetdisplayedTV)
-    protected TextView mTweetTextView;
+    @Bind(R.id.tweetView)
+    CompactTweetView mTweetView;
 
     @Inject
     TwitterService mTwitterService;
@@ -47,7 +46,8 @@ public class TwitterUpdateFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Injector.get().inject(this);
-        mTweets = Lists.newArrayList();
+        mDisplayTweets = Lists.newArrayList();
+        mMostRecentlyLoadedTweets = Lists.newArrayList();
     }
 
     @Override
@@ -62,42 +62,8 @@ public class TwitterUpdateFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         mTwitterService.fetchFilteredTweets();
-
-        mCurrentTweet = 0;
-        if(!mTweets.isEmpty()) {
-            mTweetTextView.setText(mTweets.get(mCurrentTweet).text);
-        }
-
         scheduleTweetSwitching();
-
-        // OnClick
-        mTweetTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onTweetFragmentClicked();
-
-            }
-        });
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (TweetFragmentListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -106,12 +72,8 @@ public class TwitterUpdateFragment extends Fragment {
         mTweetSwitchTimer.cancel();
     }
 
-    public interface TweetFragmentListener {
-        // TODO: Update argument type and name
-        void onTweetFragmentClicked();
-    }
-
     private void scheduleTweetSwitching(){
+        mCurrentTweetIndx = 0;
         mTweetSwitchTimer = new Timer("tweet_switcher");
         mTweetSwitchTimer.scheduleAtFixedRate(
                 new TimerTask() {
@@ -120,20 +82,19 @@ public class TwitterUpdateFragment extends Fragment {
 
                             @Override
                             public void run() {
-                                if(mCurrentTweet < (mTweets.size() - 1)){
-                                    mCurrentTweet++;
-                                }
-                                else{
-                                    // Refresh tweets when we're about to go back to start
+                                if(mCurrentTweetIndx < (mDisplayTweets.size() - 1)){
+                                    mCurrentTweetIndx++;
+                                } else {
+                                    mDisplayTweets = mMostRecentlyLoadedTweets;
                                     mTwitterService.fetchFilteredTweets();
-                                    mCurrentTweet = 0;
+                                    mCurrentTweetIndx = 0;
                                 }
 
-                                if(!mTweets.isEmpty()) {
-                                    mTweetTextView.setText(mTweets.get(mCurrentTweet).text);
-                                }
-                                else{
-                                    mTweetTextView.setText(getString(R.string.no_tweets));
+                                if(mCurrentTweetIndx <= (mDisplayTweets.size() - 1)) {
+                                    mTweetView.setVisibility(View.VISIBLE);
+                                    mTweetView.setTweet(mDisplayTweets.get(mCurrentTweetIndx));
+                                } else {
+                                    mTweetView.setVisibility(View.GONE);
                                 }
                             }
                         });
@@ -144,7 +105,7 @@ public class TwitterUpdateFragment extends Fragment {
 
     @Subscribe
     private void onTweetsReceived(List<Tweet> tweets) {
-        mTweets = tweets;
+        mMostRecentlyLoadedTweets = tweets;
     }
 
 }

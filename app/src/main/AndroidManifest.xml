@@ -26,10 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.TwitterActivity"
-            android:label="Irish Rail Tweets"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="898882a9f763649a3908f635d77d65968089fe53" />

@@ -60,7 +60,9 @@ public class StationListFragment extends Fragment {
     private OnStationClickedListener mListener;
     private AppCompatActivity mParentActivity;
 
-    public StationListFragment(){
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Injector.get().inject(this);
     }
 

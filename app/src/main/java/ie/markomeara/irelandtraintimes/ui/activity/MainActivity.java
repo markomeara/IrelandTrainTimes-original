@@ -1,6 +1,5 @@
 package ie.markomeara.irelandtraintimes.ui.activity;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -14,12 +13,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import com.google.common.eventbus.EventBus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.BuildConfig;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-
-import javax.inject.Inject;
 
 import ie.markomeara.irelandtraintimes.R;
 import ie.markomeara.irelandtraintimes.model.Station;
@@ -27,22 +23,18 @@ import ie.markomeara.irelandtraintimes.model.Train;
 import ie.markomeara.irelandtraintimes.ui.fragment.StationListFragment;
 import ie.markomeara.irelandtraintimes.ui.fragment.StationNextTrainsFragment;
 import ie.markomeara.irelandtraintimes.ui.fragment.TrainDetailsFragment;
-import ie.markomeara.irelandtraintimes.ui.fragment.TwitterUpdateFragment;
 import ie.markomeara.irelandtraintimes.utils.LocationUtils;
 import ie.markomeara.irelandtraintimes.utils.SecretKeys;
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements TwitterUpdateFragment.TweetFragmentListener,
-        StationListFragment.OnStationClickedListener, StationNextTrainsFragment.OnTrainSelectedListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements StationListFragment.OnStationClickedListener,
+        StationNextTrainsFragment.OnTrainSelectedListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     // TODO Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient mGoogleApiClient;
-
-    @Inject
-    EventBus mEventBus;
 
     // TODO Fragments should never communicate directly
     // Change implementation so Activity handles comms and fragment changing
@@ -52,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements TwitterUpdateFrag
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
-
         TwitterAuthConfig authConfig = new TwitterAuthConfig(SecretKeys.FABRIC_TWITTER_KEY,
                 SecretKeys.FABRIC_TWITTER_SECRET);
         if(BuildConfig.DEBUG) {
@@ -77,12 +68,6 @@ public class MainActivity extends AppCompatActivity implements TwitterUpdateFrag
         Log.d(TAG, "onStart called");
         super.onStart();
         mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onTweetFragmentClicked() {
-        Intent intent = new Intent(this, TwitterActivity.class);
-        startActivity(intent);
     }
 
     @Override

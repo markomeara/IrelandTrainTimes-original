@@ -1,9 +1,9 @@
 package ie.markomeara.irelandtraintimes;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.common.eventbus.EventBus;
+import com.twitter.sdk.android.tweetui.UserTimeline;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,14 +23,10 @@ public class AppModule {
 
     private static final String TAG = AppModule.class.getSimpleName();
 
+    private static final long IRISH_RAIL_TWITTER_ID = 15115986;
+
     // TODO Move to build.gradle
     private static final String API_ENDPOINT = "http://api.irishrail.ie/realtime/realtime.asmx/";
-
-    private Context mContext;
-
-    public AppModule(Context context){
-        mContext = context;
-    }
 
     @Provides
     @Singleton
@@ -64,8 +60,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    TwitterService providesTwitterService(EventBus eventBus) {
-        return new TwitterService(eventBus);
+    TwitterService providesTwitterService(EventBus eventBus, UserTimeline userTimeline) {
+        return new TwitterService(eventBus, userTimeline);
     }
 
     @Provides
@@ -77,5 +73,20 @@ public class AppModule {
     public static class InjectorHelper {
         @Inject
         public EventBus mEventBus;
+    }
+
+    @Provides
+    @Singleton
+    UserTimeline providesUserTimeline() {
+        return createUserTimeline();
+    }
+
+    private UserTimeline createUserTimeline() {
+        return new UserTimeline.Builder()
+            .includeReplies(false)
+            .includeRetweets(false)
+            .maxItemsPerRequest(20)
+            .userId(IRISH_RAIL_TWITTER_ID)
+            .build();
     }
 }

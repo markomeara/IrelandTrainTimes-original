@@ -1,7 +1,5 @@
 package ie.markomeara.irelandtraintimes;
 
-import android.content.Context;
-
 /**
  * Injects the dagger dependencies
  */
@@ -9,9 +7,9 @@ public class Injector {
 
 	private static AppComponent sComponent;
 
-	public static void init(Context context) {
+	public static void init() {
 		if (sComponent == null) {
-			sComponent = DaggerAppComponent.builder().appModule(new AppModule(context)).build();
+			sComponent = DaggerAppComponent.builder().appModule(new AppModule()).build();
 		}
 	}
 
